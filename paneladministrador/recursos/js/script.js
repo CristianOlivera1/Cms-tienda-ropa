@@ -41,7 +41,7 @@ const confirmDeleteBtnAdmin = document.getElementById('confirmDeleteBtnAdmin');
 if (confirmDeleteBtnAdmin) {
     confirmDeleteBtnAdmin.addEventListener('click', function() {
         if (deleteProductId !== null) {
-            window.location.href = 'eliminaradministrador.php?id=' + deleteProductId;
+            window.location.href = 'eliminarusuario.php?id=' + deleteProductId;
         }
     });
 }

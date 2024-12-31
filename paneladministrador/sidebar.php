@@ -1,9 +1,14 @@
 <?php
 include "coneccionbd.php";
 $username=$_SESSION['admin_username'];
+
+if($_SESSION['cargo_gerente']=='Gerente'){
+
+  $gerente=$_SESSION['cargo_gerente'];
+  }
+  
 ?>
 <div class="app-menu navbar-menu">
-  <!-- LOGO -->
   <div class="navbar-brand-box">
 
     <!-- Logo proncipal pantallas grandes-->
@@ -32,18 +37,25 @@ $username=$_SESSION['admin_username'];
                 <a href="dashboard" class="nav-link" data-key="t-analytics">  <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards"> Tablero </span></a>
               </li>
 
-                        <li class="nav-item">
+              <li class="nav-item">
                             <a class="nav-link menu-link" href="#sidebarK" data-bs-toggle="collapse" role="button" aria-expanded="true" aria-controls="sidebarLanding">
-                                <i class="ri-tools-fill"></i> <span data-key="t-landing">Administrador</span>
+                                <i class="ri-user-line"></i> <span data-key="t-landing">Usuarios</span>
                             </a>
                             <div class="menu-dropdown collapse" id="sidebarK">
                                 <ul class="nav nav-sm flex-column">
+                                <?php if (isset($gerente)): ?>
                                     <li class="nav-item">
-                                        <a href="agregar-administrador.php" class="nav-link" data-key="t-nft-landing">Añadir Nuevo</a>
+                                        <a href="agregar-usuario.php" class="nav-link" data-key="t-nft-landing">Añadir Nuevo</a>
                                     </li>
+
                                     <li class="nav-item">
-                                        <a href="listaadministradores.php" class="nav-link" data-key="t-nft-landing">Listar todos</a>
+                                        <a href="listausuarios.php" class="nav-link" data-key="t-nft-landing">Listar todos</a>
                                     </li>
+                                    <?php else: ?>
+                                    <li class="nav-item">
+                                        <a href="listausuarios.php" class="nav-link" data-key="t-nft-landing">Listar todos</a>
+                                    </li>
+                                    <?php endif; ?>
                                 </ul>
                             </div>
                         </li>

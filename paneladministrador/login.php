@@ -12,7 +12,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['username'])) {
         $error = 'Todos los campos son obligatorios.';
     } else {
         // Recuperar nombre de usuario y contraseña de la base de datos según la entrada del usuario, evitando la inyección SQL
-        $query = "SELECT * FROM administrador WHERE admUser = ?";
+        $query = "SELECT u.*, c.carNombre FROM usuario u INNER JOIN cargo c ON u.carId = c.carId WHERE admUser = ?";
+
         $stmt = $con->prepare($query);
         $stmt->bind_param('s', $username);
         $stmt->execute();
@@ -23,6 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['username'])) {
             if (password_verify($password, $admin['admPass'])) {
                 $_SESSION['admin_id'] = $admin['admId'];
                 $_SESSION['admin_username'] = $admin['admUser'];
+                $_SESSION['cargo_gerente'] = $admin['carNombre']; // Guardar el nombre del cargo
                 header('Location: index.php');
                 exit();
             } else {

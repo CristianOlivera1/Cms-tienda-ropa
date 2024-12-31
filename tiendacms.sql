@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 28-12-2024 a las 21:41:19
+-- Tiempo de generación: 31-12-2024 a las 02:10:57
 -- Versión del servidor: 10.4.27-MariaDB
 -- Versión de PHP: 8.2.0
 
@@ -24,22 +24,22 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `administrador`
+-- Estructura de tabla para la tabla `cargo`
 --
 
-CREATE TABLE `administrador` (
-  `admId` int(11) NOT NULL,
-  `admUser` varchar(100) DEFAULT NULL,
-  `admPass` varchar(60) DEFAULT NULL,
-  `admFechaRegis` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
+CREATE TABLE `cargo` (
+  `carId` int(11) NOT NULL,
+  `carNombre` varchar(40) DEFAULT NULL,
+  `carFechaRegis` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `administrador`
+-- Volcado de datos para la tabla `cargo`
 --
 
-INSERT INTO `administrador` (`admId`, `admUser`, `admPass`, `admFechaRegis`) VALUES
-(1, 'admin', '$2y$10$eWM5d7YzzQIY.k9DDsG/kez9DUneGuqqHx19TixxrRdBpk6rcaVEm', '2024-12-28 15:40:50');
+INSERT INTO `cargo` (`carId`, `carNombre`, `carFechaRegis`) VALUES
+(1, 'Gerente', '2024-12-30 11:21:50'),
+(2, 'Administrador', '2024-12-30 11:21:50');
 
 -- --------------------------------------------------------
 
@@ -95,6 +95,13 @@ CREATE TABLE `contacto` (
   `conEmail` varchar(100) DEFAULT NULL,
   `conFechaRegis` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `contacto`
+--
+
+INSERT INTO `contacto` (`conId`, `conTelefono`, `conEmail`, `conFechaRegis`) VALUES
+(1, '987654321', '2211@ddddd.com', '2024-12-30 14:29:06');
 
 -- --------------------------------------------------------
 
@@ -162,6 +169,13 @@ CREATE TABLE `portada` (
   `porFechaRegis` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Volcado de datos para la tabla `portada`
+--
+
+INSERT INTO `portada` (`porId`, `porTitulo`, `porDescripcion`, `porFechaRegis`) VALUES
+(1, 'Cms tienda de ropas para todos', 'Este es un sistio wew similar a un ecommerce diseñaado para una tienda de prendas de vestir.', '2024-12-30 20:08:09');
+
 -- --------------------------------------------------------
 
 --
@@ -223,6 +237,28 @@ CREATE TABLE `talla` (
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `usuario`
+--
+
+CREATE TABLE `usuario` (
+  `admId` int(11) NOT NULL,
+  `admUser` varchar(100) DEFAULT NULL,
+  `admPass` varchar(60) DEFAULT NULL,
+  `admFechaRegis` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `carId` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `usuario`
+--
+
+INSERT INTO `usuario` (`admId`, `admUser`, `admPass`, `admFechaRegis`, `carId`) VALUES
+(3, 'admini', '$2y$10$qerMdlXvctadGnCOXgfIKui49VHV6zdpsdBRBee1IZXvpMy.tYJvu', '2024-12-30 19:44:24', 2),
+(4, 'pruebagerente', '$2y$10$eWM5d7YzzQIY.k9DDsG/kez9DUneGuqqHx19TixxrRdBpk6rcaVEm', '2024-12-30 19:51:33', 1);
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `ventas`
 --
 
@@ -238,10 +274,10 @@ CREATE TABLE `ventas` (
 --
 
 --
--- Indices de la tabla `administrador`
+-- Indices de la tabla `cargo`
 --
-ALTER TABLE `administrador`
-  ADD PRIMARY KEY (`admId`);
+ALTER TABLE `cargo`
+  ADD PRIMARY KEY (`carId`);
 
 --
 -- Indices de la tabla `categoria`
@@ -332,6 +368,13 @@ ALTER TABLE `talla`
   ADD PRIMARY KEY (`talId`);
 
 --
+-- Indices de la tabla `usuario`
+--
+ALTER TABLE `usuario`
+  ADD PRIMARY KEY (`admId`),
+  ADD KEY `fk_admi_cargo` (`carId`);
+
+--
 -- Indices de la tabla `ventas`
 --
 ALTER TABLE `ventas`
@@ -344,10 +387,10 @@ ALTER TABLE `ventas`
 --
 
 --
--- AUTO_INCREMENT de la tabla `administrador`
+-- AUTO_INCREMENT de la tabla `cargo`
 --
-ALTER TABLE `administrador`
-  MODIFY `admId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+ALTER TABLE `cargo`
+  MODIFY `carId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `categoria`
@@ -371,7 +414,7 @@ ALTER TABLE `color`
 -- AUTO_INCREMENT de la tabla `contacto`
 --
 ALTER TABLE `contacto`
-  MODIFY `conId` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `conId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `detalleventa`
@@ -401,7 +444,7 @@ ALTER TABLE `oferta`
 -- AUTO_INCREMENT de la tabla `portada`
 --
 ALTER TABLE `portada`
-  MODIFY `porId` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `porId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `producto`
@@ -426,6 +469,12 @@ ALTER TABLE `stock`
 --
 ALTER TABLE `talla`
   MODIFY `talId` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `usuario`
+--
+ALTER TABLE `usuario`
+  MODIFY `admId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `ventas`
@@ -471,6 +520,12 @@ ALTER TABLE `stock`
   ADD CONSTRAINT `stock_ibfk_2` FOREIGN KEY (`estId`) REFERENCES `estado` (`estId`),
   ADD CONSTRAINT `stock_ibfk_3` FOREIGN KEY (`colId`) REFERENCES `color` (`colId`),
   ADD CONSTRAINT `stock_ibfk_4` FOREIGN KEY (`talId`) REFERENCES `talla` (`talId`);
+
+--
+-- Filtros para la tabla `usuario`
+--
+ALTER TABLE `usuario`
+  ADD CONSTRAINT `fk_admi_cargo` FOREIGN KEY (`carId`) REFERENCES `cargo` (`carId`);
 
 --
 -- Filtros para la tabla `ventas`

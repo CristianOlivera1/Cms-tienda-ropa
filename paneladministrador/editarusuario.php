@@ -1,13 +1,15 @@
-<?php
-ob_start();
-include "header.php";
+<?php include "header.php";
 include "sidebar.php";
 
 $error = '';
+$success = '';
+$id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = trim($_POST['username']);
     $password = trim($_POST['password']);
     $confirm_password = trim($_POST['confirm_password']);
+    $carId = mysqli_real_escape_string($con, $_POST['carId']);
 
     if (empty($username) || empty($password) || empty($confirm_password)) {
         $error = 'Todos los campos son obligatorios.';
@@ -16,9 +18,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     } elseif ($password !== $confirm_password) {
         $error = 'Las contraseñas no coinciden.';
     } else {
-        $query = "SELECT * FROM administrador WHERE admUser = ?";
+        $query = "SELECT * FROM usuario WHERE admUser = ? AND admId != ?";
         $stmt = $con->prepare($query);
-        $stmt->bind_param('s', $username);
+        $stmt->bind_param('si', $username, $id);
         $stmt->execute();
         $result = $stmt->get_result();
 
@@ -26,18 +28,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $error = 'El nombre de usuario ya está en uso.';
         } else {
             $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-            $query = "INSERT INTO administrador (admUser, admPass) VALUES (?, ?)";
+            $query = "UPDATE usuario SET admUser = ?, admPass = ?, carId = ? WHERE admId = ?";
             $stmt = $con->prepare($query);
-            $stmt->bind_param('ss', $username, $hashed_password);
+            $stmt->bind_param('ssii', $username, $hashed_password, $carId, $id);
             if ($stmt->execute()) {
-                // Redirigir después de registrar el administrador
-                header("Location: listaadministradores.php"); 
-                exit();
+                $success = 'Usuario actualizado correctamente.';
             } else {
-                $error = 'Error al registrar el administrador.';
+                $error = 'Error al actualizar el usuario.';
             }
         }
     }
+} else {
+    $query = "SELECT * FROM usuario WHERE admId = ?";
+    $stmt = $con->prepare($query);
+    $stmt->bind_param('i', $id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $admin = $result->fetch_assoc();
+    $username = $admin['admUser'];
+    $carId = $admin['carId'];
 }
 
 ?>
@@ -45,16 +54,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <div class="main-content">
     <div class="page-content">
         <div class="container-fluid">
-            
+
             <div class="row">
                 <div class="col-12">
                     <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                        <h4 class="mb-sm-0">Agregar Administrador</h4>
+                        <h4 class="mb-sm-0">Editar usuario</h4>
 
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
-                                <li class="breadcrumb-item"><a href="javascript: void(0);">Administrador</a></li>
-                                <li class="breadcrumb-item active">Agregar</li>
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">usuario</a></li>
+                                <li class="breadcrumb-item active">Editar</li>
                             </ol>
                         </div>
                     </div>
@@ -68,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <ul class="nav nav-tabs-custom rounded card-header-tabs border-bottom-0" role="tablist">
                                 <li class="nav-item">
                                     <a class="nav-link active" data-bs-toggle="tab" href="#personalDetails" role="tab" aria-selected="false">
-                                        <i class="fas fa-user"></i> Agregar Administrador
+                                        </i> Editar usuario
                                     </a>
                                 </li>
                             </ul>
@@ -78,14 +87,33 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <div class="tab-content">
                                 <div class="tab-pane active" id="personalDetails" role="tabpanel">
                                     <?php if ($error): ?>
-                                        <div class="alert alert-danger alert-dismissible alert-outline fade show"><?php echo $error; ?><button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>
+                                        <div class="alert alert-danger alert-dismissible alert-outline fade show"><?php echo $error; ?> <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>
+                                    <?php endif; ?>
+                                    <?php if ($success): ?>
+                                        <div class="alert alert-success alert-dismissible alert-outline fade show"><?php echo $success; ?> <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>
                                     <?php endif; ?>
                                     <form method="POST" action="">
                                         <div class="row">
                                             <div class="col-lg-6">
                                                 <div class="mb-3">
                                                     <label for="username" class="form-label">Nombre de Usuario</label>
-                                                    <input type="text" class="form-control" id="username" name="username" required>
+                                                    <input type="text" class="form-control" id="username" name="username" value="<?php echo htmlspecialchars($username); ?>" required>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-6">
+                                                <div class="mb-3">
+                                                    <label for="cargoSelect" class="form-label">Cargo</label>
+                                                    <select class="form-select" id="cargoSelect" name="carId">
+                                                        <option selected>Seleccione cargo</option>
+                                                        <?php
+                                                        $result = mysqli_query($con, "SELECT carId, carNombre FROM cargo order by carId desc");
+                                                        while($row = mysqli_fetch_assoc($result)) {
+                                                            $selected = ($row['carId'] == $carId) ? 'selected' : '';
+                                                            echo "<option value='".$row['carId']."' $selected>".$row['carNombre']."</option>";
+                                                        }
+                                                        ?>
+                                                    </select>
                                                 </div>
                                             </div>
 
@@ -111,7 +139,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                                             <div class="col-lg-12">
                                                 <div class="hstack gap-2 justify-content-end">
-                                                    <button type="submit" class="btn btn-primary">Registrar</button>
+                                                    <button type="submit" class="btn btn-primary">Actualizar</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -127,7 +155,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <script src="recursos/js/script.js"></script>
 </div>
 
-<?php
-include "footer.php";
-ob_end_flush();
-?>
+<?php include "footer.php"; ?>
