@@ -12,15 +12,15 @@ if($_SESSION['cargo_gerente']=='Gerente'){
   <div class="navbar-brand-box">
 
     <!-- Logo proncipal pantallas grandes-->
-    <a href="index.php" class="logo logo-light">
+    <a href="/paneladministrador/index.php" class="logo logo-light">
       <span class="logo-lg">
-        <img src="recursos/images/mens-store.png" alt="logo" height="45">
+        <img src="/paneladministrador/recursos/images/mens-store.png" alt="logo" height="45">
       </span>
     </a>
     <!-- Logo proncipal pantallas pequeñas-->
-    <a href="index.php" class="logo logo-light">
+    <a href="/paneladministrador/index.php" class="logo logo-light">
       <span class="logo-sm">
-        <img src="recursos/images/mens-store-small.png" alt="logo" height="40">
+        <img src="/paneladministrador/recursos/images/mens-store-small.png" alt="logo" height="40">
       </span>
     </a>
 
@@ -34,10 +34,31 @@ if($_SESSION['cargo_gerente']=='Gerente'){
         <li class="menu-title"><span data-key="t-menu">Menú</span></li>
 
         <li class="nav-item">
-                <a href="dashboard" class="nav-link" data-key="t-analytics">  <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards"> Tablero </span></a>
+                <a href="/paneladministrador/index.php" class="nav-link" data-key="t-analytics">  <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards"> Tablero </span></a>
               </li>
 
-              <li class="nav-item">
+                      <li class="nav-item">
+                            <a class="nav-link menu-link" href="#sidebarK" data-bs-toggle="collapse" role="button" aria-expanded="true" aria-controls="sidebarLanding">
+                            <i class="ri-list-check-2"></i>
+                            <span data-key="t-landing">Detalles del producto</span>
+                            </a>
+                            <div class="menu-dropdown collapse" id="sidebarK">
+                                <ul class="nav nav-sm flex-column">
+                                    <li class="nav-item">
+                                        <a href="/paneladministrador/detallesproducto/gestionar-oferta.php" class="nav-link" data-key="t-nft-landing">Gestionar oferta</a>
+                                    </li>
+
+                                    <li class="nav-item">
+                                        <a href="/paneladministrador/detallesproducto/gestionar-talla.php" class="nav-link" data-key="t-nft-landing">Gestionar talla</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="/paneladministrador/detallesproducto/gestionar-color.php" class="nav-link" data-key="t-nft-landing">Gestionar color</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+
+                        <li class="nav-item">
                             <a class="nav-link menu-link" href="#sidebarK" data-bs-toggle="collapse" role="button" aria-expanded="true" aria-controls="sidebarLanding">
                                 <i class="ri-user-line"></i> <span data-key="t-landing">Usuarios</span>
                             </a>
@@ -45,15 +66,15 @@ if($_SESSION['cargo_gerente']=='Gerente'){
                                 <ul class="nav nav-sm flex-column">
                                 <?php if (isset($gerente)): ?>
                                     <li class="nav-item">
-                                        <a href="agregar-usuario.php" class="nav-link" data-key="t-nft-landing">Añadir Nuevo</a>
+                                        <a href="/paneladministrador/usuarios/agregar-usuario.php" class="nav-link" data-key="t-nft-landing">Añadir Nuevo</a>
                                     </li>
 
                                     <li class="nav-item">
-                                        <a href="listausuarios.php" class="nav-link" data-key="t-nft-landing">Listar todos</a>
+                                        <a href="/paneladministrador/usuarios/listausuarios.php" class="nav-link" data-key="t-nft-landing">Listar todos</a>
                                     </li>
                                     <?php else: ?>
                                     <li class="nav-item">
-                                        <a href="listausuarios.php" class="nav-link" data-key="t-nft-landing">Listar todos</a>
+                                        <a href="/paneladministrador/usuarios/listausuarios.php" class="nav-link" data-key="t-nft-landing">Listar todos</a>
                                     </li>
                                     <?php endif; ?>
                                 </ul>
@@ -67,10 +88,10 @@ if($_SESSION['cargo_gerente']=='Gerente'){
                             <div class="menu-dropdown collapse" id="sidebarK">
                                 <ul class="nav nav-sm flex-column">
                                     <li class="nav-item">
-                                        <a href="contacto.php" class="nav-link" data-key="t-nft-landing"> Actualizar Contacto </a>
+                                        <a href="/paneladministrador/configuracionsitio/contacto.php" class="nav-link" data-key="t-nft-landing"> Actualizar Contacto </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="portada.php" class="nav-link" data-key="t-nft-landing">Titulo y descripcion portada</a>
+                                        <a href="/paneladministrador/configuracionsitio/portada.php" class="nav-link" data-key="t-nft-landing">Titulo y descripcion portada</a>
                                     </li>
                                 </ul>
                             </div>

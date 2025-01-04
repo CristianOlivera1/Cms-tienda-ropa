@@ -1,6 +1,6 @@
 <?php
-include "header.php";
-include "sidebar.php";
+include "../header.php";
+include "../sidebar.php";
 
 $error = '';
 $success = '';
@@ -102,7 +102,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
         </div>
     </div>
-    <script src="recursos/js/script.js"></script>
+    <script src="../recursos/js/script.js"></script>
 </div>
 
-<?php include "footer.php"; ?>
+<?php include "../footer.php"; ?>

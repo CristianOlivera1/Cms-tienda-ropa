@@ -1,5 +1,5 @@
-<?php include "header.php"; ?>
-<?php include "sidebar.php"; ?>
+<?php include "../header.php"; ?>
+<?php include "../sidebar.php"; ?>
 <?php
 if($_SESSION['cargo_gerente']=='Gerente'){
     $gerente=$_SESSION['cargo_gerente'];
@@ -89,6 +89,6 @@ if($_SESSION['cargo_gerente']=='Gerente'){
         </div>
     </div>
 
-    <script src="recursos/js/script.js"></script>
-    <?php include "footer.php"; ?>
+    <script src="../recursos/js/script.js"></script>
+    <?php include "../footer.php"; ?>
 </div>

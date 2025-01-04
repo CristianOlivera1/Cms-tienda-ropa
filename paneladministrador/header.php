@@ -19,11 +19,11 @@ if (!isset($_SESSION['admin_id'])) {
     <title>Tablero | Mens' Store</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta content="Panel de administración de Men's Style" name="description" />
-    <link rel="shortcut icon" href="recursos/images/favicon/favicon.ico">
+    <link rel="shortcut icon" href="/paneladministrador/recursos/images/favicon/favicon.ico">
 
-    <link href="recursos/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-    <link href="recursos/css/icons.min.css" rel="stylesheet" type="text/css" />
-    <link href="recursos/css/app.min.css" rel="stylesheet" type="text/css" />
+    <link href="/paneladministrador/recursos/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="/paneladministrador/recursos/css/icons.min.css" rel="stylesheet" type="text/css" />
+    <link href="/paneladministrador/recursos/css/app.min.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body>
@@ -53,7 +53,7 @@ if (!isset($_SESSION['admin_id'])) {
                             <div class="dropdown-menu dropdown-menu-end">
                                 <!-- elemento -->
                                 <h6 class="dropdown-header">¡Bienvenido <?php print $username;?>!</h6>
-                                <a class="dropdown-item" href="logout.php"><i class="mdi mdi-logout text-muted fs-16 align-middle me-1"></i> <span class="align-middle" data-key="t-logout">Cerrar sesión</span></a>
+                                <a class="dropdown-item" href="/paneladministrador/logout.php"><i class="mdi mdi-logout text-muted fs-16 align-middle me-1"></i> <span class="align-middle" data-key="t-logout">Cerrar sesión</span></a>
                             </div>
                         </div>
                     </div>
