@@ -1,4 +1,4 @@
-//eliminar all
+//eliminar cualquier cosa para todas las secciones
 let deleteProductId = null;
 
 function confirmDelete(id) {
@@ -42,6 +42,16 @@ if (confirmDeleteBtnAdmin) {
     confirmDeleteBtnAdmin.addEventListener('click', function() {
         if (deleteProductId !== null) {
             window.location.href = 'eliminarusuario.php?id=' + deleteProductId;
+        }
+    });
+}
+
+//eliminar color
+const confirmDeleteBtnColor= document.getElementById('confirmDeleteBtnColor');
+if (confirmDeleteBtnColor) {
+    confirmDeleteBtnColor.addEventListener('click', function() {
+        if (deleteProductId !== null) {
+            window.location.href = 'eliminarcolor.php?id=' + deleteProductId;
         }
     });
 }

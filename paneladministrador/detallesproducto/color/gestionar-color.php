@@ -69,8 +69,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                         <div class="row">
                                             <div class="col-lg-6">
                                                 <div class="mb-3">
-                                                    <label for="color_nombre" class="form-label">Código Hexadecimal del Color</label>
-                                                    <input type="color" class="form-control" id="color_nombre" name="color_nombre" required>
+                                                    <label for="color_nombre" class="form-label">Color</label>
+                                                    <input type="color" class="form-control picker-height" id="color_nombre" name="color_nombre" required>
                                                 </div>
                                             </div>
 
