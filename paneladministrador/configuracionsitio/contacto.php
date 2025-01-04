@@ -97,14 +97,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                             </div>
                                         </div>
                                     </form>
-                                    <!-- Fin del formulario de contacto -->
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- Fin del contenido principal -->
         </div>
     </div>
 </div>

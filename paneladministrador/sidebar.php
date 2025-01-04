@@ -45,14 +45,14 @@ if($_SESSION['cargo_gerente']=='Gerente'){
                             <div class="menu-dropdown collapse" id="sidebarK">
                                 <ul class="nav nav-sm flex-column">
                                     <li class="nav-item">
-                                        <a href="/paneladministrador/detallesproducto/gestionar-oferta.php" class="nav-link" data-key="t-nft-landing">Gestionar oferta</a>
+                                        <a href="/paneladministrador/detallesproducto/oferta/gestionar-oferta.php" class="nav-link" data-key="t-nft-landing">Gestionar oferta</a>
                                     </li>
 
                                     <li class="nav-item">
-                                        <a href="/paneladministrador/detallesproducto/gestionar-talla.php" class="nav-link" data-key="t-nft-landing">Gestionar talla</a>
+                                        <a href="/paneladministrador/detallesproducto/talla/gestionar-talla.php" class="nav-link" data-key="t-nft-landing">Gestionar talla</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="/paneladministrador/detallesproducto/gestionar-color.php" class="nav-link" data-key="t-nft-landing">Gestionar color</a>
+                                        <a href="/paneladministrador/detallesproducto/color/gestionar-color.php" class="nav-link" data-key="t-nft-landing">Gestionar color</a>
                                     </li>
                                 </ul>
                             </div>
