@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 31-12-2024 a las 02:10:57
+-- Tiempo de generación: 05-01-2025 a las 22:33:26
 -- Versión del servidor: 10.4.27-MariaDB
 -- Versión de PHP: 8.2.0
 
@@ -83,6 +83,17 @@ CREATE TABLE `color` (
   `colFechaRegis` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Volcado de datos para la tabla `color`
+--
+
+INSERT INTO `color` (`colId`, `colNombre`, `colFechaRegis`) VALUES
+(1, '#e90c0c', '2025-01-04 17:03:17'),
+(2, '#0008eb', '2025-01-04 17:04:25'),
+(3, '#e209f1', '2025-01-04 17:05:39'),
+(4, '#000000', '2025-01-04 17:06:37'),
+(5, '#cccccc', '2025-01-04 17:06:54');
+
 -- --------------------------------------------------------
 
 --
@@ -101,7 +112,7 @@ CREATE TABLE `contacto` (
 --
 
 INSERT INTO `contacto` (`conId`, `conTelefono`, `conEmail`, `conFechaRegis`) VALUES
-(1, '987654321', '2211@ddddd.com', '2024-12-30 14:29:06');
+(1, '987654320', '2211@ddddd.com', '2025-01-04 16:34:28');
 
 -- --------------------------------------------------------
 
@@ -253,7 +264,7 @@ CREATE TABLE `usuario` (
 --
 
 INSERT INTO `usuario` (`admId`, `admUser`, `admPass`, `admFechaRegis`, `carId`) VALUES
-(3, 'admini', '$2y$10$qerMdlXvctadGnCOXgfIKui49VHV6zdpsdBRBee1IZXvpMy.tYJvu', '2024-12-30 19:44:24', 2),
+(3, 'admin', '$2y$10$XC4T3j7LdBJtZdrbMRqjq.BcYi6K1011PtNIXiY1NtoCjfpmJ3r6i', '2025-01-04 16:34:54', 2),
 (4, 'pruebagerente', '$2y$10$eWM5d7YzzQIY.k9DDsG/kez9DUneGuqqHx19TixxrRdBpk6rcaVEm', '2024-12-30 19:51:33', 1);
 
 -- --------------------------------------------------------
@@ -408,7 +419,7 @@ ALTER TABLE `cliente`
 -- AUTO_INCREMENT de la tabla `color`
 --
 ALTER TABLE `color`
-  MODIFY `colId` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `colId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de la tabla `contacto`
