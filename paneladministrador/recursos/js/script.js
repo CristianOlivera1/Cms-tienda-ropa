@@ -56,6 +56,38 @@ if (confirmDeleteBtnColor) {
     });
 }
 
+//eliminar categoria
+const confirmDeleteBtnCategoria= document.getElementById('confirmDeleteBtnCategoria');
+if (confirmDeleteBtnCategoria) {
+    confirmDeleteBtnCategoria.addEventListener('click', function() {
+        if (deleteProductId !== null) {
+            window.location.href = 'eliminarcategoria.php?id=' + deleteProductId;
+        }
+    });
+}
+
+//eliminar categoria
+const confirmDeleteBtnMarca= document.getElementById('confirmDeleteBtnMarca');
+if (confirmDeleteBtnMarca) {
+    confirmDeleteBtnMarca.addEventListener('click', function() {
+        if (deleteProductId !== null) {
+            window.location.href = 'eliminarmarca.php?id=' + deleteProductId;
+        }
+    });
+}
+
+//eliminar cliente
+const confirmDeleteBtnCliente= document.getElementById('confirmDeleteBtnCliente');
+if (confirmDeleteBtnCliente) {
+    confirmDeleteBtnCliente.addEventListener('click', function() {
+        if (deleteProductId !== null) {
+            window.location.href = 'eliminarcliente.php?id=' + deleteProductId;
+        }
+    });
+}
+
+
+
 /* buscador por nombre en productos*/
 let searchTimeout = null;
 const searchInput = document.getElementById('searchInput');
