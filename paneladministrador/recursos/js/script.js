@@ -123,3 +123,49 @@ if (toggleConfirmPassword) {
     });
 }
 /* ADMINISTRADOR VER CONTRASEÑA */
+
+
+//GESTION DE TALLAS DE LOS PRODUCTOS
+
+
+        // Función para preparar la edición de una talla
+        function editarTalla(id, nombre) {
+            document.getElementById('talla_id').value = id;
+            document.getElementById('talla').value = nombre;
+            document.querySelector('input[name="accion"]').value = 'editar';
+        }
+
+        // Función para confirmar la eliminación de una talla
+        function confirmarEliminarTalla(idRes) {
+            const modal = new bootstrap.Modal(document.getElementById('modalEliminar'));
+            modal.show();
+            document.getElementById('btn-confirmar-eliminar').onclick = function() {
+                eliminarTalla(idRes);
+                modal.hide();
+            }
+        }
+
+        // Función para eliminar una talla
+        function eliminarTalla(idRes) {
+            const formData = new FormData();
+            formData.append('accion', 'eliminar');
+            formData.append('talla_id', idRes);
+
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', '', true);
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    location.reload();
+                } else {
+                    alert('Error al eliminar la talla.');
+                }
+            };
+            xhr.send(formData);
+        }
+
+        // Limpiar el formulario
+        document.getElementById('btn-limpiar').onclick = function() {
+            document.getElementById('form-talla').reset();
+            document.getElementById('talla_id').value = ''; 
+        }
+    
