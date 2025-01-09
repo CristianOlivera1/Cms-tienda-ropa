@@ -2,14 +2,14 @@
 include "../../coneccionbd.php";
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['action'] == 'delete') {
-    $cliente_id = $_POST['cliente_id'];
-    $query = "DELETE FROM cliente WHERE cliId = ?";
+    $talla_id = $_POST['talla_id'];
+    $query = "DELETE FROM talla WHERE talId = ?";
     $stmt = $con->prepare($query);
-    $stmt->bind_param('i', $cliente_id);
+    $stmt->bind_param('i', $talla_id);
     if ($stmt->execute()) {
         echo json_encode(['success' => true]);
     } else {
-        echo json_encode(['success' => false, 'error' => 'Error al eliminar la cliente.']);
+        echo json_encode(['success' => false, 'error' => 'Error al eliminar la talla.']);
     }
     exit;
 }

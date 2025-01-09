@@ -1,10 +1,16 @@
 <?php
-header( "refresh:0.1;url=listausuarios.php" );
-include_once ("../../coneccionbd.php");
-// Iniciar sesion
-session_start();
-$todelete= mysqli_real_escape_string($con,$_GET["id"]);
+include "../coneccionbd.php";
 
-$result=mysqli_query($con,"DELETE FROM usuario WHERE admId='$todelete'");
-
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['action'] == 'delete') {
+    $usuario_id = $_POST['usuario_id'];
+    $query = "DELETE FROM usuario WHERE admId = ?";
+    $stmt = $con->prepare($query);
+    $stmt->bind_param('i', $usuario_id);
+    if ($stmt->execute()) {
+        echo json_encode(['success' => true]);
+    } else {
+        echo json_encode(['success' => false, 'error' => 'Error al eliminar la usuario.']);
+    }
+    exit;
+}
 ?>

@@ -1,10 +1,16 @@
 <?php
-header( "refresh:0.1; url=gestionar-marca.php" );
-include_once ("../../coneccionbd.php");
-// Iniciar sesion
-session_start();
-$todelete= mysqli_real_escape_string($con,$_GET["id"]);
+include "../../coneccionbd.php";
 
-$result=mysqli_query($con,"DELETE FROM marca WHERE marId='$todelete'");
-
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['action'] == 'delete') {
+    $marca_id = $_POST['marca_id'];
+    $query = "DELETE FROM marca WHERE marId = ?";
+    $stmt = $con->prepare($query);
+    $stmt->bind_param('i', $marca_id);
+    if ($stmt->execute()) {
+        echo json_encode(['success' => true]);
+    } else {
+        echo json_encode(['success' => false, 'error' => 'Error al eliminar la marca.']);
+    }
+    exit;
+}
 ?>

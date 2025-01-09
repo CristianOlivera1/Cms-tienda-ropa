@@ -1,10 +1,16 @@
 <?php
-header("refresh:0.1 ;url=gestionar-categoria.php");
-include_once ("../../coneccionbd.php");
-// Iniciar sesion
-session_start();
-$todelete= mysqli_real_escape_string($con,$_GET["id"]);
+include "../../coneccionbd.php";
 
-$result=mysqli_query($con,"DELETE FROM categoria WHERE catId='$todelete'");
-
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['action'] == 'delete') {
+    $categoria_id = $_POST['categoria_id'];
+    $query = "DELETE FROM categoria WHERE catId = ?";
+    $stmt = $con->prepare($query);
+    $stmt->bind_param('i', $categoria_id);
+    if ($stmt->execute()) {
+        echo json_encode(['success' => true]);
+    } else {
+        echo json_encode(['success' => false, 'error' => 'Error al eliminar la categoria.']);
+    }
+    exit;
+}
 ?>

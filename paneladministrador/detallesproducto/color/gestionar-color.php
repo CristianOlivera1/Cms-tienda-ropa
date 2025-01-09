@@ -104,7 +104,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     $query = "SELECT * FROM color ORDER BY colId DESC";
                                     $result = mysqli_query($con, $query);
                                     while ($row = mysqli_fetch_assoc($result)) {
-                                        echo "<tr>
+                                        echo "<tr id='color-{$row['colId']}'>
                                                 <td>{$row['colNombre']}</td>
                                                 <td><div style='width: 20px; height: 20px; background-color: {$row['colNombre']}; border-radius: 50%;'></div></td>
                                                 <td>
@@ -115,7 +115,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                                         <ul class='dropdown-menu dropdown-menu-end'>
                                                             <li><a href='editarcolor.php?id={$row['colId']}' class='dropdown-item edit-item-btn'><i class='ri-pencil-fill align-bottom me-2 text-muted'></i> Editar</a></li>
                                                             <li>
-                                                                <a href='javascript:void(0);' class='dropdown-item remove-item-btn' onclick='confirmDelete({$row['colId']})'>
+                                                                <a href='javascript:void(0);' class='dropdown-item remove-item-btn' onclick='confirmDeleteColor({$row['colId']})'>
                                                                     <i class='ri-delete-bin-fill align-bottom me-2 text-muted'></i> Eliminar
                                                                 </a>
                                                             </li>
@@ -156,6 +156,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <script src="../../recursos/js/script.js"></script>
 </div>
 
-<?php
-include "../../footer.php";
-?>
+<?php include "../../footer.php";?>

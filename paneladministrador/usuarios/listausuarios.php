@@ -38,7 +38,7 @@ if($_SESSION['cargo_gerente']=='Gerente'){
                                     $query = "SELECT admId,admUser,carNombre as cargo_nombre FROM usuario a inner join cargo c on a.carId=c.carId  ORDER BY admId DESC";
                                     $result = mysqli_query($con, $query);
                                     while ($row = mysqli_fetch_assoc($result)) {
-                                        echo "<tr>
+                                        echo "<tr id='usuario-{$row['admId']}'>
                                                 <td>{$row['admUser']}</td>
                                                   <td>{$row['cargo_nombre']}</td>";
                                         if (isset($gerente)) {
@@ -50,7 +50,7 @@ if($_SESSION['cargo_gerente']=='Gerente'){
                                                         <ul class='dropdown-menu dropdown-menu-end'>
                                                             <li><a href='editarusuario.php?id={$row['admId']}' class='dropdown-item edit-item-btn'><i class='ri-pencil-fill align-bottom me-2 text-muted'></i> Editar</a></li>
                                                             <li>
-                                                                <a href='javascript:void(0);' class='dropdown-item remove-item-btn' onclick='confirmDelete({$row['admId']})'>
+                                                                <a href='javascript:void(0);' class='dropdown-item remove-item-btn' onclick='confirmDeleteUsuario({$row['admId']})'>
                                                                     <i class='ri-delete-bin-fill align-bottom me-2 text-muted'></i> Eliminar
                                                                 </a>
                                                             </li>
@@ -83,7 +83,7 @@ if($_SESSION['cargo_gerente']=='Gerente'){
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-danger" id="confirmDeleteBtnAdmin">Eliminar</button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteBtnUsuario">Eliminar</button>
                 </div>
             </div>
         </div>

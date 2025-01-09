@@ -6,38 +6,38 @@ $error = '';
 $success = '';
 
 if (isset($_GET['id'])) {
-    $marca_id = $_GET['id'];
+    $talla_id = $_GET['id'];
 
-    // Obtener los datos de la marca
-    $query = "SELECT * FROM marca WHERE marId = ?";
+    // Obtener los datos de la talla
+    $query = "SELECT * FROM talla WHERE talId = ?";
     $stmt = $con->prepare($query);
-    $stmt->bind_param('i', $marca_id);
+    $stmt->bind_param('i', $talla_id);
     $stmt->execute();
     $result = $stmt->get_result();
-    $marca = $result->fetch_assoc();
+    $talla = $result->fetch_assoc();
 
-    if (!$marca) {
-        $error = 'Marca no encontrada.';
+    if (!$talla) {
+        $error = 'Talla no encontrada.';
     }
 } else {
-    $error = 'ID de marca no proporcionado.';
+    $error = 'ID de talla no proporcionado.';
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $marca_nombre = trim($_POST['marca_nombre']);
+    $talla_nombre = trim($_POST['talla_nombre']);
 
-    if (empty($marca_nombre)) {
-        $error = 'El campo de marca es obligatorio.';
+    if (empty($talla_nombre)) {
+        $error = 'El campo de talla es obligatorio.';
     } else {
-        $query = "UPDATE marca SET marNombre = ? WHERE marId = ?";
+        $query = "UPDATE talla SET talNombre = ? WHERE talId = ?";
         $stmt = $con->prepare($query);
-        $stmt->bind_param('si', $marca_nombre, $marca_id);
+        $stmt->bind_param('si', $talla_nombre, $talla_id);
         if ($stmt->execute()) {
-            $success = 'Marca actualizada exitosamente.';
-            // Actualizar los datos de la marca
-            $marca['marNombre'] = $marca_nombre;
+            $success = 'Talla actualizada exitosamente.';
+            // Actualizar los datos de la talla
+            $talla['talNombre'] = $talla_nombre;
         } else {
-            $error = 'Error al actualizar la marca.';
+            $error = 'Error al actualizar la talla.';
         }
     }
 }
@@ -50,11 +50,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <div class="row">
                 <div class="col-12">
                     <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                        <h4 class="mb-sm-0">Editar Marca</h4>
+                        <h4 class="mb-sm-0">Editar Talla</h4>
 
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
-                                <li class="breadcrumb-item"><a href="javascript: void(0);">Marcas</a></li>
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">Tallas</a></li>
                                 <li class="breadcrumb-item active">Editar</li>
                             </ol>
                         </div>
@@ -68,8 +68,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <div class="card-header">
                             <ul class="nav nav-tabs-custom rounded card-header-tabs border-bottom-0" role="tablist">
                                 <li class="nav-item">
-                                    <a class="nav-link active" data-bs-toggle="tab" href="#marcaDetails" role="tab" aria-selected="false">
-                                        <i class="fas fa-tags"></i> Editar Marca
+                                    <a class="nav-link active" data-bs-toggle="tab" href="#tallaDetails" role="tab" aria-selected="false">
+                                        <i class="fas fa-ruler"></i> Editar Talla
                                     </a>
                                 </li>
                             </ul>
@@ -77,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                         <div class="card-body p-4">
                             <div class="tab-content">
-                                <div class="tab-pane active" id="marcaDetails" role="tabpanel">
+                                <div class="tab-pane active" id="tallaDetails" role="tabpanel">
                                     <?php if ($error): ?>
                                         <div class="alert alert-danger alert-dismissible alert-outline fade show"><?php echo $error; ?><button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>
                                     <?php endif; ?>
@@ -88,8 +88,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                         <div class="row">
                                             <div class="col-lg-6">
                                                 <div class="mb-3">
-                                                    <label for="marca_nombre" class="form-label">Nombre de la Marca</label>
-                                                    <input type="text" class="form-control" id="marca_nombre" name="marca_nombre" value="<?php echo htmlspecialchars($marca['marNombre']); ?>" required>
+                                                    <label for="talla_nombre" class="form-label">Nombre de la Talla</label>
+                                                    <input type="text" class="form-control" id="talla_nombre" name="talla_nombre" value="<?php echo htmlspecialchars($talla['talNombre']); ?>" required>
                                                 </div>
                                             </div>
 

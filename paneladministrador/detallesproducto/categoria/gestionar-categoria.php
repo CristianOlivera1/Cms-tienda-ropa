@@ -102,7 +102,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     $query = "SELECT * FROM categoria ORDER BY catId DESC";
                                     $result = mysqli_query($con, $query);
                                     while ($row = mysqli_fetch_assoc($result)) {
-                                        echo "<tr>
+                                        echo "<tr id='categoria-{$row['catId']}'>
                                                 <td>{$row['catNombre']}</td>
                                                 <td>
                                                     <div class='dropdown d-inline-block'>
@@ -112,7 +112,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                                         <ul class='dropdown-menu dropdown-menu-end'>
                                                             <li><a href='editarcategoria.php?id={$row['catId']}' class='dropdown-item edit-item-btn'><i class='ri-pencil-fill align-bottom me-2 text-muted'></i> Editar</a></li>
                                                             <li>
-                                                                <a href='javascript:void(0);' class='dropdown-item remove-item-btn' onclick='confirmDelete({$row['catId']})'>
+                                                                <a href='javascript:void(0);' class='dropdown-item remove-item-btn' onclick='confirmDeleteCategoria({$row['catId']})'>
                                                                     <i class='ri-delete-bin-fill align-bottom me-2 text-muted'></i> Eliminar
                                                                 </a>
                                                             </li>

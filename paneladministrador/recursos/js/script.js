@@ -1,93 +1,250 @@
-//eliminar cualquier cosa para todas las secciones
-let deleteProductId = null;
-
-function confirmDelete(id) {
-    deleteProductId = id;
-    const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
-    deleteModal.show();
-}
 
 //eliminar producto
-const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
-if (confirmDeleteBtn) {
-    confirmDeleteBtn.addEventListener('click', function() {
-        if (deleteProductId !== null) {
-            window.location.href = 'eliminarproducto.php?id=' + deleteProductId;
-        }
+function confirmDeleteProducto(productoId) {
+    $('#deleteModal').modal('show');
+    $('#confirmDeleteBtnProducto').off('click').on('click', function() {
+        $.ajax({
+            url: 'eliminarproducto.php',
+            type: 'POST',
+            data: {
+                action: 'delete',
+                producto_id: productoId
+            },
+            success: function(response) {
+                // console.log(response); // Agregar este console.log para depurar la respuesta
+                var result = JSON.parse(response);
+                if (result.success) {
+                    $('#deleteModal').modal('hide');
+                    $('#producto-' + productoId).remove();
+                } else {
+                    alert(result.error);
+                }
+            }
+        });
     });
 }
 
-//eliminar categoria
-const confirmDeleteBtnCategory = document.getElementById('confirmDeleteBtnCategory');
-if (confirmDeleteBtnCategory) {
-    confirmDeleteBtnCategory.addEventListener('click', function() {
-        if (deleteProductId !== null) {
-            window.location.href = 'eliminarcategoria.php?id=' + deleteProductId;
-        }
-    });
-}
 //eliminar oferta
-const confirmDeleteBtnOferta = document.getElementById('confirmDeleteBtnOferta');
-if (confirmDeleteBtnOferta) {
-    confirmDeleteBtnOferta.addEventListener('click', function() {
-        if (deleteProductId !== null) {
-            window.location.href = 'eliminaroferta.php?id=' + deleteProductId;
-        }
+function confirmDeleteOferta(ofertaId) {
+    $('#deleteModal').modal('show');
+    $('#confirmDeleteBtnOferta').off('click').on('click', function() {
+        $.ajax({
+            url: 'eliminaroferta.php',
+            type: 'POST',
+            data: {
+                action: 'delete',
+                oferta_id: ofertaId
+            },
+            success: function(response) {
+                // console.log(response); // Agregar este console.log para depurar la respuesta
+                var result = JSON.parse(response);
+                if (result.success) {
+                    $('#deleteModal').modal('hide');
+                    $('#oferta-' + ofertaId).remove();
+                } else {
+                    alert(result.error);
+                }
+            }
+        });
     });
 }
 
 //eliminar administrador
-const confirmDeleteBtnAdmin = document.getElementById('confirmDeleteBtnAdmin');
-if (confirmDeleteBtnAdmin) {
-    confirmDeleteBtnAdmin.addEventListener('click', function() {
-        if (deleteProductId !== null) {
-            window.location.href = 'eliminarusuario.php?id=' + deleteProductId;
-        }
+function confirmDeleteAdministrador(administradorId) {
+    $('#deleteModal').modal('show');
+    $('#confirmDeleteBtnAdministrador').off('click').on('click', function() {
+        $.ajax({
+            url: 'eliminaradministrador.php',
+            type: 'POST',
+            data: {
+                action: 'delete',
+                administrador_id: administradorId
+            },
+            success: function(response) {
+                // console.log(response); // Agregar este console.log para depurar la respuesta
+                var result = JSON.parse(response);
+                if (result.success) {
+                    $('#deleteModal').modal('hide');
+                    $('#administrador-' + administradorId).remove();
+                } else {
+                    alert(result.error);
+                }
+            }
+        });
     });
 }
 
 //eliminar color
-const confirmDeleteBtnColor= document.getElementById('confirmDeleteBtnColor');
-if (confirmDeleteBtnColor) {
-    confirmDeleteBtnColor.addEventListener('click', function() {
-        if (deleteProductId !== null) {
-            window.location.href = 'eliminarcolor.php?id=' + deleteProductId;
-        }
+function confirmDeleteColor(colorId) {
+    $('#deleteModal').modal('show');
+    $('#confirmDeleteBtnColor').off('click').on('click', function() {
+        $.ajax({
+            url: 'eliminarcolor.php',
+            type: 'POST',
+            data: {
+                action: 'delete',
+                color_id: colorId
+            },
+            success: function(response) {
+                // console.log(response); // Agregar este console.log para depurar la respuesta
+                var result = JSON.parse(response);
+                if (result.success) {
+                    $('#deleteModal').modal('hide');
+                    $('#color-' + colorId).remove();
+                } else {
+                    alert(result.error);
+                }
+            }
+        });
     });
 }
 
 //eliminar categoria
-const confirmDeleteBtnCategoria= document.getElementById('confirmDeleteBtnCategoria');
-if (confirmDeleteBtnCategoria) {
-    confirmDeleteBtnCategoria.addEventListener('click', function() {
-        if (deleteProductId !== null) {
-            window.location.href = 'eliminarcategoria.php?id=' + deleteProductId;
-        }
+function confirmDeleteCategoria(categoriaId) {
+    $('#deleteModal').modal('show');
+    $('#confirmDeleteBtnCategoria').off('click').on('click', function() {
+        $.ajax({
+            url: 'eliminarcategoria.php',
+            type: 'POST',
+            data: {
+                action: 'delete',
+                categoria_id: categoriaId
+            },
+            success: function(response) {
+                // console.log(response); // Agregar este console.log para depurar la respuesta
+                var result = JSON.parse(response);
+                if (result.success) {
+                    $('#deleteModal').modal('hide');
+                    $('#categoria-' + categoriaId).remove();
+                } else {
+                    alert(result.error);
+                }
+            }
+        });
     });
 }
 
-//eliminar categoria
-const confirmDeleteBtnMarca= document.getElementById('confirmDeleteBtnMarca');
-if (confirmDeleteBtnMarca) {
-    confirmDeleteBtnMarca.addEventListener('click', function() {
-        if (deleteProductId !== null) {
-            window.location.href = 'eliminarmarca.php?id=' + deleteProductId;
-        }
+//eliminar marca
+function confirmDeleteMarca(marcaId) {
+    $('#deleteModal').modal('show');
+    $('#confirmDeleteBtnMarca').off('click').on('click', function() {
+        $.ajax({
+            url: 'eliminarmarca.php',
+            type: 'POST',
+            data: {
+                action: 'delete',
+                marca_id: marcaId
+            },
+            success: function(response) {
+                console.log(response); // Agregar este console.log para depurar la respuesta
+                var result = JSON.parse(response);
+                if (result.success) {
+                    $('#deleteModal').modal('hide');
+                    $('#marca-' + marcaId).remove();
+                } else {
+                    alert(result.error);
+                }
+            }
+        });
     });
 }
-
 //eliminar cliente
-const confirmDeleteBtnCliente= document.getElementById('confirmDeleteBtnCliente');
-if (confirmDeleteBtnCliente) {
-    confirmDeleteBtnCliente.addEventListener('click', function() {
-        if (deleteProductId !== null) {
-            window.location.href = 'eliminarcliente.php?id=' + deleteProductId;
-        }
+function confirmDeleteCliente(clienteId) {
+    $('#deleteModal').modal('show');
+    $('#confirmDeleteBtnCliente').off('click').on('click', function() {
+        $.ajax({
+            url: 'eliminarcliente.php',
+            type: 'POST',
+            data: {
+                action: 'delete',
+                cliente_id: clienteId
+            },
+            success: function(response) {
+                // console.log(response); // Agregar este console.log para depurar la respuesta
+                var result = JSON.parse(response);
+                if (result.success) {
+                    $('#deleteModal').modal('hide');
+                    $('#cliente-' + clienteId).remove();
+                } else {
+                    alert(result.error);
+                }
+            }
+        });
     });
 }
 
+//eliminar talla
+function confirmDeleteTalla(tallaId) {
+    $('#deleteModal').modal('show');
+    $('#confirmDeleteBtnTalla').off('click').on('click', function() {
+        $.ajax({
+            url: 'eliminartalla.php',
+            type: 'POST',
+            data: {
+                action: 'delete',
+                talla_id: tallaId
+            },
+            success: function(response) {
+                // console.log(response); // Agregar este console.log para depurar la respuesta
+                var result = JSON.parse(response);
+                if (result.success) {
+                    $('#deleteModal').modal('hide');
+                    $('#talla-' + tallaId).remove();
+                } else {
+                    alert(result.error);
+                }
+            }
+        });
+    });
+}
 
-
+//eliminar usuario
+function confirmDeleteUsuario(usuarioId) {
+    $('#deleteModal').modal('show');
+    $('#confirmDeleteBtnUsuario').off('click').on('click', function() {
+        $.ajax({
+            url: 'eliminarusuario.php',
+            type: 'POST',
+            data: {
+                action: 'delete',
+                usuario_id: usuarioId
+            },
+            success: function(response) {
+                // console.log(response); // Agregar este console.log para depurar la respuesta
+                var result = JSON.parse(response);
+                if (result.success) {
+                    $('#deleteModal').modal('hide');
+                    $('#usuario-' + usuarioId).remove();
+                } else {
+                    alert(result.error);
+                }
+            }
+        });
+    });
+}
+function confirmDeleteResenha(resenhaId) {
+    $('#deleteModal').modal('show');
+    $('#confirmDeleteBtnResenha').off('click').on('click', function() {
+        $.ajax({
+            url: 'eliminarresenha.php',
+            type: 'POST',
+            data: {
+                action: 'delete',
+                resenha_id: resenhaId
+            },
+            success: function(response) {
+                console.log(response); // Agregar este console.log para depurar la respuesta
+                var result = JSON.parse(response);
+                if (result.success) {
+                    $('#deleteModal').modal('hide');
+                    $('#resenha-' + resenhaId).remove();
+                } else {
+                    alert(result.error);
+                }
+            }
+        });
+    });
+}
 /* buscador por nombre en productos*/
 let searchTimeout = null;
 const searchInput = document.getElementById('searchInput');

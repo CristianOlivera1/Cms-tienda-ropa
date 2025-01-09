@@ -5,7 +5,7 @@ include "../../sidebar.php";
 $error = '';
 $success = '';
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['action'])) {
     $marca_nombre = trim($_POST['marca_nombre']);
 
     if (empty($marca_nombre)) {
@@ -102,7 +102,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     $query = "SELECT * FROM marca ORDER BY marId DESC";
                                     $result = mysqli_query($con, $query);
                                     while ($row = mysqli_fetch_assoc($result)) {
-                                        echo "<tr>
+                                        echo "<tr id='marca-{$row['marId']}'>
                                                 <td>{$row['marNombre']}</td>
                                                 <td>
                                                     <div class='dropdown d-inline-block'>
@@ -112,7 +112,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                                         <ul class='dropdown-menu dropdown-menu-end'>
                                                             <li><a href='editarmarca.php?id={$row['marId']}' class='dropdown-item edit-item-btn'><i class='ri-pencil-fill align-bottom me-2 text-muted'></i> Editar</a></li>
                                                             <li>
-                                                                <a href='javascript:void(0);' class='dropdown-item remove-item-btn' onclick='confirmDelete({$row['marId']})'>
+                                                                <a href='javascript:void(0);' class='dropdown-item remove-item-btn' onclick='confirmDeleteMarca({$row['marId']})'>
                                                                     <i class='ri-delete-bin-fill align-bottom me-2 text-muted'></i> Eliminar
                                                                 </a>
                                                             </li>
@@ -129,30 +129,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Modal de confirmación -->
-    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="deleteModalLabel">Confirmar eliminación</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    ¿Estás seguro de que deseas eliminar esta marca?
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-danger" id="confirmDeleteBtnMarca">Eliminar</button>
+        <!-- Modal de confirmación -->
+        <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deleteModalLabel">Confirmar eliminación</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        ¿Estás seguro de que deseas eliminar esta marca?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-danger" id="confirmDeleteBtnMarca">Eliminar</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+        <script src="../../recursos/js/script.js"></script>
+    </div>
 
-    <script src="../../recursos/js/script.js"></script>
-</div>
-
-<?php
-include "../../footer.php";
-?>
+<?php include "../../footer.php"; ?>
