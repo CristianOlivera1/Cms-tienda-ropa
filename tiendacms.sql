@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 05-01-2025 a las 22:33:26
+-- Tiempo de generación: 11-01-2025 a las 20:40:26
 -- Versión del servidor: 10.4.27-MariaDB
 -- Versión de PHP: 8.2.0
 
@@ -56,6 +56,15 @@ CREATE TABLE `categoria` (
   `catFechaRegis` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Volcado de datos para la tabla `categoria`
+--
+
+INSERT INTO `categoria` (`catId`, `catNombre`, `catDescripcion`, `catDetalle`, `catImg`, `catFechaRegis`) VALUES
+(11, 'Casacas', NULL, NULL, NULL, '2025-01-07 07:38:02'),
+(12, 'Gorras', NULL, NULL, NULL, '2025-01-07 07:38:21'),
+(14, 'POLOS2', NULL, NULL, NULL, '2025-01-08 14:25:46');
+
 -- --------------------------------------------------------
 
 --
@@ -64,12 +73,21 @@ CREATE TABLE `categoria` (
 
 CREATE TABLE `cliente` (
   `cliId` int(11) NOT NULL,
+  `cliDni` char(8) NOT NULL,
   `cliNombre` varchar(100) DEFAULT NULL,
   `cliApellidoPaterno` varchar(100) DEFAULT NULL,
   `cliApellidoMaterno` varchar(100) DEFAULT NULL,
   `cliCorreo` varchar(150) DEFAULT NULL,
   `cliFechaRegis` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `cliente`
+--
+
+INSERT INTO `cliente` (`cliId`, `cliDni`, `cliNombre`, `cliApellidoPaterno`, `cliApellidoMaterno`, `cliCorreo`, `cliFechaRegis`) VALUES
+(1, '', 'Crond', 'ccccccccccccc', 'ssssssssssssss', 'cccccccc@gmail.com', '2025-01-07 08:34:14'),
+(4, '', 'Luis', 'Alfaro', 'Chirinos', 'miguel@gmail.com', '2025-01-08 14:34:50');
 
 -- --------------------------------------------------------
 
@@ -88,7 +106,7 @@ CREATE TABLE `color` (
 --
 
 INSERT INTO `color` (`colId`, `colNombre`, `colFechaRegis`) VALUES
-(1, '#e90c0c', '2025-01-04 17:03:17'),
+(1, '#b39898', '2025-01-04 17:03:17'),
 (2, '#0008eb', '2025-01-04 17:04:25'),
 (3, '#e209f1', '2025-01-04 17:05:39'),
 (4, '#000000', '2025-01-04 17:06:37'),
@@ -141,6 +159,14 @@ CREATE TABLE `estado` (
   `estFechaRegis` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Volcado de datos para la tabla `estado`
+--
+
+INSERT INTO `estado` (`estId`, `estDisponible`, `estFechaRegis`) VALUES
+(1, 1, '2025-01-08 09:30:25'),
+(2, 0, '2025-01-08 09:30:25');
+
 -- --------------------------------------------------------
 
 --
@@ -150,8 +176,19 @@ CREATE TABLE `estado` (
 CREATE TABLE `marca` (
   `marId` int(11) NOT NULL,
   `marNombre` varchar(50) DEFAULT NULL,
+  `marImg` varchar(255) NOT NULL,
   `marFechaRegis` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `marca`
+--
+
+INSERT INTO `marca` (`marId`, `marNombre`, `marImg`, `marFechaRegis`) VALUES
+(4, 'Nike', '', '2025-01-07 07:39:35'),
+(5, 'Adidas', '', '2025-01-07 07:39:43'),
+(21, 'sssssssss', '', '2025-01-09 08:38:33'),
+(23, 'saaaaaa', '', '2025-01-09 08:43:52');
 
 -- --------------------------------------------------------
 
@@ -197,12 +234,20 @@ CREATE TABLE `producto` (
   `proId` int(11) NOT NULL,
   `catId` int(11) DEFAULT NULL,
   `marId` int(11) DEFAULT NULL,
-  `proDes` varchar(150) DEFAULT NULL,
+  `proDescripcion` varchar(150) DEFAULT NULL,
   `proImg` varchar(255) DEFAULT NULL,
   `proImg2` varchar(255) DEFAULT NULL,
   `proPrecio` decimal(8,2) DEFAULT NULL,
   `proFechaRegistro` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `producto`
+--
+
+INSERT INTO `producto` (`proId`, `catId`, `marId`, `proDescripcion`, `proImg`, `proImg2`, `proPrecio`, `proFechaRegistro`) VALUES
+(1, 12, 4, 'ssssssssssssss', 'dddddddddddddd', 'sssssssssssss', '50.00', '2025-01-08 09:31:30'),
+(2, 11, 5, 'sssssssssssssssssssssssssd', 'ddddddddddddddddddd', 'sssssssssssssssssssssssssssssss', '100.00', '2025-01-08 09:31:47');
 
 -- --------------------------------------------------------
 
@@ -216,6 +261,13 @@ CREATE TABLE `resenhas` (
   `resMensaje` varchar(255) DEFAULT NULL,
   `resFechaRegis` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `resenhas`
+--
+
+INSERT INTO `resenhas` (`resId`, `venId`, `resMensaje`, `resFechaRegis`) VALUES
+(3, NULL, 'ESTA ES OTRA PRUEBA DE RESEÑASSS2', '2025-01-08 09:35:10');
 
 -- --------------------------------------------------------
 
@@ -233,6 +285,14 @@ CREATE TABLE `stock` (
   `stoFechaRegis` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Volcado de datos para la tabla `stock`
+--
+
+INSERT INTO `stock` (`stoId`, `proId`, `estId`, `colId`, `talId`, `stoCantidad`, `stoFechaRegis`) VALUES
+(1, 1, 1, 5, 2, 10, '2025-01-08 09:33:12'),
+(2, 2, 2, 4, 1, 100, '2025-01-08 09:33:33');
+
 -- --------------------------------------------------------
 
 --
@@ -245,6 +305,16 @@ CREATE TABLE `talla` (
   `talFechaRegis` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Volcado de datos para la tabla `talla`
+--
+
+INSERT INTO `talla` (`talId`, `talNombre`, `talFechaRegis`) VALUES
+(1, 'dddd', '2025-01-08 09:32:46'),
+(2, 'XL', '2025-01-08 09:32:46'),
+(4, 'S', '2025-01-08 09:41:37'),
+(6, 'aaa', '2025-01-09 08:49:58');
+
 -- --------------------------------------------------------
 
 --
@@ -254,7 +324,7 @@ CREATE TABLE `talla` (
 CREATE TABLE `usuario` (
   `admId` int(11) NOT NULL,
   `admUser` varchar(100) DEFAULT NULL,
-  `admPass` varchar(60) DEFAULT NULL,
+  `admPassword` varchar(60) DEFAULT NULL,
   `admFechaRegis` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `carId` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -263,7 +333,7 @@ CREATE TABLE `usuario` (
 -- Volcado de datos para la tabla `usuario`
 --
 
-INSERT INTO `usuario` (`admId`, `admUser`, `admPass`, `admFechaRegis`, `carId`) VALUES
+INSERT INTO `usuario` (`admId`, `admUser`, `admPassword`, `admFechaRegis`, `carId`) VALUES
 (3, 'admin', '$2y$10$XC4T3j7LdBJtZdrbMRqjq.BcYi6K1011PtNIXiY1NtoCjfpmJ3r6i', '2025-01-04 16:34:54', 2),
 (4, 'pruebagerente', '$2y$10$eWM5d7YzzQIY.k9DDsG/kez9DUneGuqqHx19TixxrRdBpk6rcaVEm', '2024-12-30 19:51:33', 1);
 
@@ -275,7 +345,6 @@ INSERT INTO `usuario` (`admId`, `admUser`, `admPass`, `admFechaRegis`, `carId`) 
 
 CREATE TABLE `ventas` (
   `venId` int(11) NOT NULL,
-  `stoId` int(11) DEFAULT NULL,
   `cliId` int(11) DEFAULT NULL,
   `venFechaRegis` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -390,7 +459,6 @@ ALTER TABLE `usuario`
 --
 ALTER TABLE `ventas`
   ADD PRIMARY KEY (`venId`),
-  ADD KEY `stoId` (`stoId`),
   ADD KEY `cliId` (`cliId`);
 
 --
@@ -407,19 +475,19 @@ ALTER TABLE `cargo`
 -- AUTO_INCREMENT de la tabla `categoria`
 --
 ALTER TABLE `categoria`
-  MODIFY `catId` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `catId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT de la tabla `cliente`
 --
 ALTER TABLE `cliente`
-  MODIFY `cliId` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `cliId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `color`
 --
 ALTER TABLE `color`
-  MODIFY `colId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `colId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de la tabla `contacto`
@@ -437,13 +505,13 @@ ALTER TABLE `detalleventa`
 -- AUTO_INCREMENT de la tabla `estado`
 --
 ALTER TABLE `estado`
-  MODIFY `estId` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `estId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `marca`
 --
 ALTER TABLE `marca`
-  MODIFY `marId` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `marId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT de la tabla `oferta`
@@ -461,37 +529,37 @@ ALTER TABLE `portada`
 -- AUTO_INCREMENT de la tabla `producto`
 --
 ALTER TABLE `producto`
-  MODIFY `proId` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `proId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `resenhas`
 --
 ALTER TABLE `resenhas`
-  MODIFY `resId` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `resId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `stock`
 --
 ALTER TABLE `stock`
-  MODIFY `stoId` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `stoId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `talla`
 --
 ALTER TABLE `talla`
-  MODIFY `talId` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `talId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `admId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `admId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de la tabla `ventas`
 --
 ALTER TABLE `ventas`
-  MODIFY `venId` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `venId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Restricciones para tablas volcadas
@@ -542,7 +610,6 @@ ALTER TABLE `usuario`
 -- Filtros para la tabla `ventas`
 --
 ALTER TABLE `ventas`
-  ADD CONSTRAINT `ventas_ibfk_1` FOREIGN KEY (`stoId`) REFERENCES `stock` (`stoId`),
   ADD CONSTRAINT `ventas_ibfk_2` FOREIGN KEY (`cliId`) REFERENCES `cliente` (`cliId`) ON DELETE CASCADE;
 COMMIT;
 

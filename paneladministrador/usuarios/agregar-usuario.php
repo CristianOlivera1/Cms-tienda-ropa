@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $error = 'El nombre de usuario ya está en uso.';
         } else {
             $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-            $query = "INSERT INTO usuario (admUser, admPass,carId) VALUES (?, ?,$carId)";
+            $query = "INSERT INTO usuario (admUser, admPassword,carId) VALUES (?, ?,$carId)";
             $stmt = $con->prepare($query);
             $stmt->bind_param('ss', $username, $hashed_password);
             if ($stmt->execute()) { 

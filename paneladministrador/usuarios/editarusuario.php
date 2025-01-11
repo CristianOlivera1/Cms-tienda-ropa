@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $error = 'El nombre de usuario ya está en uso.';
         } else {
             $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-            $query = "UPDATE usuario SET admUser = ?, admPass = ?, carId = ? WHERE admId = ?";
+            $query = "UPDATE usuario SET admUser = ?, admPassword = ?, carId = ? WHERE admId = ?";
             $stmt = $con->prepare($query);
             $stmt->bind_param('ssii', $username, $hashed_password, $carId, $id);
             if ($stmt->execute()) {
