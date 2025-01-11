@@ -60,9 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                             <div class='flex-grow-1'>
                                                 <h5 class='mt-0 mb-1'>{$row['cliNombre']}
                                                     <small class='text-muted'>{$row['resFechaRegis']}</small>
-                                                    <a href='javascript:void(0);' class='float-end text-danger' onclick='confirmDeleteResenha({$row['resId']})'>
-                                                        <i class='ri-delete-bin-line align-bottom me-4 text-muted' style='font-size: 1.5rem;'></i>
-                                                    </a>
+                                               <a href='javascript:void(0);' class='btn btn-soft-danger float-end me-5 btn-sm' onclick='confirmDeleteResenha({$row['resId']})' aria-label='Eliminar' title='Eliminar'><i class='ri-delete-bin-fill align-bottom me-1' style='font-size: 1.5em;'></i></a>
                                                 </h5>
                                                 <p class='text-muted'>{$row['resMensaje']}</p>
                                             </div>

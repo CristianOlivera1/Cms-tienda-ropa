@@ -25,27 +25,31 @@ if (isset($_GET['id'])) {
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $color_nombre = trim($_POST['color_nombre']);
+    $color_hex = trim($_POST['color_hex']);
 
     if (empty($color_nombre)) {
-        $error = 'El campo de color es obligatorio.';
+        $error = 'El campo de nombre del color es obligatorio.';
+    } else if (empty($color_hex)) {
+        $error = 'El campo de código hexadecimal es obligatorio.';
     } else {
         // Verificar si el color ya existe
-        $query = "SELECT * FROM color WHERE colNombre = ? AND colId != ?";
+        $query = "SELECT * FROM color WHERE (colNombre = ? OR colCodigoHex = ?) AND colId != ?";
         $stmt = $con->prepare($query);
-        $stmt->bind_param('si', $color_nombre, $color_id);
+        $stmt->bind_param('ssi', $color_nombre, $color_hex, $color_id);
         $stmt->execute();
         $result = $stmt->get_result();
 
         if ($result->num_rows > 0) {
             $error = 'El color ya se encuentra registrado, por favor seleccione otro color.';
         } else {
-            $query = "UPDATE color SET colNombre = ? WHERE colId = ?";
+            $query = "UPDATE color SET colNombre = ?, colCodigoHex = ? WHERE colId = ?";
             $stmt = $con->prepare($query);
-            $stmt->bind_param('si', $color_nombre, $color_id);
+            $stmt->bind_param('ssi', $color_nombre, $color_hex, $color_id);
             if ($stmt->execute()) {
                 $success = 'Color actualizado exitosamente.';
                 // Actualizar los datos del color
                 $color['colNombre'] = $color_nombre;
+                $color['colCodigoHex'] = $color_hex;
             } else {
                 $error = 'Error al actualizar el color.';
             }
@@ -97,10 +101,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     <?php endif; ?>
                                     <form method="POST" action="">
                                         <div class="row">
+
                                             <div class="col-lg-6">
                                                 <div class="mb-3">
-                                                    <label for="color_nombre" class="form-label">Color</label>
-                                                    <input type="color" class="form-control picker-height" id="color_nombre" name="color_nombre" value="<?php echo htmlspecialchars($color['colNombre']); ?>" required>
+                                                    <label for="color_nombre" class="form-label">Nombre del Color</label>
+                                                    <input type="text" class="form-control" id="color_nombre" name="color_nombre" value="<?php echo htmlspecialchars($color['colNombre']); ?>" required>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-6">
+                                                <div class="mb-3">
+                                                    <label for="color_hex" class="form-label">Código Hexadecimal</label>
+                                                    <input type="color" class="form-control picker-height" id="color_hex" name="color_hex" value="<?php echo htmlspecialchars($color['colCodigoHex']); ?>" required>
                                                 </div>
                                             </div>
 

@@ -105,19 +105,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['action'])) {
                                         echo "<tr id='marca-{$row['marId']}'>
                                                 <td>{$row['marNombre']}</td>
                                                 <td>
-                                                    <div class='dropdown d-inline-block'>
-                                                        <button class='btn btn-soft-secondary btn-sm dropdown' type='button' data-bs-toggle='dropdown' aria-expanded='false'>
-                                                            <i class='ri-more-fill align-middle'></i>
-                                                        </button>
-                                                        <ul class='dropdown-menu dropdown-menu-end'>
-                                                            <li><a href='editarmarca.php?id={$row['marId']}' class='dropdown-item edit-item-btn'><i class='ri-pencil-fill align-bottom me-2 text-muted'></i> Editar</a></li>
-                                                            <li>
-                                                                <a href='javascript:void(0);' class='dropdown-item remove-item-btn' onclick='confirmDeleteMarca({$row['marId']})'>
-                                                                    <i class='ri-delete-bin-fill align-bottom me-2 text-muted'></i> Eliminar
-                                                                </a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
+                                                   <a href='editarmarca.php?id={$row['marId']}' class='btn btn-soft-secondary btn-sm ms-2 me-1 aria-label='Editar' title='Editar'><i class='ri-pencil-fill align-bottom me-1' style='font-size: 1.5em;'></i></a>
+                                                    <a href='javascript:void(0);' class='btn btn-soft-danger btn-sm' onclick='confirmDeleteMarca({$row['marId']})' aria-label='Eliminar' title='Eliminar'><i class='ri-delete-bin-fill align-bottom me-1' style='font-size: 1.5em;'></i></a>
                                                 </td>
                                             </tr>";
                                     }

@@ -43,19 +43,8 @@ if($_SESSION['cargo_gerente']=='Gerente'){
                                                   <td>{$row['cargo_nombre']}</td>";
                                         if (isset($gerente)) {
                                             echo "<td>
-                                                    <div class='dropdown d-inline-block'>
-                                                        <button class='btn btn-soft-secondary btn-sm dropdown' type='button' data-bs-toggle='dropdown' aria-expanded='false'>
-                                                            <i class='ri-more-fill align-middle'></i>
-                                                        </button>
-                                                        <ul class='dropdown-menu dropdown-menu-end'>
-                                                            <li><a href='editarusuario.php?id={$row['admId']}' class='dropdown-item edit-item-btn'><i class='ri-pencil-fill align-bottom me-2 text-muted'></i> Editar</a></li>
-                                                            <li>
-                                                                <a href='javascript:void(0);' class='dropdown-item remove-item-btn' onclick='confirmDeleteUsuario({$row['admId']})'>
-                                                                    <i class='ri-delete-bin-fill align-bottom me-2 text-muted'></i> Eliminar
-                                                                </a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
+                                                  <a href='editarusuario.php?id={$row['admId']}' class='btn btn-soft-secondary btn-sm ms-2 me-1 aria-label='Editar' title='Editar'><i class='ri-pencil-fill align-bottom me-1' style='font-size: 1.5em;'></i></a>
+                                                    <a href='javascript:void(0);' class='btn btn-soft-danger btn-sm' onclick='confirmDeleteUsuario({$row['admId']})' aria-label='Eliminar' title='Eliminar'><i class='ri-delete-bin-fill align-bottom me-1' style='font-size: 1.5em;'></i></a>
                                                 </td>";
                                         }
                                         echo "</tr>";

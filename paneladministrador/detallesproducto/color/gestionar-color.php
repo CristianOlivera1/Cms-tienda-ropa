@@ -7,24 +7,27 @@ $error = '';
 $success = '';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $color_hex = trim($_POST['color_hex']);
     $color_nombre = trim($_POST['color_nombre']);
 
     if (empty($color_nombre)) {
-        $error = 'El campo de color es obligatorio.';
+        $error = 'El campo de nombre del color es obligatorio.';
+    } else if (empty($color_hex)) {
+        $error = 'El campo de código hexadecimal es obligatorio.';
     } else {
         // Verificar si el color ya existe
-        $query = "SELECT * FROM color WHERE colNombre = ?";
+        $query = "SELECT * FROM color WHERE colNombre = ? OR colCodigoHex = ?";
         $stmt = $con->prepare($query);
-        $stmt->bind_param('s', $color_nombre);
+        $stmt->bind_param('ss', $color_nombre, $color_hex);
         $stmt->execute();
         $result = $stmt->get_result();
 
         if ($result->num_rows > 0) {
             $error = 'El color ya se encuentra registrado, por favor seleccione otro color.';
         } else {
-            $query = "INSERT INTO color (colNombre, colFechaRegis) VALUES (?, NOW())";
+            $query = "INSERT INTO color (colNombre, colCodigoHex, colFechaRegis) VALUES (?, ?, NOW())";
             $stmt = $con->prepare($query);
-            $stmt->bind_param('s', $color_nombre);
+            $stmt->bind_param('ss', $color_nombre, $color_hex);
             if ($stmt->execute()) {
                 $success = 'Color registrado exitosamente.';
             } else {
@@ -70,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <div class="card-body p-4">
                             <div class="tab-content">
                                 <div class="tab-pane active" id="colorDetails" role="tabpanel">
-                                    <?php if ($error): ?>
+                                <?php if ($error): ?>
                                         <div class="alert alert-danger alert-dismissible alert-outline fade show"><?php echo $error; ?><button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>
                                     <?php endif; ?>
                                     <?php if ($success): ?>
@@ -78,10 +81,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     <?php endif; ?>
                                     <form method="POST" action="">
                                         <div class="row">
+
                                             <div class="col-lg-6">
                                                 <div class="mb-3">
-                                                    <label for="color_nombre" class="form-label">Color</label>
-                                                    <input type="color" class="form-control picker-height" id="color_nombre" name="color_nombre" required>
+                                                    <label for="color_nombre" class="form-label">Nombre del Color</label>
+                                                    <input type="text" class="form-control" id="color_nombre" name="color_nombre" required>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-6">
+                                                <div class="mb-3">
+                                                    <label for="color_hex" class="form-label">Código Hexadecimal</label>
+                                                    <input type="color" class="form-control picker-height" id="color_hex" name="color_hex" required>
                                                 </div>
                                             </div>
 
@@ -101,13 +112,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <div class="card-header">
                             <h5 class="card-title mb-0">Lista de Colores</h5>
                         </div>
+                        <div class="alert-fk px-3 pt-3">
+                        </div>
                         <div class="card-body">
                             <table id="example" class="table table-bordered dt-responsive nowrap table-striped align-middle" style="width:100%">
                                 <thead>
                                     <tr>
-                                        <th>Nombre del Color</th>
+                                        <th>Nombre</th>
                                         <th>Color</th>
-                                        <th class="accion-col">Acción</th>
+                                        <th>Acción</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -117,21 +130,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     while ($row = mysqli_fetch_assoc($result)) {
                                         echo "<tr id='color-{$row['colId']}'>
                                                 <td>{$row['colNombre']}</td>
-                                                <td><div style='width: 20px; height: 20px; background-color: {$row['colNombre']}; border-radius: 50%;'></div></td>
-                                                <td>
-                                                    <div class='dropdown d-inline-block'>
-                                                        <button class='btn btn-soft-secondary btn-sm dropdown' type='button' data-bs-toggle='dropdown' aria-expanded='false'>
-                                                            <i class='ri-more-fill align-middle'></i>
-                                                        </button>
-                                                        <ul class='dropdown-menu dropdown-menu-end'>
-                                                            <li><a href='editarcolor.php?id={$row['colId']}' class='dropdown-item edit-item-btn'><i class='ri-pencil-fill align-bottom me-2 text-muted'></i> Editar</a></li>
-                                                            <li>
-                                                                <a href='javascript:void(0);' class='dropdown-item remove-item-btn' onclick='confirmDeleteColor({$row['colId']})'>
-                                                                    <i class='ri-delete-bin-fill align-bottom me-2 text-muted'></i> Eliminar
-                                                                </a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
+                                                <td><div style='width: 20px; height: 20px; background-color: {$row['colCodigoHex']}; border-radius: 50%;'></div></td>
+                                                <td >
+                                                    <a href='editarcolor.php?id={$row['colId']}' class='btn btn-soft-secondary btn-sm ms-2 me-1 aria-label='Editar' title='Editar'><i class='ri-pencil-fill align-bottom me-1' style='font-size: 1.5em;'></i></a>
+                                                    <a href='javascript:void(0);' class='btn btn-soft-danger btn-sm' onclick='confirmDeleteColor({$row['colId']})' aria-label='Eliminar' title='Eliminar'><i class='ri-delete-bin-fill align-bottom me-1' style='font-size: 1.5em;'></i></a>
                                                 </td>
                                             </tr>";
                                     }
@@ -163,7 +165,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
         </div>
     </div>
-
     <script src="../../recursos/js/script.js"></script>
 </div>
 

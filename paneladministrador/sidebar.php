@@ -37,6 +37,24 @@ if($_SESSION['cargo_gerente']=='Gerente'){
                 <a href="/paneladministrador/index.php" class="nav-link" data-key="t-analytics">  <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards"> Tablero </span></a>
               </li>
 
+                  <li class="nav-item">
+                            <a class="nav-link menu-link" href="#sidebarP" data-bs-toggle="collapse" role="button" aria-expanded="true" aria-controls="sidebarLanding">
+                            <i class="ri-t-shirt-line"></i>
+                            <span data-key="t-landing">Producto</span>
+                            </a>
+                            <div class="menu-dropdown collapse" id="sidebarP">
+                                <ul class="nav nav-sm flex-column">
+                                  
+                                   <li class="nav-item">
+                                        <a href="/paneladministrador/productos/producto/gestionar-producto.php" class="nav-link" data-key="t-nft-landing">Gestionar productos</a>
+                                    </li>
+                                    <li class="nav-item">
+                                      <a href="/paneladministrador/productos/stock/gestionar-stock.php" class="nav-link" data-key="t-nft-landing">Gestionar Stock</a>
+                                    </li>
+                                </ul>
+                            </div>
+                      </li>
+
                       <li class="nav-item">
                             <a class="nav-link menu-link" href="#sidebarDP" data-bs-toggle="collapse" role="button" aria-expanded="true" aria-controls="sidebarLanding">
                             <i class="ri-list-check-2"></i>
