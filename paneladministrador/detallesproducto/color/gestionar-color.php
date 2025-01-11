@@ -12,13 +12,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (empty($color_nombre)) {
         $error = 'El campo de color es obligatorio.';
     } else {
-        $query = "INSERT INTO color (colNombre, colFechaRegis) VALUES (?, NOW())";
+        // Verificar si el color ya existe
+        $query = "SELECT * FROM color WHERE colNombre = ?";
         $stmt = $con->prepare($query);
         $stmt->bind_param('s', $color_nombre);
-        if ($stmt->execute()) {
-            $success = 'Color registrado exitosamente.';
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result->num_rows > 0) {
+            $error = 'El color ya se encuentra registrado, por favor seleccione otro color.';
         } else {
-            $error = 'Error al registrar el color.';
+            $query = "INSERT INTO color (colNombre, colFechaRegis) VALUES (?, NOW())";
+            $stmt = $con->prepare($query);
+            $stmt->bind_param('s', $color_nombre);
+            if ($stmt->execute()) {
+                $success = 'Color registrado exitosamente.';
+            } else {
+                $error = 'Error al registrar el color.';
+            }
         }
     }
 }

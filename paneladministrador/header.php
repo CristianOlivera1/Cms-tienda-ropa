@@ -5,7 +5,7 @@ include "coneccionbd.php";
 session_start();
 // Verificar si la sesión de usuario no está establecida, entonces redirigir a la página de inicio de sesión
 if (!isset($_SESSION['admin_id'])) {
-    header("Location: login.php"); 
+    header("Location: /paneladministrador/login.php"); 
 } else {
     $username = $_SESSION['admin_username'];
 }

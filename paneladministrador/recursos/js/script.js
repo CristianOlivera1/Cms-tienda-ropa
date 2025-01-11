@@ -92,7 +92,11 @@ function confirmDeleteColor(colorId) {
                     $('#deleteModal').modal('hide');
                     $('#color-' + colorId).remove();
                 } else {
-                    alert(result.error);
+                    $('#deleteModal').modal('hide');
+                   // alert(result.error);
+                    // Mostrar el mensaje de error en la alerta
+                    $('.alert-danger').remove();
+                    $('.card-body').prepend('<div class="alert alert-danger alert-dismissible alert-outline fade show">' + result.error + '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
                 }
             }
         });

@@ -29,15 +29,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (empty($color_nombre)) {
         $error = 'El campo de color es obligatorio.';
     } else {
-        $query = "UPDATE color SET colNombre = ? WHERE colId = ?";
+        // Verificar si el color ya existe
+        $query = "SELECT * FROM color WHERE colNombre = ? AND colId != ?";
         $stmt = $con->prepare($query);
         $stmt->bind_param('si', $color_nombre, $color_id);
-        if ($stmt->execute()) {
-            $success = 'Color actualizado exitosamente.';
-            // Actualizar los datos del color
-            $color['colNombre'] = $color_nombre;
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result->num_rows > 0) {
+            $error = 'El color ya se encuentra registrado, por favor seleccione otro color.';
         } else {
-            $error = 'Error al actualizar el color.';
+            $query = "UPDATE color SET colNombre = ? WHERE colId = ?";
+            $stmt = $con->prepare($query);
+            $stmt->bind_param('si', $color_nombre, $color_id);
+            if ($stmt->execute()) {
+                $success = 'Color actualizado exitosamente.';
+                // Actualizar los datos del color
+                $color['colNombre'] = $color_nombre;
+            } else {
+                $error = 'Error al actualizar el color.';
+            }
         }
     }
 }
