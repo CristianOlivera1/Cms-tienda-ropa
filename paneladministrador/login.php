@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['username'])) {
 
         if ($result->num_rows > 0) {
             $admin = $result->fetch_assoc();
-            if (password_verify($password, $admin['admPass'])) {
+            if (password_verify($password, $admin['admPassword'])) {
                 $_SESSION['admin_id'] = $admin['admId'];
                 $_SESSION['admin_username'] = $admin['admUser'];
                 $_SESSION['cargo_gerente'] = $admin['carNombre']; // Guardar el nombre del cargo
