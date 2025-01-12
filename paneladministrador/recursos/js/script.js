@@ -227,6 +227,7 @@ function confirmDeleteUsuario(usuarioId) {
         });
     });
 }
+//eliminar reseña
 function confirmDeleteResenha(resenhaId) {
     $('#deleteModal').modal('show');
     $('#confirmDeleteBtnResenha').off('click').on('click', function() {
@@ -250,6 +251,36 @@ function confirmDeleteResenha(resenhaId) {
         });
     });
 }
+
+//eliminar stock
+function confirmDeleteStock(stockId) {
+    $('#deleteModal').modal('show');
+    $('#confirmDeleteBtnStock').off('click').on('click', function() {
+        $.ajax({
+            url: 'eliminarstock.php',
+            type: 'POST',
+            data: {
+                action: 'delete',
+                stock_id: stockId
+            },
+            success: function(response) {
+                console.log(response); // Agregar este console.log para depurar la respuesta
+                var result = JSON.parse(response);
+                if (result.success) {
+                    $('#deleteModal').modal('hide');
+                    $('#stock-' + stockId).remove();
+                } else {
+                    $('#deleteModal').modal('hide');
+                    // Mostrar el mensaje de error en la alerta
+                    $('.alert-danger').remove();
+                    $('.alert-success').remove();
+                    $('.alert-fk').prepend('<div class="alert alert-danger alert-dismissible alert-outline fade show">' + result.error + '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
+                }
+            }
+        });
+    });
+}
+
 /* buscador por nombre en productos*/
 let searchTimeout = null;
 const searchInput = document.getElementById('searchInput');
