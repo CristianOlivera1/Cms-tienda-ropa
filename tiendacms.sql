@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 11-01-2025 a las 20:40:26
+-- Tiempo de generación: 12-01-2025 a las 01:37:13
 -- Versión del servidor: 10.4.27-MariaDB
 -- Versión de PHP: 8.2.0
 
@@ -97,7 +97,8 @@ INSERT INTO `cliente` (`cliId`, `cliDni`, `cliNombre`, `cliApellidoPaterno`, `cl
 
 CREATE TABLE `color` (
   `colId` int(11) NOT NULL,
-  `colNombre` varchar(30) DEFAULT NULL,
+  `colNombre` varchar(50) NOT NULL,
+  `colCodigoHex` varchar(30) DEFAULT NULL,
   `colFechaRegis` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -105,12 +106,10 @@ CREATE TABLE `color` (
 -- Volcado de datos para la tabla `color`
 --
 
-INSERT INTO `color` (`colId`, `colNombre`, `colFechaRegis`) VALUES
-(1, '#b39898', '2025-01-04 17:03:17'),
-(2, '#0008eb', '2025-01-04 17:04:25'),
-(3, '#e209f1', '2025-01-04 17:05:39'),
-(4, '#000000', '2025-01-04 17:06:37'),
-(5, '#cccccc', '2025-01-04 17:06:54');
+INSERT INTO `color` (`colId`, `colNombre`, `colCodigoHex`, `colFechaRegis`) VALUES
+(13, 'negro', '#000000', '2025-01-11 15:20:05'),
+(16, 'azul', '#004cff', '2025-01-11 15:40:11'),
+(17, 'ddd', '#ffffff', '2025-01-11 15:53:03');
 
 -- --------------------------------------------------------
 
@@ -204,6 +203,13 @@ CREATE TABLE `oferta` (
   `ofeFechaRegis` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Volcado de datos para la tabla `oferta`
+--
+
+INSERT INTO `oferta` (`ofeId`, `stoId`, `ofePorcentaje`, `ofeTiempo`, `ofeFechaRegis`) VALUES
+(1, 4, 10, '2025-01-30 17:41:37', '2025-01-11 17:42:02');
+
 -- --------------------------------------------------------
 
 --
@@ -234,6 +240,7 @@ CREATE TABLE `producto` (
   `proId` int(11) NOT NULL,
   `catId` int(11) DEFAULT NULL,
   `marId` int(11) DEFAULT NULL,
+  `proNombre` varchar(50) NOT NULL,
   `proDescripcion` varchar(150) DEFAULT NULL,
   `proImg` varchar(255) DEFAULT NULL,
   `proImg2` varchar(255) DEFAULT NULL,
@@ -245,9 +252,9 @@ CREATE TABLE `producto` (
 -- Volcado de datos para la tabla `producto`
 --
 
-INSERT INTO `producto` (`proId`, `catId`, `marId`, `proDescripcion`, `proImg`, `proImg2`, `proPrecio`, `proFechaRegistro`) VALUES
-(1, 12, 4, 'ssssssssssssss', 'dddddddddddddd', 'sssssssssssss', '50.00', '2025-01-08 09:31:30'),
-(2, 11, 5, 'sssssssssssssssssssssssssd', 'ddddddddddddddddddd', 'sssssssssssssssssssssssssssssss', '100.00', '2025-01-08 09:31:47');
+INSERT INTO `producto` (`proId`, `catId`, `marId`, `proNombre`, `proDescripcion`, `proImg`, `proImg2`, `proPrecio`, `proFechaRegistro`) VALUES
+(1, 12, 4, '', 'gorra nike ...', 'dddddddddddddd', 'sssssssssssss', '50.00', '2025-01-11 16:42:24'),
+(2, 11, 5, '', 'sssssssssssssssssssssssssd', 'ddddddddddddddddddd', 'sssssssssssssssssssssssssssssss', '100.00', '2025-01-08 09:31:47');
 
 -- --------------------------------------------------------
 
@@ -290,8 +297,9 @@ CREATE TABLE `stock` (
 --
 
 INSERT INTO `stock` (`stoId`, `proId`, `estId`, `colId`, `talId`, `stoCantidad`, `stoFechaRegis`) VALUES
-(1, 1, 1, 5, 2, 10, '2025-01-08 09:33:12'),
-(2, 2, 2, 4, 1, 100, '2025-01-08 09:33:33');
+(4, 1, 1, 13, 2, 100, '2025-01-11 17:08:47'),
+(8, 1, 1, 13, 1, 102, '2025-01-11 17:17:02'),
+(9, 1, 2, 16, 2, 120, '2025-01-11 17:41:21');
 
 -- --------------------------------------------------------
 
@@ -348,6 +356,13 @@ CREATE TABLE `ventas` (
   `cliId` int(11) DEFAULT NULL,
   `venFechaRegis` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `ventas`
+--
+
+INSERT INTO `ventas` (`venId`, `cliId`, `venFechaRegis`) VALUES
+(3, 4, '2025-01-11 16:34:08');
 
 --
 -- Índices para tablas volcadas
@@ -487,7 +502,7 @@ ALTER TABLE `cliente`
 -- AUTO_INCREMENT de la tabla `color`
 --
 ALTER TABLE `color`
-  MODIFY `colId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `colId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT de la tabla `contacto`
@@ -517,7 +532,7 @@ ALTER TABLE `marca`
 -- AUTO_INCREMENT de la tabla `oferta`
 --
 ALTER TABLE `oferta`
-  MODIFY `ofeId` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `ofeId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `portada`
@@ -535,13 +550,13 @@ ALTER TABLE `producto`
 -- AUTO_INCREMENT de la tabla `resenhas`
 --
 ALTER TABLE `resenhas`
-  MODIFY `resId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `resId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `stock`
 --
 ALTER TABLE `stock`
-  MODIFY `stoId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `stoId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de la tabla `talla`
@@ -559,7 +574,7 @@ ALTER TABLE `usuario`
 -- AUTO_INCREMENT de la tabla `ventas`
 --
 ALTER TABLE `ventas`
-  MODIFY `venId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `venId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Restricciones para tablas volcadas
