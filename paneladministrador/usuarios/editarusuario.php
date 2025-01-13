@@ -62,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
-                                <li class="breadcrumb-item"><a href="javascript: void(0);">usuario</a></li>
+                                <li class="breadcrumb-item"><a href="listausuarios.php">Lista usuario</a></li>
                                 <li class="breadcrumb-item active">Editar</li>
                             </ol>
                         </div>
@@ -152,6 +152,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
         </div>
     </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="../recursos/js/script.js"></script>
 </div>
 

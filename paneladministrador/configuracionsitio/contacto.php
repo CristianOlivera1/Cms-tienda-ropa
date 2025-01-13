@@ -45,23 +45,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <h4 class="mb-sm-0">Contacto del Sitio</h4>
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
-                                <li class="breadcrumb-item"><a href="javascript: void(0);">Actualizar</a></li>
+                                <li class="breadcrumb-item"><a>Actualizar</a></li>
                                 <li class="breadcrumb-item active">Contacto</li>
                             </ol>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- Fin del título de la página -->
 
-            <!-- Contenido principal -->
             <div class="row">
                 <div class="col-xxl-9">
                     <div class="card mt-xxl-n5">
                         <div class="card-header">
                             <ul class="nav nav-tabs-custom rounded card-header-tabs border-bottom-0" role="tablist">
                                 <li class="nav-item">
-                                    <a class="nav-link active" data-bs-toggle="tab" href="#contactDetails" role="tab" aria-selected="false">
+                                    <a class="nav-link active" data-bs-toggle="tab" role="tab" aria-selected="false">
                                         <i class="fas fa-home"></i> Actualizar Contacto
                                     </a>
                                 </li>

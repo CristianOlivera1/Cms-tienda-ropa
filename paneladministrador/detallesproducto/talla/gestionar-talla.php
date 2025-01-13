@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['action'])) {
 
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
-                                <li class="breadcrumb-item"><a href="javascript: void(0);">Tallas</a></li>
+                                <li class="breadcrumb-item"><a>Tallas</a></li>
                                 <li class="breadcrumb-item active">Gestionar</li>
                             </ol>
                         </div>
@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['action'])) {
                         <div class="card-header">
                             <ul class="nav nav-tabs-custom rounded card-header-tabs border-bottom-0" role="tablist">
                                 <li class="nav-item">
-                                    <a class="nav-link active" data-bs-toggle="tab" href="#tallaDetails" role="tab" aria-selected="false">
+                                    <a class="nav-link active" data-bs-toggle="tab" role="tab" aria-selected="false">
                                         <i class="fas fa-ruler"></i> Agregar Talla
                                     </a>
                                 </li>

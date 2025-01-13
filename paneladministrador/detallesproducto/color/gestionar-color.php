@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
-                                <li class="breadcrumb-item"><a href="javascript: void(0);">Colores</a></li>
+                                <li class="breadcrumb-item"><a>Colores</a></li>
                                 <li class="breadcrumb-item active">Gestionar</li>
                             </ol>
                         </div>
@@ -63,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <div class="card-header">
                             <ul class="nav nav-tabs-custom rounded card-header-tabs border-bottom-0" role="tablist">
                                 <li class="nav-item">
-                                    <a class="nav-link active" data-bs-toggle="tab" href="#colorDetails" role="tab" aria-selected="false">
+                                    <a class="nav-link active" data-bs-toggle="tab" role="tab" aria-selected="false">
                                         <i class="fas fa-palette"></i> Agregar Color
                                     </a>
                                 </li>

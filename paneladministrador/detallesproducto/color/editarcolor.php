@@ -69,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
-                                <li class="breadcrumb-item"><a href="javascript: void(0);">Colores</a></li>
+                                <li class="breadcrumb-item"><a href="gestionar-color.php">Colores</a></li>
                                 <li class="breadcrumb-item active">Editar</li>
                             </ol>
                         </div>

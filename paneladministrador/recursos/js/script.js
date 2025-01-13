@@ -122,7 +122,12 @@ function confirmDeleteCategoria(categoriaId) {
                     $('#deleteModal').modal('hide');
                     $('#categoria-' + categoriaId).remove();
                 } else {
-                    alert(result.error);
+                    $('#deleteModal').modal('hide');
+                    // alert(result.error);
+                     // Mostrar el mensaje de error en la alerta
+                     $('.alert-danger').remove();
+                     $('.alert-success').remove();
+                     $('.alert-fk').prepend('<div class="alert alert-danger alert-dismissible alert-outline fade show">' + result.error + '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
                 }
             }
         });
@@ -280,6 +285,30 @@ function confirmDeleteStock(stockId) {
         });
     });
 }
+
+$(document).ready(function() {
+    $('#search').on('keyup', function() {
+        var value = $(this).val().toLowerCase();
+        $('#example tbody tr').filter(function() {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+    });
+
+    $('#filterCategory').on('change', function() {
+        var value = $(this).val();
+        $('#example tbody tr').filter(function() {
+            $(this).toggle($(this).data('category') == value || value === "")
+        });
+    });
+
+    $('#filterState').on('change', function() {
+        var value = $(this).val();
+        $('#example tbody tr').filter(function() {
+            $(this).toggle($(this).find('td:nth-child(2)').text().trim() === (value === "1" ? "Disponible" : "No Disponible") || value === "");
+        });
+    });
+});
+
 
 /* buscador por nombre en productos*/
 let searchTimeout = null;

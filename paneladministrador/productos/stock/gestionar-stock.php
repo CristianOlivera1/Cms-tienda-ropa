@@ -5,6 +5,17 @@ include "../../sidebar.php";
 $error = '';
 $success = '';
 
+// Configuración de la paginación
+$registros_por_pagina = 10;
+$pagina_actual = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
+$offset = ($pagina_actual - 1) * $registros_por_pagina;
+
+// Obtener el total de registros
+$query_total = "SELECT COUNT(*) as total FROM stock";
+$result_total = mysqli_query($con, $query_total);
+$total_registros = mysqli_fetch_assoc($result_total)['total'];
+$total_paginas = ceil($total_registros / $registros_por_pagina);
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $proId = trim($_POST['proId']);
     $estId = trim($_POST['estId']);
@@ -38,7 +49,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 ?>
 
-
 <div class="main-content">
     <div class="page-content">
         <div class="container-fluid">
@@ -64,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <div class="card-header">
                             <ul class="nav nav-tabs-custom rounded card-header-tabs border-bottom-0" role="tablist">
                                 <li class="nav-item">
-                                    <a class="nav-link active" data-bs-toggle="tab" href="#stockDetails" role="tab" aria-selected="false">
+                                    <a class="nav-link active" data-bs-toggle="tab" role="tab" aria-selected="false">
                                         <i class="fas fa-box"></i> Agregar Stock
                                     </a>
                                 </li>
@@ -87,10 +97,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                                     <label for="proId" class="form-label">Producto</label>
                                                     <select class="form-select" id="proId" name="proId" required>
                                                         <?php
-                                                        $query = "SELECT proId, proDescripcion FROM producto";
+                                                        $query = "SELECT proId, proNombre FROM producto";
                                                         $result = mysqli_query($con, $query);
                                                         while ($row = mysqli_fetch_assoc($result)) {
-                                                            echo "<option value='{$row['proId']}'>{$row['proDescripcion']}</option>";
+                                                            echo "<option value='{$row['proId']}'>{$row['proNombre']}</option>";
                                                         }
                                                         ?>
                                                     </select>
@@ -146,7 +156,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                             <div class="col-lg-6">
                                                 <div class="mb-3">
                                                     <label for="stoCantidad" class="form-label">Cantidad</label>
-                                                    <input type="number" class="form-control" id="stoCantidad" name="stoCantidad" required>
+                                                    <input type="number" class="form-control" id="stoCantidad" name="stoCantidad" required placeholder="Agregue una cantidad">
                                                 </div>
                                             </div>
 
@@ -164,11 +174,71 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                     <div class="card mt-4">
                         <div class="card-header">
-                            <h5 class="card-title mb-0">Lista de Stock</h5>
+                          <h5 class="card-title mb-0">Lista de Stock <div class="badge-total">Total: <?php echo $total_registros; ?></div></h5>
                         </div>
                         <div class="alert-fk px-3 pt-3">
                         </div>
                         <div class="card-body">
+                            <div class="row mb-3">
+                                <div class="col-md-3">
+                                    <div class="input-group">
+                                        <input type="text" id="search" class="form-control" placeholder="Buscar por nombre, color, talla o cantidad">
+                                        <span class="input-group-text"><i class="ri-search-2-line"></i></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <select id="filterCategory" class="form-select">
+                                        <option value="">Filtrar por Categoría</option>
+                                        <?php
+                                        $query = "SELECT DISTINCT c.catId, c.catNombre FROM categoria c INNER JOIN producto p ON c.catId = p.catId INNER JOIN stock s ON p.proId = s.proId";
+                                        $result = mysqli_query($con, $query);
+                                        while ($row = mysqli_fetch_assoc($result)) {
+                                            echo "<option value='{$row['catId']}'>{$row['catNombre']}</option>";
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <select id="filterState" class="form-select">
+                                        <option value="">Filtrar por Estado</option>
+                                        <option value="1">Disponible</option>
+                                        <option value="0">No Disponible</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-3">
+                                <!-- Paginación -->
+                                <nav aria-label="Page navigation example">
+                                    <ul class="pagination justify-content-center">
+                                        <?php if ($pagina_actual > 1): ?>
+                                            <li class="page-item">
+                                                <a class="page-link" href="?pagina=<?php echo $pagina_actual - 1; ?>#example" tabindex="-1">Anterior</a>
+                                            </li>
+                                        <?php else: ?>
+                                            <li class="page-item disabled">
+                                                <a class="page-link" href="#" tabindex="-1">Anterior</a>
+                                            </li>
+                                        <?php endif; ?>
+
+                                        <?php for ($i = 1; $i <= $total_paginas; $i++): ?>
+                                            <li class="page-item <?php echo ($i == $pagina_actual) ? 'active' : ''; ?>">
+                                                <a class="page-link" href="?pagina=<?php echo $i; ?>#example"><?php echo $i; ?></a>
+                                            </li>
+                                        <?php endfor; ?>
+
+                                        <?php if ($pagina_actual < $total_paginas): ?>
+                                            <li class="page-item">
+                                                <a class="page-link" href="?pagina=<?php echo $pagina_actual + 1; ?>#example">Siguiente</a>
+                                            </li>
+                                        <?php else: ?>
+                                            <li class="page-item disabled">
+                                                <a class="page-link" href="#">Siguiente</a>
+                                            </li>
+                                        <?php endif; ?>
+                                    </ul>
+                                </nav>
+                                </div>
+                            </div>
                             <table id="example" class="table table-bordered dt-responsive nowrap table-striped align-middle" style="width:100%">
                                 <thead>
                                     <tr>
@@ -176,30 +246,32 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                         <th>Estado</th>
                                         <th>Color</th>
                                         <th>Talla</th>
-                                        <th>Cantidad</th>
+                                        <th> <div class="badge-dark"> Cantidad</div></th>
                                         <th>Acción</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php
-                                    $query = "SELECT s.stoId, p.proDescripcion, e.estDisponible, c.colNombre, t.talNombre, s.stoCantidad 
+                                    $query = "SELECT s.stoId, p.proNombre, e.estDisponible, c.colNombre, t.talNombre, s.stoCantidad, p.catId 
                                               FROM stock AS s
                                               INNER JOIN producto AS p ON s.proId = p.proId
                                               INNER JOIN estado AS e ON s.estId = e.estId
                                               INNER JOIN color AS c ON s.colId = c.colId
                                               INNER JOIN talla AS t ON s.talId = t.talId
-                                              ORDER BY s.stoId DESC";
+                                              ORDER BY s.stoId DESC
+                                              LIMIT $registros_por_pagina OFFSET $offset";
                                     $result = mysqli_query($con, $query);
                                     while ($row = mysqli_fetch_assoc($result)) {
                                         $estado = $row['estDisponible'] ? 'Disponible' : 'No Disponible';
-                                        echo "<tr id='stock-{$row['stoId']}'>
-                                                <td>{$row['proDescripcion']}</td>
-                                                <td>{$estado}</td>
+                                        $estadoClass = $row['estDisponible'] ? 'badge-success' : 'badge-danger';
+                                        echo "<tr id='stock-{$row['stoId']}' data-category='{$row['catId']}'>
+                                                <td>{$row['proNombre']}</td>
+                                                <td><span class='{$estadoClass}'>{$estado}</span></td>
                                                 <td>{$row['colNombre']}</td>
                                                 <td>{$row['talNombre']}</td>
                                                 <td>{$row['stoCantidad']}</td>
                                                 <td>
-                                                   <a href='editarstock.php?id={$row['stoId']}' class='btn btn-soft-secondary btn-sm ms-2 me-1 aria-label='Editar' title='Editar'><i class='ri-pencil-fill align-bottom me-1' style='font-size: 1.5em;'></i></a>
+                                                   <a href='editarstock.php?id={$row['stoId']}' class='btn btn-soft-secondary btn-sm ms-2 me-1' aria-label='Editar' title='Editar'><i class='ri-pencil-fill align-bottom me-1' style='font-size: 1.5em;'></i></a>
                                                     <a href='javascript:void(0);' class='btn btn-soft-danger btn-sm' onclick='confirmDeleteStock({$row['stoId']})' aria-label='Eliminar' title='Eliminar'><i class='ri-delete-bin-fill align-bottom me-1' style='font-size: 1.5em;'></i></a>
                                                 </td>
                                             </tr>";
@@ -207,6 +279,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     ?>
                                 </tbody>
                             </table>
+
+                         
                         </div>
                     </div>
                 </div>
@@ -232,9 +306,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
         </div>
     </div>
-
     <script src="../../recursos/js/script.js"></script>
-   
 </div>
-
 <?php include "../../footer.php";?>

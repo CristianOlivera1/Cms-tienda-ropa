@@ -25,19 +25,61 @@ if (isset($_GET['id'])) {
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $categoria_nombre = trim($_POST['catNombre']);
+    $categoria_descripcion = trim($_POST['catDescripcion']);
+    $categoria_detalle = trim($_POST['catDetalle']);
+    $categoria_img = $_FILES['catImg'];
 
-    if (empty($categoria_nombre)) {
-        $error = 'El campo de categoría es obligatorio.';
+    if (empty($categoria_nombre) || empty($categoria_descripcion) || empty($categoria_detalle)) {
+        $error = 'Todos los campos son obligatorios.';
     } else {
-        $query = "UPDATE categoria SET catNombre = ? WHERE catId = ?";
+        // Verificar si el nombre de la categoría ya existe
+        $query = "SELECT * FROM categoria WHERE catNombre = ? AND catId != ?";
         $stmt = $con->prepare($query);
         $stmt->bind_param('si', $categoria_nombre, $categoria_id);
-        if ($stmt->execute()) {
-            $success = 'Categoría actualizada exitosamente.';
-            // Actualizar los datos de la categoría
-            $categoria['catNombre'] = $categoria_nombre;
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result->num_rows > 0) {
+            $error = 'El nombre de la categoría ya existe.';
         } else {
-            $error = 'Error al actualizar la categoría.';
+            $target_file = $categoria['catImg'];
+            if (!empty($categoria_img['name'])) {
+                // Manejar la carga de la nueva imagen
+                $target_dir = "../../recursos/uploads/categoria/";
+                $target_file = $target_dir . basename($categoria_img["name"]);
+                $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+
+                // Verificar si el archivo es una imagen real
+                $check = getimagesize($categoria_img["tmp_name"]);
+                if ($check === false) {
+                    $error = 'El archivo no es una imagen.';
+                } elseif ($categoria_img["size"] > 3000000) {
+                    $error = 'El archivo es demasiado grande.';
+                } elseif (!in_array($imageFileType, ['jpg', 'png', 'jpeg', 'gif'])) {
+                    $error = 'Solo se permiten archivos JPG, JPEG, PNG y GIF.';
+                } else {
+                    if (!move_uploaded_file($categoria_img["tmp_name"], $target_file)) {
+                        $error = 'Error al cargar la imagen.';
+                    }
+                }
+            }
+
+            if (empty($error)) {
+                $query = "UPDATE categoria SET catNombre = ?, catDescripcion = ?, catDetalle = ?, catImg = ? WHERE catId = ?";
+                $stmt = $con->prepare($query);
+                $stmt->bind_param('ssssi', $categoria_nombre, $categoria_descripcion, $categoria_detalle, $target_file, $categoria_id);
+
+                if ($stmt->execute()) {
+                    $success = 'Categoría actualizada exitosamente.';
+                    // Actualizar los datos de la categoría
+                    $categoria['catNombre'] = $categoria_nombre;
+                    $categoria['catDescripcion'] = $categoria_descripcion;
+                    $categoria['catDetalle'] = $categoria_detalle;
+                    $categoria['catImg'] = $target_file;
+                } else {
+                    $error = 'Error al actualizar la categoría.';
+                }
+            }
         }
     }
 }
@@ -54,7 +96,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
-                                <li class="breadcrumb-item"><a href="javascript: void(0);">Categorías</a></li>
+                                <li class="breadcrumb-item"><a href="gestionar-categoria.php">Categorías</a></li>
                                 <li class="breadcrumb-item active">Editar</li>
                             </ol>
                         </div>
@@ -84,15 +126,34 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     <?php if ($success): ?>
                                         <div class="alert alert-success alert-dismissible alert-outline fade show"><?php echo $success; ?><button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>
                                     <?php endif; ?>
-                                    <form method="POST" action="">
+                                    <form method="POST" action="" enctype="multipart/form-data">
                                         <div class="row">
                                             <div class="col-lg-6">
                                                 <div class="mb-3">
-                                                    <label for="categoria_nombre" class="form-label">Nombre de la Categoría</label>
+                                                    <label for="categoria_nombre" class="form-label">Nombre</label>
                                                     <input type="text" class="form-control" id="categoria_nombre" name="catNombre" value="<?php echo htmlspecialchars($categoria['catNombre']); ?>" required>
                                                 </div>
                                             </div>
+                                            <div class="col-lg-6">
+                                                <div class="mb-3">
+                                                    <label for="categoria_descripcion" class="form-label">Descripción</label>
+                                                    <textarea class="form-control"id="categoria_descripcion" name="catDescripcion" required><?php echo htmlspecialchars($categoria['catDescripcion']); ?></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="mb-3">
+                                                    <label for="categoria_detalle" class="form-label">Detalle</label>
+                                                    <textarea type="text" class="form-control"id="categoria_detalle" name="catDetalle" required><?php echo htmlspecialchars($categoria['catDetalle']); ?></textarea>
 
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="mb-3">
+                                                    <label for="categoria_img" class="form-label">Imagen</label>
+                                                    <input type="file" class="form-control" id="categoria_img" name="catImg">
+                                                    <img src="<?php echo htmlspecialchars($categoria['catImg']); ?>" alt="<?php echo htmlspecialchars($categoria['catNombre']); ?>" style="width: 100px; height: 100px; margin-top: 10px;">
+                                                </div>
+                                            </div>
                                             <div class="col-lg-12">
                                                 <div class="hstack gap-2 justify-content-end">
                                                     <button type="submit" class="btn btn-primary">Actualizar</button>
@@ -108,10 +169,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
         </div>
     </div>
-
-    <script src="../../recursos/js/script.js"></script>
 </div>
 
-<?php
-include "../../footer.php";
-?>
+<?php include "../../footer.php";?>

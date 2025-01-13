@@ -2404,6 +2404,34 @@ progress {
     border-color: #bfd4df
 }
 
+.badge-dark, .badge-success, .badge-danger, .badge-total { 
+    display: inline-block;
+    padding: 3px 5px;
+    border-radius: 5px;
+    white-space: nowrap;
+    vertical-align: baseline;
+}
+.badge-dark{
+    background-color: #343a40;
+    color: #fff;
+}
+
+.badge-success{
+    background-color: #00FF2C;
+}
+
+.badge-danger{
+    background-color: #FF4646;
+}
+.badge-total {
+    font-size: 12px;
+    font-weight: normal;
+    background-color:#ccc;
+    color: rgb(255, 255, 255);
+  vertical-align: 3px;
+    margin-left: 5px;
+}
+
 .table-warning {
     --vz-table-bg: #fdf1db;
     --vz-table-striped-bg: #f8ecd7;

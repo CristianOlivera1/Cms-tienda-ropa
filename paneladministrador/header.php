@@ -24,6 +24,8 @@ if (!isset($_SESSION['admin_id'])) {
     <link href="/paneladministrador/recursos/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <link href="/paneladministrador/recursos/css/icons.min.css" rel="stylesheet" type="text/css" />
     <link href="/paneladministrador/recursos/css/app.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 </head>
 
 <body>
