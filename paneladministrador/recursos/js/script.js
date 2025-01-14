@@ -314,10 +314,6 @@ $(document).ready(function() {
     $('#filterCategory, #filterState, #order_dir').on('change', function() {
         window.location.href = '?search=' + $('#search').val() + '&filterCategory=' + $('#filterCategory').val() + '&filterState=' + $('#filterState').val() + '&order_dir=' + $('#order_dir').val() + '#example';
     });
-
-    // $('#order_dir_color').on('change', function() {
-    //     window.location.href = '?search=' + $('#search').val() + '&order_dir_color=' + $(this).val()  + '#example';
-    // });
 });
 
 //Incrementar y decremnetar input de cantidad
