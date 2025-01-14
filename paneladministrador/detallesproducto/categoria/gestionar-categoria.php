@@ -152,6 +152,46 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <div class="alert-fk px-3 pt-3">
                         </div>
                         <div class="card-body">
+                        <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <div class="input-group">
+                                        <input type="text" id="search" class="form-control" placeholder="Buscar producto">
+                                        <span class="input-group-text"><i class="ri-search-2-line"></i></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 d-flex justify-content-end">
+                                <!-- Paginación -->
+                                <nav aria-label="Page navigation example">
+                                    <ul class="pagination justify-content-center">
+                                        <?php if ($pagina_actual > 1): ?>
+                                            <li class="page-item">
+                                                <a class="page-link" href="?pagina=<?php echo $pagina_actual - 1; ?>" tabindex="-1">Anterior</a>
+                                            </li>
+                                        <?php else: ?>
+                                            <li class="page-item disabled">
+                                                <a class="page-link" href="#" tabindex="-1">Anterior</a>
+                                            </li>
+                                        <?php endif; ?>
+
+                                        <?php for ($i = 1; $i <= $total_paginas; $i++): ?>
+                                            <li class="page-item <?php echo ($i == $pagina_actual) ? 'active' : ''; ?>">
+                                                <a class="page-link" href="?pagina=<?php echo $i; ?>"><?php echo $i; ?></a>
+                                            </li>
+                                        <?php endfor; ?>
+
+                                        <?php if ($pagina_actual < $total_paginas): ?>
+                                            <li class="page-item">
+                                                <a class="page-link" href="?pagina=<?php echo $pagina_actual + 1; ?>">Siguiente</a>
+                                            </li>
+                                        <?php else: ?>
+                                            <li class="page-item disabled">
+                                                <a class="page-link" href="#">Siguiente</a>
+                                            </li>
+                                        <?php endif; ?>
+                                    </ul>
+                                </nav>
+                                </div>
+                            </div>
                             <table id="example" class="table table-bordered dt-responsive nowrap table-striped align-middle" style="width:100%">
                                 <thead>
                                     <tr>
@@ -178,38 +218,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     }
                                     ?>
                                 </tbody>
-                            </table>
-
-                            <!-- Paginación -->
-                            <nav aria-label="Page navigation example">
-                                <ul class="pagination justify-content-center">
-                                    <?php if ($pagina_actual > 1): ?>
-                                        <li class="page-item">
-                                            <a class="page-link" href="?pagina=<?php echo $pagina_actual - 1; ?>" tabindex="-1">Anterior</a>
-                                        </li>
-                                    <?php else: ?>
-                                        <li class="page-item disabled">
-                                            <a class="page-link" href="#" tabindex="-1">Anterior</a>
-                                        </li>
-                                    <?php endif; ?>
-
-                                    <?php for ($i = 1; $i <= $total_paginas; $i++): ?>
-                                        <li class="page-item <?php echo ($i == $pagina_actual) ? 'active' : ''; ?>">
-                                            <a class="page-link" href="?pagina=<?php echo $i; ?>"><?php echo $i; ?></a>
-                                        </li>
-                                    <?php endfor; ?>
-
-                                    <?php if ($pagina_actual < $total_paginas): ?>
-                                        <li class="page-item">
-                                            <a class="page-link" href="?pagina=<?php echo $pagina_actual + 1; ?>">Siguiente</a>
-                                        </li>
-                                    <?php else: ?>
-                                        <li class="page-item disabled">
-                                            <a class="page-link" href="#">Siguiente</a>
-                                        </li>
-                                    <?php endif; ?>
-                                </ul>
-                            </nav>
+                            </table>           
                         </div>
                     </div>
                 </div>

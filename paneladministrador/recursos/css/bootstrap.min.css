@@ -2426,8 +2426,8 @@ progress {
 .badge-total {
     font-size: 12px;
     font-weight: normal;
-    background-color:#ccc;
-    color: rgb(255, 255, 255);
+    background-color:#f5dd04;
+    color: rgb(0, 0, 0);
   vertical-align: 3px;
     margin-left: 5px;
 }

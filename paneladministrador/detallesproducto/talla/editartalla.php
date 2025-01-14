@@ -29,15 +29,32 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (empty($talla_nombre)) {
         $error = 'El campo de talla es obligatorio.';
     } else {
-        $query = "UPDATE talla SET talNombre = ? WHERE talId = ?";
-        $stmt = $con->prepare($query);
-        $stmt->bind_param('si', $talla_nombre, $talla_id);
-        if ($stmt->execute()) {
-            $success = 'Talla actualizada exitosamente.';
-            // Actualizar los datos de la talla
-            $talla['talNombre'] = $talla_nombre;
+        // Verificar si el dato es igual al actual
+        if ($talla_nombre === $talla['talNombre']) {
+            $error = 'Estás intentando actualizar a la misma talla.';
         } else {
-            $error = 'Error al actualizar la talla.';
+            // Verificar si la talla ya existe (excluyendo la actual)
+            $query_check = "SELECT talId FROM talla WHERE talNombre = ? AND talId != ?";
+            $stmt_check = $con->prepare($query_check);
+            $stmt_check->bind_param('si', $talla_nombre, $talla_id);
+            $stmt_check->execute();
+            $result_check = $stmt_check->get_result();
+
+            if ($result_check->num_rows > 0) {
+                $error = 'La talla ya existe.';
+            } else {
+                // Actualizar la talla
+                $query_update = "UPDATE talla SET talNombre = ? WHERE talId = ?";
+                $stmt_update = $con->prepare($query_update);
+                $stmt_update->bind_param('si', $talla_nombre, $talla_id);
+                if ($stmt_update->execute()) {
+                    $success = 'Talla actualizada exitosamente.';
+                    // Actualizar los datos de la talla
+                    $talla['talNombre'] = $talla_nombre;
+                } else {
+                    $error = 'Error al actualizar la talla.';
+                }
+            }
         }
     }
 }
@@ -46,12 +63,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <div class="main-content">
     <div class="page-content">
         <div class="container-fluid">
-            
             <div class="row">
                 <div class="col-12">
                     <div class="page-title-box d-sm-flex align-items-center justify-content-between">
                         <h4 class="mb-sm-0">Editar Talla</h4>
-
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
                                 <li class="breadcrumb-item"><a href="gestionar-talla.php">Tallas</a></li>
@@ -68,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <div class="card-header">
                             <ul class="nav nav-tabs-custom rounded card-header-tabs border-bottom-0" role="tablist">
                                 <li class="nav-item">
-                                    <a class="nav-link active" data-bs-toggle="tab" href="#tallaDetails" role="tab" aria-selected="false">
+                                    <a class="nav-link active" data-bs-toggle="tab" role="tab" aria-selected="false">
                                         <i class="fas fa-ruler"></i> Editar Talla
                                     </a>
                                 </li>
@@ -94,10 +109,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                             </div>
 
                                             <div class="col-lg-12">
-                                                <div class="hstack gap-2 justify-content-end">
-                                                    <button type="submit" class="btn btn-primary">Actualizar</button>
-                                                </div>
-                                            </div>
+    <div class="hstack gap-2 justify-content-end">
+        <button type="submit" class="btn btn-primary">Actualizar</button>
+    </div>
+</div>
                                         </div>
                                     </form>
                                 </div>

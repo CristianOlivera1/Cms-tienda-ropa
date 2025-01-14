@@ -24,6 +24,7 @@ if (isset($_GET['id'])) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $cliDni = trim($_POST['cliDni']);
     $cliNombre = trim($_POST['cliNombre']);
     $cliAp = trim($_POST['cliApellidoPaterno']);
     $cliAm = trim($_POST['cliApellidoMaterno']);
@@ -32,18 +33,46 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (empty($cliNombre) || empty($cliAp) || empty($cliAm) || empty($correo)) {
         $error = 'Todos los campos son obligatorios.';
     } else {
-        $query = "UPDATE cliente SET cliNombre = ?, cliApellidoPaterno = ?, cliApellidoMaterno = ?, cliCorreo = ? WHERE cliId = ?";
-        $stmt = $con->prepare($query);
-        $stmt->bind_param('ssssi', $cliNombre, $cliAp, $cliAm, $correo, $cliente_id);
-        if ($stmt->execute()) {
-            $success = 'Cliente actualizado exitosamente.';
-            // Actualizar los datos del cliente
-            $cliente['cliNombre'] = $cliNombre;
-            $cliente['cliApellidoPaterno'] = $cliAp;
-            $cliente['cliApellidoMaterno'] = $cliAm;
-            $cliente['cliCorreo'] = $correo;
+        // Check for existing email
+        $checkEmailQuery = "SELECT * FROM cliente WHERE cliCorreo = ? AND cliId != ?";
+        $checkEmailStmt = $con->prepare($checkEmailQuery);
+        $checkEmailStmt->bind_param('si', $correo, $cliente_id);
+        $checkEmailStmt->execute();
+        $checkEmailResult = $checkEmailStmt->get_result();
+
+        if ($checkEmailResult->num_rows > 0) {
+            $error = 'El correo ya está registrado.';
         } else {
-            $error = 'Error al actualizar el cliente.';
+            // If DNI is provided, check if it's unique
+            if (!empty($cliDni)) {
+                $checkDniQuery = "SELECT * FROM cliente WHERE cliDni = ? AND cliId != ?";
+                $checkDniStmt = $con->prepare($checkDniQuery);
+                $checkDniStmt->bind_param('si', $cliDni, $cliente_id);
+                $checkDniStmt->execute();
+                $checkDniResult = $checkDniStmt->get_result();
+
+                if ($checkDniResult->num_rows > 0) {
+                    $error = 'El DNI ya está registrado.';
+                }
+            }
+
+            // If no errors, proceed to update the client
+            if (empty($error)) {
+                $query = "UPDATE cliente SET cliNombre = ?, cliApellidoPaterno = ?, cliApellidoMaterno = ?, cliCorreo = ?, cliDni = ? WHERE cliId = ?";
+                $stmt = $con->prepare($query);
+                $stmt->bind_param('sssssi', $cliNombre, $cliAp, $cliAm, $correo, $cliDni, $cliente_id);
+                if ($stmt->execute()) {
+                    $success = 'Cliente actualizado exitosamente.';
+                    // Actualizar los datos del cliente
+                    $cliente['cliNombre'] = $cliNombre;
+                    $cliente['cliApellidoPaterno'] = $cliAp;
+                    $cliente['cliApellidoMaterno'] = $cliAm;
+                    $cliente['cliCorreo'] = $correo;
+                    $cliente['cliDni'] = $cliDni; // Update DNI as well
+                } else {
+                    $error = 'Error al actualizar el cliente.';
+                }
+            }
         }
     }
 }
@@ -92,6 +121,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     <?php endif; ?>
                                     <form method="POST" action="">
                                         <div class="row">
+                                            <div class="col-lg-6">
+                                                <div class="mb-3">
+                                                    <label for="cliDni" class="form-label">DNI</label>
+                                                    <input type="number" class="form-control" id="cliDni" name="cliDni" value="<?php echo htmlspecialchars($cliente['cliDni']); ?>" min="0" max="99999999" oninput="this.value = this.value.slice(0, 8);" />
+                                                </div>
+                                            </div>
                                             <div class="col-lg-6">
                                                 <div class="mb-3">
                                                     <label for="cliNombre" class="form-label">Nombre</label>

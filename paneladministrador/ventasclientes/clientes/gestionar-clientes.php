@@ -6,21 +6,52 @@ $error = '';
 $success = '';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $cliDni = trim($_POST['cliDni']);
     $cliNombre = trim($_POST['cliNombre']);
     $cliAp = trim($_POST['cliApellidoPaterno']);
     $cliAm = trim($_POST['cliApellidoMaterno']);
     $correo = trim($_POST['cliCorreo']);
 
+    // Check for empty fields
     if (empty($cliNombre) || empty($cliAp) || empty($cliAm) || empty($correo)) {
-        $error = 'Todos los campos son obligatorios.';
+        $error = 'Todos los campos son obligatorios excepto el DNI.';
     } else {
-        $query = "INSERT INTO cliente (cliNombre, cliApellidoPaterno, cliApellidoMaterno, cliCorreo, cliFechaRegis) VALUES (?, ?, ?, ?, NOW())";
-        $stmt = $con->prepare($query);
-        $stmt->bind_param('ssss', $cliNombre, $cliAp, $cliAm, $correo);
-        if ($stmt->execute()) {
-            $success = 'Cliente registrado exitosamente.';
+        // Prepare query to check for existing email
+        $checkEmailQuery = "SELECT * FROM cliente WHERE cliCorreo = ?";
+        $checkEmailStmt = $con->prepare($checkEmailQuery);
+        $checkEmailStmt->bind_param('s', $correo);
+        $checkEmailStmt->execute();
+        $checkEmailResult = $checkEmailStmt->get_result();
+
+        // Check if email already exists
+        if ($checkEmailResult->num_rows > 0) {
+            $error = 'El correo ya está registrado.';
         } else {
-            $error = 'Error al registrar el cliente.';
+            // If DNI is provided, check if it's unique
+            if (!empty($cliDni)) {
+                $checkDniQuery = "SELECT * FROM cliente WHERE cliDni = ?";
+                $checkDniStmt = $con->prepare($checkDniQuery);
+                $checkDniStmt->bind_param('s', $cliDni);
+                $checkDniStmt->execute();
+                $checkDniResult = $checkDniStmt->get_result();
+
+                // Check if DNI already exists
+                if ($checkDniResult->num_rows > 0) {
+                    $error = 'El DNI ya está registrado.';
+                }
+            }
+
+            // If no errors, proceed to insert the new client
+            if (empty($error)) {
+                $query = "INSERT INTO cliente (cliDni, cliNombre, cliApellidoPaterno, cliApellidoMaterno, cliCorreo, cliFechaRegis) VALUES (?, ?, ?, ?, ?, NOW())";
+                $stmt = $con->prepare($query);
+                $stmt->bind_param('sssss', $cliDni, $cliNombre, $cliAp, $cliAm, $correo);
+                if ($stmt->execute()) {
+                    $success = 'Cliente registrado exitosamente.';
+                } else {
+                    $error = 'Error al registrar el cliente.';
+                }
+            }
         }
     }
 }
@@ -71,6 +102,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                         <div class="row">
                                             <div class="col-lg-6">
                                                 <div class="mb-3">
+                                                    <label for="cliDni" class="form-label">DNI</label>
+                                                    <input type="number" class="form-control" id="cliDni" name="cliDni" min="0" max="99999999" oninput="this.value = this.value.slice(0, 8);" />
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="mb-3">
                                                     <label for="cliNombre" class="form-label">Nombre</label>
                                                     <input type="text" class="form-control" id="cliNombre" name="cliNombre" required>
                                                 </div>
@@ -109,10 +146,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <div class="card-header">
                             <h5 class="card-title mb-0">Lista de Clientes</h5>
                         </div>
+                        <div class="alert-fk px-3 pt-3">
+                        </div>
                         <div class="card-body">
                             <table id="example" class="table table-bordered dt-responsive nowrap table-striped align-middle" style="width:100%">
                                 <thead>
                                     <tr>
+                                        <th>Dni</th>
                                         <th>Nombre</th>
                                         <th>Apellido Paterno</th>
                                         <th>Apellido Materno</th>
@@ -126,13 +166,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     $result = mysqli_query($con, $query);
                                     while ($row = mysqli_fetch_assoc($result)) {
                                         echo "<tr id='cliente-{$row['cliId']}'>
+                                                <td>{$row['cliDni']}</td>
                                                 <td>{$row['cliNombre']}</td>
                                                 <td>{$row['cliApellidoPaterno']}</td>
                                                 <td>{$row['cliApellidoMaterno']}</td>
                                                 <td>{$row['cliCorreo']}</td>
                                                 <td>
-                                                   <a href='editarcliente.php?id={$row['cliId']}' class='btn btn-soft-secondary btn-sm ms-2 me-1 aria-label='Editar' title='Editar'><i class='ri-pencil-fill align-bottom me-1' style='font-size: 1.5em;'></i></a>
-                                                    <a href='javascript:void(0);' class='btn btn-soft-danger btn-sm' onclick='confirmDeleteCliente({$row['cliId']})' aria-label='Eliminar' title='Eliminar'><i class='ri-delete-bin-fill align-bottom me-1' style='font-size: 1.5em;'></i></a>
+                                                <a href='editarcliente.php?id={$row['cliId']}' class='btn btn-soft-secondary btn-sm ms-2 me-1' aria-label='Editar' title='Editar'><i class='ri-pencil-fill align-bottom me-1' style='font-size: 1.5em;'></i></a>
+                                                <a href='javascript:void(0);' class='btn btn-soft-danger btn-sm' onclick='confirmDeleteCliente({$row['cliId']})' aria-label='Eliminar' title='Eliminar'><i class='ri-delete-bin-fill align-bottom me-1' style='font-size: 1.5em;'></i></a>
                                                 </td>
                                             </tr>";
                                     }

@@ -182,7 +182,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <div class="row mb-3">
                                 <div class="col-md-3">
                                     <div class="input-group">
-                                        <input type="text" id="search" class="form-control" placeholder="Buscar por nombre, color, talla o cantidad">
+                                        <input type="text" id="search" class="form-control" placeholder="Buscar por producto, color, talla o cantidad">
                                         <span class="input-group-text"><i class="ri-search-2-line"></i></span>
                                     </div>
                                 </div>

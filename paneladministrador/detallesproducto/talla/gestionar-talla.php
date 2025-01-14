@@ -7,23 +7,39 @@ $error = '';
 $success = '';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['action'])) {
-    $talla_nombre = trim($_POST['talla_nombre']);
+    $talla_nombre = trim($_POST['talla_nombre']); // Obtener y limpiar el valor ingresado
+
 
     if (empty($talla_nombre)) {
-        $error = 'El campo de talla es obligatorio.';
+        $error = 'El campo de talla es obligatorio.'; // Validar que el campo no esté vacío
     } else {
-        $query = "INSERT INTO talla (talNombre, talFechaRegis) VALUES (?, NOW())";
-        $stmt = $con->prepare($query);
-        $stmt->bind_param('s', $talla_nombre);
-        if ($stmt->execute()) {
-            $success = 'Talla registrada exitosamente.';
+        // Verificar si la talla ya existe
+        $query_check = "SELECT COUNT(*) AS total FROM talla WHERE talNombre = ?";
+        $stmt_check = $con->prepare($query_check);
+        $stmt_check->bind_param('s', $talla_nombre);
+        $stmt_check->execute();
+        $result_check = $stmt_check->get_result();
+        $row_check = $result_check->fetch_assoc();
+
+        if ($row_check['total'] > 0) {
+            $error = 'Esta talla ya existe.'; // Manejar duplicados
         } else {
-            $error = 'Error al registrar la talla.';
+            // Insertar la nueva talla si no existe
+            $query = "INSERT INTO talla (talNombre, talFechaRegis) VALUES (?, NOW())";
+            $stmt = $con->prepare($query);
+            $stmt->bind_param('s', $talla_nombre);
+
+            if ($stmt->execute()) {
+                // Redirigir después de registrar correctamente
+                header("Location: gestionar-talla.php?success=1");
+                exit(); // Asegurar que el script se detenga después de la redirección
+            } else {
+                $error = 'Error al registrar la talla.'; // Manejar errores de ejecución
+            }
         }
     }
 }
 ?>
-
 <div class="main-content">
     <div class="page-content">
         <div class="container-fluid">
@@ -35,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['action'])) {
 
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
-                                <li class="breadcrumb-item"><a>Tallas</a></li>
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">Tallas</a></li>
                                 <li class="breadcrumb-item active">Gestionar</li>
                             </ol>
                         </div>
@@ -49,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['action'])) {
                         <div class="card-header">
                             <ul class="nav nav-tabs-custom rounded card-header-tabs border-bottom-0" role="tablist">
                                 <li class="nav-item">
-                                    <a class="nav-link active" data-bs-toggle="tab" role="tab" aria-selected="false">
+                                    <a class="nav-link active" data-bs-toggle="tab" href="#tallaDetails" role="tab" aria-selected="false">
                                         <i class="fas fa-ruler"></i> Agregar Talla
                                     </a>
                                 </li>
@@ -90,12 +106,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['action'])) {
                         <div class="card-header">
                             <h5 class="card-title mb-0">Lista de Tallas</h5>
                         </div>
+                        <div class="alert-fk px-3 pt-3">
+                        </div>
                         <div class="card-body">
                             <table id="example" class="table table-bordered dt-responsive nowrap table-striped align-middle" style="width:100%">
                                 <thead>
                                     <tr>
                                         <th>Nombre de la Talla</th>
-                                        <th class="text-center">Fecha de Registro</th>
                                         <th class="accion-col">Acción</th>
                                     </tr>
                                 </thead>
@@ -106,9 +123,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['action'])) {
                                     while ($row = mysqli_fetch_assoc($result)) {
                                         echo "<tr id='talla-{$row['talId']}'>
                                                 <td>{$row['talNombre']}</td>
-                                                <td class='text-center'>{$row['talFechaRegis']}</td>
                                                 <td>
-                                                  <a href='editartalla.php?id={$row['talId']}' class='btn btn-soft-secondary btn-sm ms-2 me-1 aria-label='Editar' title='Editar'><i class='ri-pencil-fill align-bottom me-1' style='font-size: 1.5em;'></i></a>
+                                                    <a href='editartalla.php?id={$row['talId']}' class='btn btn-soft-secondary btn-sm ms-2 me-1' aria-label='Editar' title='Editar'><i class='ri-pencil-fill align-bottom me-1' style='font-size: 1.5em;'></i></a>
                                                     <a href='javascript:void(0);' class='btn btn-soft-danger btn-sm' onclick='confirmDeleteTalla({$row['talId']})' aria-label='Eliminar' title='Eliminar'><i class='ri-delete-bin-fill align-bottom me-1' style='font-size: 1.5em;'></i></a>
                                                 </td>
                                             </tr>";

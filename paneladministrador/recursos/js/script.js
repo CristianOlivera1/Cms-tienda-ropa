@@ -152,7 +152,11 @@ function confirmDeleteMarca(marcaId) {
                     $('#deleteModal').modal('hide');
                     $('#marca-' + marcaId).remove();
                 } else {
-                    alert(result.error);
+                    $('#deleteModal').modal('hide');
+                    // Mostrar el mensaje de error en la alerta
+                    $('.alert-danger').remove();
+                    $('.alert-success').remove();
+                    $('.alert-fk').prepend('<div class="alert alert-danger alert-dismissible alert-outline fade show">' + result.error + '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
                 }
             }
         });
@@ -176,7 +180,11 @@ function confirmDeleteCliente(clienteId) {
                     $('#deleteModal').modal('hide');
                     $('#cliente-' + clienteId).remove();
                 } else {
-                    alert(result.error);
+                    $('#deleteModal').modal('hide');
+                    // Mostrar el mensaje de error en la alerta
+                    $('.alert-danger').remove();
+                    $('.alert-success').remove();
+                    $('.alert-fk').prepend('<div class="alert alert-danger alert-dismissible alert-outline fade show">' + result.error + '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
                 }
             }
         });
@@ -201,7 +209,11 @@ function confirmDeleteTalla(tallaId) {
                     $('#deleteModal').modal('hide');
                     $('#talla-' + tallaId).remove();
                 } else {
-                    alert(result.error);
+                    $('#deleteModal').modal('hide');
+                    // Mostrar el mensaje de error en la alerta
+                    $('.alert-danger').remove();
+                    $('.alert-success').remove();
+                    $('.alert-fk').prepend('<div class="alert alert-danger alert-dismissible alert-outline fade show">' + result.error + '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
                 }
             }
         });
@@ -232,6 +244,7 @@ function confirmDeleteUsuario(usuarioId) {
         });
     });
 }
+
 //eliminar reseña
 function confirmDeleteResenha(resenhaId) {
     $('#deleteModal').modal('show');
@@ -286,6 +299,7 @@ function confirmDeleteStock(stockId) {
     });
 }
 
+//filtros de buscar filtrar categoria y stado
 $(document).ready(function() {
     $('#search').on('keyup', function() {
         var value = $(this).val().toLowerCase();
