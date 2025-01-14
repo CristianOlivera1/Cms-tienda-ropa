@@ -301,39 +301,36 @@ function confirmDeleteStock(stockId) {
 
 //filtros de buscar filtrar categoria y stado
 $(document).ready(function() {
+    let searchTimeout = null;
     $('#search').on('keyup', function() {
+        clearTimeout(searchTimeout);
         var value = $(this).val().toLowerCase();
-        $('#example tbody tr').filter(function() {
-            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-        });
+        searchTimeout = setTimeout(function() {
+            window.location.href = '?search=' + value + '#example';
+        }, 800); // se demora 800 ms y se actualiza auroamticamente
     });
 
-    $('#filterCategory').on('change', function() {
-        var value = $(this).val();
-        $('#example tbody tr').filter(function() {
-            $(this).toggle($(this).data('category') == value || value === "")
-        });
+    //filtrar por categoria, stado, orden asc y desc
+    $('#filterCategory, #filterState, #order_dir').on('change', function() {
+        window.location.href = '?search=' + $('#search').val() + '&filterCategory=' + $('#filterCategory').val() + '&filterState=' + $('#filterState').val() + '&order_dir=' + $('#order_dir').val() + '#example';
     });
 
-    $('#filterState').on('change', function() {
-        var value = $(this).val();
-        $('#example tbody tr').filter(function() {
-            $(this).toggle($(this).find('td:nth-child(2)').text().trim() === (value === "1" ? "Disponible" : "No Disponible") || value === "");
-        });
-    });
+    // $('#order_dir_color').on('change', function() {
+    //     window.location.href = '?search=' + $('#search').val() + '&order_dir_color=' + $(this).val()  + '#example';
+    // });
 });
 
+//Incrementar y decremnetar input de cantidad
+function increment() {
+    var input = document.getElementById('stoCantidad');
+    input.value = parseInt(input.value) + 1;
+}
 
-/* buscador por nombre en productos*/
-let searchTimeout = null;
-const searchInput = document.getElementById('searchInput');
-if (searchInput) {
-    searchInput.addEventListener('input', function() {
-        clearTimeout(searchTimeout);
-        searchTimeout = setTimeout(function() {
-            document.getElementById('filterForm').submit();
-        }, 500); // Retraso de 500 ms
-    });
+function decrement() {
+    var input = document.getElementById('stoCantidad');
+    if (input.value > 0) {
+        input.value = parseInt(input.value) - 1;
+    }
 }
 
 /* ADMINISTRADOR VER CONTRASEÑA */

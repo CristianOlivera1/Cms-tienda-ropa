@@ -1,10 +1,28 @@
 <?php
-
 include "../../header.php";
 include "../../sidebar.php";
 
 $error = '';
 $success = '';
+
+// Configuración de la paginación
+$registros_por_pagina = 10;
+$pagina_actual = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
+$offset = ($pagina_actual - 1) * $registros_por_pagina;
+
+// Obtener el término de búsqueda y filtros
+$search = isset($_GET['search']) ? $_GET['search'] : '';
+$order_dir = isset($_GET['order_dir']) ? $_GET['order_dir'] : 'DESC';
+
+// Obtener el total de registros
+$query_total = "SELECT COUNT(*) as total FROM color WHERE colNombre LIKE ? OR colCodigoHex LIKE ?";
+$stmt_total = $con->prepare($query_total);
+$search_param = "%$search%";
+$stmt_total->bind_param('ss', $search_param, $search_param);
+$stmt_total->execute();
+$result_total = $stmt_total->get_result();
+$total_registros = $result_total->fetch_assoc()['total'];
+$total_paginas = ceil($total_registros / $registros_por_pagina);
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $color_hex = trim($_POST['color_hex']);
@@ -110,11 +128,37 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                     <div class="card mt-4">
                         <div class="card-header">
-                            <h5 class="card-title mb-0">Lista de Colores</h5>
+                            <h5 class="card-title mb-0">Lista de Colores <div class="badge-total">Total: <?php echo $total_registros ?> </div> </h5>
                         </div>
                         <div class="alert-fk px-3 pt-3">
                         </div>
                         <div class="card-body">
+                        <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <div class="input-group">
+                                        <input type="text" id="search" class="form-control" placeholder="Buscar color" value="<?php echo htmlspecialchars($search); ?>">
+                                        <span class="input-group-text"><i class="ri-search-2-line"></i></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <select id="order_dir" class="form-select">
+                                        <option value="DESC" <?php echo ($order_dir == 'DESC') ? 'selected' : ''; ?>>Descendente</option>
+                                        <option value="ASC" <?php echo ($order_dir == 'ASC') ? 'selected' : ''; ?>>Ascendente</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4 d-flex justify-content-end">
+                                <!-- Paginación -->
+                                <nav aria-label="Page navigation example">
+                                    <ul class="pagination justify-content-center">
+                                        <?php for ($i = 1; $i <= $total_paginas; $i++): ?>
+                                            <li class="page-item <?php echo ($i == $pagina_actual) ? 'active' : ''; ?>">
+                                                <a class="page-link" href="?pagina=<?php echo $i; ?>&search=<?php echo htmlspecialchars($search); ?>&order_dir=<?php echo htmlspecialchars($order_dir); ?>#example"><?php echo $i; ?></a>
+                                            </li>
+                                        <?php endfor; ?>
+                                    </ul>
+                                </nav>
+                                </div>
+                            </div>
                             <table id="example" class="table table-bordered dt-responsive nowrap table-striped align-middle" style="width:100%">
                                 <thead>
                                     <tr>
@@ -125,8 +169,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 </thead>
                                 <tbody>
                                     <?php
-                                    $query = "SELECT * FROM color ORDER BY colId DESC";
-                                    $result = mysqli_query($con, $query);
+                                    $query = "SELECT * FROM color WHERE colNombre LIKE ? OR colCodigoHex LIKE ? ORDER BY colId $order_dir LIMIT $registros_por_pagina OFFSET $offset";
+                                    $stmt = $con->prepare($query);
+                                    $stmt->bind_param('ss', $search_param, $search_param);
+                                    $stmt->execute();
+                                    $result = $stmt->get_result();
                                     while ($row = mysqli_fetch_assoc($result)) {
                                         echo "<tr id='color-{$row['colId']}'>
                                                 <td>{$row['colNombre']}</td>

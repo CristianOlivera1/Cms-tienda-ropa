@@ -165,7 +165,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     <ul class="pagination justify-content-center">
                                         <?php if ($pagina_actual > 1): ?>
                                             <li class="page-item">
-                                                <a class="page-link" href="?pagina=<?php echo $pagina_actual - 1; ?>" tabindex="-1">Anterior</a>
+                                                <a class="page-link" href="?pagina=<?php echo $pagina_actual - 1; ?>#example" tabindex="-1">Anterior</a>
                                             </li>
                                         <?php else: ?>
                                             <li class="page-item disabled">
@@ -175,13 +175,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                                         <?php for ($i = 1; $i <= $total_paginas; $i++): ?>
                                             <li class="page-item <?php echo ($i == $pagina_actual) ? 'active' : ''; ?>">
-                                                <a class="page-link" href="?pagina=<?php echo $i; ?>"><?php echo $i; ?></a>
+                                                <a class="page-link" href="?pagina=<?php echo $i; ?>#example"><?php echo $i; ?></a>
                                             </li>
                                         <?php endfor; ?>
 
                                         <?php if ($pagina_actual < $total_paginas): ?>
                                             <li class="page-item">
-                                                <a class="page-link" href="?pagina=<?php echo $pagina_actual + 1; ?>">Siguiente</a>
+                                                <a class="page-link" href="?pagina=<?php echo $pagina_actual + 1; ?>#example">Siguiente</a>
                                             </li>
                                         <?php else: ?>
                                             <li class="page-item disabled">

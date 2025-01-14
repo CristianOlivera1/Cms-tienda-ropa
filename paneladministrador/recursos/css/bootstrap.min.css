@@ -2404,7 +2404,7 @@ progress {
     border-color: #bfd4df
 }
 
-.badge-dark, .badge-success, .badge-danger, .badge-total { 
+.badge-dark, .badge-success, .badge-danger, .badge-total,.badge-warning { 
     display: inline-block;
     padding: 3px 5px;
     border-radius: 5px;
@@ -2423,12 +2423,16 @@ progress {
 .badge-danger{
     background-color: #FF4646;
 }
+.badge-warning{
+    background-color: #f5dd04;
+}
+
 .badge-total {
     font-size: 12px;
     font-weight: normal;
-    background-color:#f5dd04;
-    color: rgb(0, 0, 0);
-  vertical-align: 3px;
+    background-color:#EFF2F7;
+    color: rgba(17, 17, 17, 0.87);
+    vertical-align: 3px;
     margin-left: 5px;
 }
 

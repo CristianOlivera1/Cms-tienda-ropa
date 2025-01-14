@@ -169,11 +169,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                                     </select>
                                                 </div>
                                             </div>
-
                                             <div class="col-lg-6">
                                                 <div class="mb-3">
                                                     <label for="stoCantidad" class="form-label">Cantidad</label>
-                                                    <input type="number" class="form-control" id="stoCantidad" name="stoCantidad" required value="<?php echo htmlspecialchars($stock['stoCantidad']); ?>">
+                                                    <div class="input-group">
+                                                        <button type="button" class="btn btn-outline-secondary" onclick="decrement()">-</button>
+                                                        <input type="number" class="form-control" id="stoCantidad" name="stoCantidad" required value="<?php echo htmlspecialchars($stock['stoCantidad']); ?>">
+                                                        <button type="button" class="btn btn-outline-secondary" onclick="increment()">+</button>
+                                                    </div>
                                                 </div>
                                             </div>
 
@@ -192,6 +195,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
         </div>
     </div>
+    <script src="../../recursos/js/script.js"></script>
+
 </div>
 
 <?php include "../../footer.php";?>
