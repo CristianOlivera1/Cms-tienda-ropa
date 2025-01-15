@@ -227,7 +227,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                         $query = "SELECT DISTINCT c.catId, c.catNombre FROM categoria c INNER JOIN producto p ON c.catId = p.catId INNER JOIN stock s ON p.proId = s.proId";
                                         $result = mysqli_query($con, $query);
                                         while ($row = mysqli_fetch_assoc($result)) {
-                                            echo "<option value='{$row['catId']}'>{$row['catNombre']}</option>";
+                                            echo "<option value='{$row['catId']}'" . ($filterCategory == $row['catId'] ? ' selected' : '') . ">{$row['catNombre']}</option>";
                                         }
                                         ?>
                                     </select>
@@ -235,8 +235,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 <div class="col-md-4 mt-3">
                                     <select id="filterState" class="form-select">
                                         <option value="">Filtrar por Estado</option>
-                                        <option value="1">Disponible</option>
-                                        <option value="0">No Disponible</option>
+                                        <option value="1" <?php echo ($filterState === '1') ? 'selected' : ''; ?>>Disponible</option>
+                                        <option value="0" <?php echo ($filterState === '0') ? 'selected' : ''; ?>>No Disponible</option>
                                     </select>
                                 </div>
                                 <div class="col-md-4 mt-3">
@@ -345,6 +345,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
         </div>
     </div>
+
     <script src="../../recursos/js/script.js"></script>
 </div>
 

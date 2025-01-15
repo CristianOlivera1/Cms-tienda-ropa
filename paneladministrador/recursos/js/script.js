@@ -299,21 +299,44 @@ function confirmDeleteStock(stockId) {
     });
 }
 
-//filtros de buscar filtrar categoria y stado
+//filtros de buscar y filtrar (todos)
 $(document).ready(function() {
     let searchTimeout = null;
+
+    //filtro de buscar para todas las tablas
     $('#search').on('keyup', function() {
         clearTimeout(searchTimeout);
         var value = $(this).val().toLowerCase();
         searchTimeout = setTimeout(function() {
-            window.location.href = '?search=' + value + '#example';
-        }, 800); // se demora 800 ms y se actualiza auroamticamente
+            var url = '?search=' + value;
+            if ($('#filterCategory').val()) {
+                url += '&filterCategory=' + $('#filterCategory').val();
+            }
+            if ($('#filterState').val()) {
+                url += '&filterState=' + $('#filterState').val();
+            }
+            if ($('#order_dir').val()) {
+                url += '&order_dir=' + $('#order_dir').val();
+            }
+            window.location.href = url + '#example';
+        }, 800);
     });
 
-    //filtrar por categoria, stado, orden asc y desc
+    //filtros independientes(varia para cada tabla) para todas las tablas
     $('#filterCategory, #filterState, #order_dir').on('change', function() {
-        window.location.href = '?search=' + $('#search').val() + '&filterCategory=' + $('#filterCategory').val() + '&filterState=' + $('#filterState').val() + '&order_dir=' + $('#order_dir').val() + '#example';
+        var url = '?search=' + $('#search').val();
+        if ($('#filterCategory').val()) {
+            url += '&filterCategory=' + $('#filterCategory').val();
+        }
+        if ($('#filterState').val()) {
+            url += '&filterState=' + $('#filterState').val();
+        }
+        if ($('#order_dir').val()) {
+            url += '&order_dir=' + $('#order_dir').val();
+        }
+        window.location.href = url + '#example';
     });
+
 });
 
 //Incrementar y decremnetar input de cantidad
