@@ -24,6 +24,9 @@ $result_total = $stmt_total->get_result();
 $total_registros = $result_total->fetch_assoc()['total'];
 $total_paginas = ceil($total_registros / $registros_por_pagina);
 
+$color_nombre = '';
+$color_hex = '';
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $color_hex = trim($_POST['color_hex']);
     $color_nombre = trim($_POST['color_nombre']);
@@ -48,6 +51,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $stmt->bind_param('ss', $color_nombre, $color_hex);
             if ($stmt->execute()) {
                 $success = 'Color registrado exitosamente.';
+                $color_nombre = '';
+                $color_hex = '';
             } else {
                 $error = 'Error al registrar el color.';
             }
@@ -103,14 +108,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                             <div class="col-lg-6">
                                                 <div class="mb-3">
                                                     <label for="color_nombre" class="form-label">Nombre del Color</label>
-                                                    <input type="text" class="form-control" id="color_nombre" name="color_nombre" required>
+                                                    <input type="text" class="form-control" id="color_nombre" name="color_nombre" value="<?php echo htmlspecialchars($color_nombre); ?>" required>
                                                 </div>
                                             </div>
 
                                             <div class="col-lg-6">
                                                 <div class="mb-3">
                                                     <label for="color_hex" class="form-label">Código Hexadecimal</label>
-                                                    <input type="color" class="form-control picker-height" id="color_hex" name="color_hex" required>
+                                                    <input type="color" class="form-control picker-height" id="color_hex" name="color_hex" value="<?php echo htmlspecialchars($color_hex); ?>" required>
                                                 </div>
                                             </div>
 
@@ -126,7 +131,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         </div>
                     </div>
 
-                    <div class="card mt-4">
+                    <div class="card mt-4" id="example">
                         <div class="card-header">
                             <h5 class="card-title mb-0">Lista de Colores <div class="badge-total">Total: <?php echo $total_registros ?> </div> </h5>
                         </div>
@@ -159,9 +164,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 </nav>
                                 </div>
                             </div>
-                            <table id="example" class="table table-bordered dt-responsive nowrap table-striped align-middle" style="width:100%">
+                            <table class="table table-bordered dt-responsive nowrap table-striped align-middle" style="width:100%">
                                 <thead>
                                     <tr>
+                                         <th>N</th>
                                         <th>Nombre</th>
                                         <th>Color</th>
                                         <th>Acción</th>
@@ -174,8 +180,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     $stmt->bind_param('ss', $search_param, $search_param);
                                     $stmt->execute();
                                     $result = $stmt->get_result();
+                                    $numero_registro = $offset + 1;
                                     while ($row = mysqli_fetch_assoc($result)) {
                                         echo "<tr id='color-{$row['colId']}'>
+                                                <td>{$numero_registro}</td>
                                                 <td>{$row['colNombre']}</td>
                                                 <td><div style='width: 20px; height: 20px; background-color: {$row['colCodigoHex']}; border-radius: 50%;'></div></td>
                                                 <td >
@@ -183,6 +191,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                                     <a href='javascript:void(0);' class='btn btn-soft-danger btn-sm' onclick='confirmDeleteColor({$row['colId']})' aria-label='Eliminar' title='Eliminar'><i class='ri-delete-bin-fill align-bottom me-1' style='font-size: 1.5em;'></i></a>
                                                 </td>
                                             </tr>";
+                                            $numero_registro++;
                                     }
                                     ?>
                                 </tbody>

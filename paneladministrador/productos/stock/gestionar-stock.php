@@ -45,6 +45,12 @@ $result_total = $stmt_total->get_result();
 $total_registros = $result_total->fetch_assoc()['total'];
 $total_paginas = ceil($total_registros / $registros_por_pagina);
 
+$proId = '';
+$estId = '';
+$colId = '';
+$talId = '';
+$stoCantidad = '';
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $proId = trim($_POST['proId']);
     $estId = trim($_POST['estId']);
@@ -70,6 +76,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $stmt->bind_param('iiiii', $proId, $estId, $colId, $talId, $stoCantidad);
             if ($stmt->execute()) {
                 $success = 'Stock registrado exitosamente.';
+                $proId = '';
+                $estId = '';
+                $colId = '';
+                $talId = '';
+                $stoCantidad = '';
             } else {
                 $error = 'Error al registrar el stock.';
             }
@@ -129,7 +140,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                                         $query = "SELECT proId, proNombre FROM producto";
                                                         $result = mysqli_query($con, $query);
                                                         while ($row = mysqli_fetch_assoc($result)) {
-                                                            echo "<option value='{$row['proId']}'>{$row['proNombre']}</option>";
+                                                            $selected = ($row['proId'] == $proId) ? 'selected' : '';
+                                                            echo "<option value='{$row['proId']}' $selected>{$row['proNombre']}</option>";
                                                         }
                                                         ?>
                                                     </select>
@@ -145,7 +157,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                                         $result = mysqli_query($con, $query);
                                                         while ($row = mysqli_fetch_assoc($result)) {
                                                             $estado = $row['estDisponible'] ? 'Disponible' : 'No Disponible';
-                                                            echo "<option value='{$row['estId']}'>{$estado}</option>";
+                                                            $selected = ($row['estId'] == $estId) ? 'selected' : '';
+                                                            echo "<option value='{$row['estId']}' $selected>{$estado}</option>";
                                                         }
                                                         ?>
                                                     </select>
@@ -160,7 +173,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                                         $query = "SELECT colId, colNombre FROM color";
                                                         $result = mysqli_query($con, $query);
                                                         while ($row = mysqli_fetch_assoc($result)) {
-                                                            echo "<option value='{$row['colId']}'>{$row['colNombre']}</option>";
+                                                            $selected = ($row['colId'] == $colId) ? 'selected' : '';
+                                                            echo "<option value='{$row['colId']}' $selected>{$row['colNombre']}</option>";
                                                         }
                                                         ?>
                                                     </select>
@@ -175,7 +189,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                                         $query = "SELECT talId, talNombre FROM talla";
                                                         $result = mysqli_query($con, $query);
                                                         while ($row = mysqli_fetch_assoc($result)) {
-                                                            echo "<option value='{$row['talId']}'>{$row['talNombre']}</option>";
+                                                            $selected = ($row['talId'] == $talId) ? 'selected' : '';
+                                                            echo "<option value='{$row['talId']}' $selected>{$row['talNombre']}</option>";
                                                         }
                                                         ?>
                                                     </select>
@@ -187,12 +202,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                                     <label for="stoCantidad" class="form-label">Cantidad</label>
                                                     <div class="input-group">
                                                         <button type="button" class="btn btn-outline-secondary" onclick="decrement()">-</button>
-                                                        <input type="number" class="form-control" id="stoCantidad" name="stoCantidad" required min="0" step="1" value="0">
+                                                        <input type="number" class="form-control" id="stoCantidad" name="stoCantidad" required min="0" step="1" value="<?php echo htmlspecialchars($stoCantidad) ?: '0'; ?>">
                                                         <button type="button" class="btn btn-outline-secondary" onclick="increment()">+</button>
                                                     </div>
                                                 </div>
                                             </div>
-
 
                                             <div class="col-lg-12">
                                                 <div class="hstack gap-2 justify-content-end">
@@ -206,7 +220,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         </div>
                     </div>
 
-                    <div class="card mt-4">
+                    <div class="card mt-4" id="example">
                         <div class="card-header">
                           <h5 class="card-title mb-0">Lista de Stock <div class="badge-total">Total: <?php echo $total_registros; ?></div></h5>
                         </div>
@@ -258,7 +272,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 </nav>
                             </div>
                             </div>
-                            <table id="example" class="table table-bordered dt-responsive nowrap table-striped align-middle" style="width:100%">
+                            <table class="table table-bordered dt-responsive nowrap table-striped align-middle" style="width:100%">
                                 <thead>
                                     <tr>
                                         <th>Producto</th>
@@ -295,6 +309,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     $stmt->bind_param(str_repeat('s', count($params)), ...$params);
                                     $stmt->execute();
                                     $result = $stmt->get_result();
+                                    $numero_registro = $offset + 1;
                                     while ($row = mysqli_fetch_assoc($result)) {
                                         $estado = $row['estDisponible'] ? 'Disponible' : 'No Disponible';
                                         $estadoClass = $row['estDisponible'] ? 'badge-success' : 'badge-danger';
@@ -305,6 +320,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                             $estadoClass = 'badge-warning';
                                         }
                                         echo "<tr id='stock-{$row['stoId']}' data-category='{$row['catId']}'>
+                                             <td>{$numero_registro}</td>
                                                 <td>{$row['proNombre']}</td>
                                                 <td><span class='{$estadoClass}'>{$estado}</span></td>
                                                 <td>{$row['colNombre']}</td>
@@ -315,6 +331,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                                     <a href='javascript:void(0);' class='btn btn-soft-danger btn-sm' onclick='confirmDeleteStock({$row['stoId']})' aria-label='Eliminar' title='Eliminar'><i class='ri-delete-bin-fill align-bottom me-1' style='font-size: 1.5em;'></i></a>
                                                 </td>
                                             </tr>";
+                                            $numero_registro++;
                                     }
                                     ?>
                                 </tbody>

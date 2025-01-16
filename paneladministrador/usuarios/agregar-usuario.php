@@ -4,12 +4,18 @@ include "../header.php";
 include "../sidebar.php";
 
 $error = '';
+$username = '';
+$password = '';
+$confirm_password = '';
+$carId = '';
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = trim($_POST['username']);
     $password = trim($_POST['password']);
     $confirm_password = trim($_POST['confirm_password']);
+    $carId = trim($_POST['carId']);
 
-    if (empty($username) || empty($password) || empty($confirm_password)) {
+    if (empty($username) || empty($password) || empty($confirm_password) || empty($carId)) {
         $error = 'Todos los campos son obligatorios.';
     } elseif (strlen($password) < 8) {
         $error = 'La contraseña debe tener al menos 8 caracteres.';
@@ -17,8 +23,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $error = 'Las contraseñas no coinciden.';
     } else {
         $query = "SELECT * FROM usuario WHERE admUser = ?";
-        $carId = mysqli_real_escape_string($con,$_POST['carId']);
-
         $stmt = $con->prepare($query);
         $stmt->bind_param('s', $username);
         $stmt->execute();
@@ -28,9 +32,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $error = 'El nombre de usuario ya está en uso.';
         } else {
             $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-            $query = "INSERT INTO usuario (admUser, admPassword,carId) VALUES (?, ?,$carId)";
+            $query = "INSERT INTO usuario (admUser, admPassword, carId) VALUES (?, ?, ?)";
             $stmt = $con->prepare($query);
-            $stmt->bind_param('ss', $username, $hashed_password);
+            $stmt->bind_param('sss', $username, $hashed_password, $carId);
             if ($stmt->execute()) { 
                 // Redirigir después de registrar el administrador
                 header("Location: listausuarios.php"); 
@@ -41,7 +45,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
 }
-
 ?>
 
 <div class="main-content">
@@ -87,19 +90,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                             <div class="col-lg-6">
                                                 <div class="mb-3">
                                                     <label for="username" class="form-label">Nombre de Usuario</label>
-                                                    <input type="text" class="form-control" id="username" name="username" required>
+                                                    <input type="text" class="form-control" id="username" name="username" value="<?php echo htmlspecialchars($username); ?>" required>
                                                 </div>
                                             </div>
 
                                             <div class="col-lg-6">
                                                 <div class="mb-3">
                                                     <label for="cargoSelect" class="form-label">Cargo</label>
-                                                    <select class="form-select" id="cargoSelect" name="carId">
-                                                        <option selected>Seleccione cargo</option>
+                                                    <select class="form-select" id="cargoSelect" name="carId" required>
+                                                        <option value="">Seleccione cargo</option>
                                                         <?php
                                                         $result = mysqli_query($con, "SELECT carId, carNombre FROM cargo order by carId desc");
                                                         while($row = mysqli_fetch_assoc($result)) {
-                                                            echo "<option value='".$row['carId']."'>".$row['carNombre']."</option>";
+                                                            $selected = ($row['carId'] == $carId) ? 'selected' : '';
+                                                            echo "<option value='".$row['carId']."' $selected>".$row['carNombre']."</option>";
                                                         }
                                                         ?>
                                                     </select>
@@ -110,7 +114,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                                 <div class="mb-3">
                                                     <label for="password" class="form-label">Contraseña</label>
                                                     <div class="input-group">
-                                                        <input type="password" class="form-control" id="password" name="password" required>
+                                                        <input type="password" class="form-control" id="password" name="password" value="<?php echo htmlspecialchars($password); ?>" required>
                                                         <button class="btn btn-outline-secondary" type="button" id="togglePassword"><i class="mdi mdi-eye-outline"></i></button>
                                                     </div>
                                                 </div>
@@ -120,7 +124,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                                 <div class="mb-3">
                                                     <label for="confirm_password" class="form-label">Confirmar Contraseña</label>
                                                     <div class="input-group">
-                                                        <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
+                                                        <input type="password" class="form-control" id="confirm_password" name="confirm_password" value="<?php echo htmlspecialchars($confirm_password); ?>" required>
                                                         <button class="btn btn-outline-secondary" type="button" id="toggleConfirmPassword"><i class="mdi mdi-eye-outline"></i></button>
                                                     </div>
                                                 </div>
