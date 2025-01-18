@@ -6,38 +6,7 @@
  * Copyright 2011-2021 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  */
- .modal-body {
-    font-family: Arial, sans-serif; /* Fuente legible */
-    line-height: 1.6; /* Mejora el espaciado entre líneas */
-    padding: 20px; /* Espacio interno */
-    background-color: #f9f9f9; /* Color de fondo del modal */
-    border-radius: 10px; /* Bordes redondeados */
-}
 
-.modal-body img {
-    max-width: 100%; /* Ajusta la imagen al ancho del modal */
-    height: auto; /* Mantiene la proporción de la imagen */
-    border-radius: 5px; /* Bordes redondeados para la imagen */
-    margin-bottom: 15px; /* Espacio debajo de la imagen */
-}
-
-.modal-body p {
-    margin: 10px 0; /* Espacio entre párrafos */
-}
-
-.modal-body strong {
-    color: #333; /* Color del texto en negrita */
-}
-
-.modal-body span {
-    color: #555; /* Color del texto normal */
-}
-
-.modal-body .price {
-    font-size: 1.2rem; /* Tamaño del texto del precio */
-    font-weight: bold; /* Negrita para el precio */
-    color: #28a745; /* Color verde para el precio */
-}
 :root {
     --vz-blue: #3577f1;
     --vz-indigo: #405189;

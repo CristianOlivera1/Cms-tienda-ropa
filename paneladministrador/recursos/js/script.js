@@ -6,16 +6,16 @@ function limpiarFiltros() {
     form.marca.selectedIndex = 0;
     form.submit();
 }
-function openProductModal(id, name, description, image, price, category, brand) {
-    document.getElementById('modalProductName').innerText = name;
-    document.getElementById('modalProductDescription').innerText = description;
-    document.getElementById('modalProductImage').src = image;
-    document.getElementById('modalProductPrice').innerText = ' S/ '+ price.toFixed(2) ; // Formato de precio
-    document.getElementById('modalProductCategory').innerText = category; // Agregar categoría
-    document.getElementById('modalProductBrand').innerText = brand; // Agregar marca
-    
-    var myModal = new bootstrap.Modal(document.getElementById('productModal'));
-    myModal.show();
+function openProductModal(id, nombre, descripcion, img1, img2, precio, categoria, marca) {
+    document.getElementById('modalProductName').innerText = nombre;
+    document.getElementById('modalProductDescription').innerText = descripcion;
+    document.getElementById('modalProductImage1').src = img1;
+    document.getElementById('modalProductImage2').src = img2;
+    document.getElementById('modalProductPrice').innerText = `S/. ${precio.toFixed(2)}`; // Agregar símbolo de precio
+
+    // Mostrar el modal
+    var modal = new bootstrap.Modal(document.getElementById('productModal'));
+    modal.show();
 }
 //eliminar producto
 

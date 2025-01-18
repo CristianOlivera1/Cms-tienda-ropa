@@ -1,4 +1,5 @@
 <?php
+ob_start();
 include "../../header.php";
 include "../../sidebar.php";
 
@@ -50,6 +51,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Validación de campos
     if (empty($producto_nombre) || empty($producto_descripcion) || empty($producto_img['name']) || empty($producto_img2['name']) || $producto_precio < 0) {
         $error = 'Todos los campos son obligatorios y deben ser válidos.';
+    } elseif ($producto_precio < 1 || $producto_precio > 10000) { // Asegúrate de cambiar 10000 al límite que consideres adecuado
+        $error = 'El precio debe ser un número positivo y no exceder el límite permitido.';
     } else {
         // Verificar si ya existe un producto con el mismo nombre
         $query_check = "SELECT COUNT(*) as count FROM producto WHERE proNombre = ?";
@@ -83,23 +86,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $stmt_insert = $con->prepare($query_insert);
                     $stmt_insert->bind_param('iissssi', $_POST['catId'], $_POST['marId'], $producto_nombre, $producto_descripcion, $target_file, $target_file2, $producto_precio);
                     if ($stmt_insert->execute()) {
-                        $success = 'Producto registrado exitosamente.';
-                        
-                        // Limpiar los campos del formulario
-                        $producto_nombre = '';
-                        $producto_descripcion = '';
-                        $producto_precio = 0;
-                        $_POST['catId'] = '';
-                        $_POST['marId'] = '';
+                        // Redirigir a la misma página para actualizar la tabla
+                        header("Location: " . $_SERVER['PHP_SELF'] . "?success=1&pagina=" . $pagina_actual);
+                        exit();
                     } else {
                         $error = 'Error al registrar el producto.';
-                    }
+                    } 
+                    
                 } else {
                     $error = 'Error al cargar las imágenes.';
                 }
             }
         }
     }
+}
+
+// Verificar el mensaje de éxito
+if (isset($_GET['success'])) {
+    $success = 'Producto registrado exitosamente.';
 }
 ?>
 
@@ -217,15 +221,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </div>
                         </div>
                     </div>
-                    
                     <div class="card mt-4">
                         <div class="card-header">
-                        <div class="card-header">
-                          <h5 class="card-title mb-0">Lista de Productos <div class="badge-total">Total: <?php echo $total_registros; ?></div></h5>
-                        </div>
-                        <div class="alert-fk px-3 pt-3">
-                        </div>
-                            <h5 class="card-title mb-0">Lista de Productos</h5>
+                            <h5 class="card-title mb-0">Lista de Productos <div class="badge-total">Total: <?php echo $total_registros; ?></div></h5>
                             <form method="GET" action="" class="d-flex" id="filterForm">
                                 <input type="text" name="nombre" class="form-control me-2" placeholder="Buscar por nombre" value="<?php echo htmlspecialchars($filter_nombre); ?>" onchange="this.form.submit()">
                                 <select name="categoria" class="form-control me-2" onchange="this.form.submit()">
@@ -251,49 +249,51 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     ?>
                                 </select>
                                 <div>
-                                <!-- paginacion -->
-                                <nav aria-label="Page navigation example">
-                                    <ul class="pagination justify-content-center">
-                                        <?php for ($i = 1; $i <= $total_paginas; $i++): ?>
-                                            <li class="page-item <?php echo ($i == $pagina_actual) ? 'active' : ''; ?>">
-                                                <a class="page-link" id="search" href="?pagina=<?php echo $i; ?>&nombre=<?php echo htmlspecialchars($filter_nombre); ?>&categoria=<?php echo $filter_categoria; ?>&marca=<?php echo $filter_marca; ?>"><?php echo $i; ?></a>
-                                            </li>
-                                        <?php endfor; ?>
-                                    </ul>
-                                </nav>
+                                    <!-- paginacion -->
+                                    <nav aria-label="Page navigation example">
+                                        <ul class="pagination justify-content-center">
+                                            <?php for ($i = 1; $i <= $total_paginas; $i++): ?>
+                                                <li class="page-item <?php echo ($i == $pagina_actual) ? 'active' : ''; ?>">
+                                                    <a class="page-link" id="search" href="?pagina=<?php echo $i; ?>&nombre=<?php echo htmlspecialchars($filter_nombre); ?>&categoria=<?php echo $filter_categoria; ?>&marca=<?php echo $filter_marca; ?>"><?php echo $i; ?></a>
+                                                </li>
+                                            <?php endfor; ?>
+                                        </ul>
+                                    </nav>
                                 </div>
                                 <div>
-                                <button type="button" class="btn btn-secondary btn-custom-small me-6" onclick="limpiarFiltros()">Limpiar</button>
+                                    <button type="button" class="btn btn-secondary btn-custom-small me-6" onclick="limpiarFiltros()">Limpiar</button>
                                 </div>
                             </form>
                         </div>
 
                         <div class="card-body">
-                            <table id="example" class="table table-bordered dt-responsive nowrap table-striped align-middle" style="width:100%">
-                                <thead>
-                                    <tr>
-                                        <th>Nombre del Producto</th>
-                                        <th>Imagen Principal</th>
-                                        <th>Precio</th>
-                                        <th class="accion-col">Acción</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php
-                                    while ($row = $result->fetch_assoc()) {
-                                        echo "<tr id='producto-{$row['proId']}' ondblclick='openProductModal({$row['proId']}, \"{$row['proNombre']}\", \"{$row['proDescripcion']}\", \"{$row['proImg']}\", {$row['proPrecio']}, \"{$row['catNombre']}\", \"{$row['marNombre']}\")'>
-                                                <td>{$row['proNombre']}</td>
-                                                <td><img src='{$row['proImg']}' alt='{$row['proNombre']}' style='width: 50px; height: 50px;'></td>
-                                                <td>{$row['proPrecio']}</td>
-                                                <td>
-                                                    <a href='editarproducto.php?id={$row['proId']}' class='btn btn-soft-secondary btn-sm' aria-label='Editar' title='Editar'><i class='ri-pencil-fill'></i></a>
-                                                   <a href='javascript:void(0);' class='btn btn-soft-danger btn-sm' onclick='confirmDeleteProducto({$row['proId']})' aria-label='Eliminar' title='Eliminar'><i class='ri-delete-bin-fill'></i></a>
-                                                </td>
-                                            </tr>";
-                                    }
-                                    ?>
-                                </tbody>
-                            </table>
+                            <!-- Tabla de productos -->
+                            <table class="table table-bordered dt-responsive nowrap table-striped align-middle" style="width:100%">
+    <thead>
+        <tr>
+            <th>Nombre del Producto</th>
+            <th>Imagen Principal</th>
+            <th>Precio</th>
+            <th class="accion-col">Acción</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php
+        while ($row = $result->fetch_assoc()) {
+            echo "<tr id='producto-{$row['proId']}' ondblclick='openProductModal({$row['proId']}, \"{$row['proNombre']}\", \"{$row['proDescripcion']}\", \"{$row['proImg']}\", \"{$row['proImg2']}\", {$row['proPrecio']}, \"{$row['catNombre']}\", \"{$row['marNombre']}\")'>
+                    <td>{$row['proNombre']}</td>
+                    <td><img src='{$row['proImg']}' alt='{$row['proNombre']}' style='width: 50px; height: 50px;'></td>
+                    <td>{$row['proPrecio']}</td>
+                    <td>
+                        <a href='editarproducto.php?id={$row['proId']}' class='btn btn-soft-secondary btn-sm' aria-label='Editar' title='Editar'><i class='ri-pencil-fill'></i></a>
+                        <a href='javascript:void(0);' class='btn btn-soft-danger btn-sm' onclick='confirmDeleteProducto({$row['proId']})' aria-label='Eliminar' title='Eliminar'><i class='ri-delete-bin-fill'></i></a>
+                    </td>
+                </tr>";
+        }
+        ?>
+    </tbody>
+</table>
+
                         </div>
                     </div>
                 </div>
@@ -317,31 +317,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </div>
 </div>
-   <!-- Modal para mostrar detalles del producto -->
-   <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="productModalLabel">Detalles del Producto</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+   
+   
+<!-- Modal para mostrar detalles del producto -->
+<div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+        <div class="modal-header">
+                <h5 class="modal-title" id="productModalLabel">Detalles del Producto</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-                    <img id="modalProductImage" src="" alt="" style="width: 100%; height: auto;">
-                    <p><strong>Nombre: </strong><span id="modalProductName"></span></p>
-                    <p><strong>Descripción: </strong><span id="modalProductDescription"></span></p>
-                    <p><strong>Categoria: </strong><span id="modalProductCategory"></span></p>
+            <div class="modal-body d-flex">
+                <div class="me-4" style="flex: 1;">
+                    <img id="modalProductImage1" src="" alt="" class="img-fluid rounded mb-2">
+                    <img id="modalProductImage2" src="" alt="" class="img-fluid rounded">
+                </div>
+                <div style="flex: 2;">
+                    <h4 id="modalProductName" class="product-name"></h4>
+                    <p id="modalProductPrice" class="text-danger" style="font-size: 20px; font-weight: bold;"></p>
+                    <p><strong>Descripción: </strong>
+                    <p id="modalProductDescription" class="product-description"></p>
+                    <p><strong>Categoría: </strong><span id="modalProductCategory"></span></p>
                     <p><strong>Marca: </strong><span id="modalProductBrand"></span></p>
-                    <p><strong>Precio: </strong><span id="modalProductPrice"></span></p>
                 </div>
-                <div class="modal-footer">
-                    
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
             </div>
         </div>
     </div>
+</div>
 
     <script src="../../recursos/js/script.js"></script>
 </div>
-
+ob_end_flush();
 <?php include "../../footer.php"; ?>
