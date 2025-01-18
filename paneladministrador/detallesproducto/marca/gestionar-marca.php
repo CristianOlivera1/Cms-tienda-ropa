@@ -5,6 +5,24 @@ include "../../sidebar.php";
 $error = '';
 $success = '';
 
+// Configuración de la paginación
+$registros_por_pagina = 10;
+$pagina_actual = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
+$offset = ($pagina_actual - 1) * $registros_por_pagina;
+
+// Obtener el término de búsqueda
+$search = isset($_GET['search']) ? trim($_GET['search']) : '';
+
+// Obtener el total de registros
+$query_total = "SELECT COUNT(*) as total FROM marca WHERE marNombre LIKE ?";
+$search_param = "%$search%";
+$stmt_total = $con->prepare($query_total);
+$stmt_total->bind_param('s', $search_param);
+$stmt_total->execute();
+$result_total = $stmt_total->get_result();
+$total_registros = $result_total->fetch_assoc()['total'];
+$total_paginas = ceil($total_registros / $registros_por_pagina);
+
 // Manejo de la carga de imagen
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['action'])) {
     $marca_nombre = trim($_POST['marca_nombre']);
@@ -33,7 +51,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['action'])) {
             if (!is_dir($target_dir)) {
                 mkdir($target_dir, 0755, true); // Crear el directorio si no existe
             }
-            $target_file = $target_dir . uniqid() . '-' . basename($marca_img["name"]); // Renombrar el archivo para evitar conflictos
+            $unique_name = uniqid() . '-' . basename($marca_img["name"]);
+            $target_file = $target_dir . $unique_name; // Renombrar el archivo para evitar conflictos
             $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
 
             // Verificar si el archivo es una imagen real
@@ -49,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['action'])) {
                 if (move_uploaded_file($marca_img["tmp_name"], $target_file)) {
                     $query = "INSERT INTO marca (marNombre, marImg, marFechaRegis) VALUES (?, ?, NOW())";
                     $stmt = $con->prepare($query);
-                    $stmt->bind_param('ss', $marca_nombre, $target_file);
+                    $stmt->bind_param('ss', $marca_nombre, $unique_name); // Guardar solo el nombre del archivo
                     if ($stmt->execute()) {
                         $success = 'Marca registrada exitosamente.';
                     } else {
@@ -137,6 +156,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['action'])) {
                         <div class="alert-fk px-3 pt-3">
                         </div>
                         <div class="card-body">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <div class="input-group">
+                                        <input type="text" id="search" class="form-control" placeholder="Buscar marca" value="<?php echo htmlspecialchars($search); ?>">
+                                        <span class="input-group-text"><i class="ri-search-2-line"></i></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 d-flex justify-content-end">
+                                <!-- Paginación -->
+                                <nav aria-label="Page navigation example">
+                                    <ul class="pagination justify-content-center">
+                                        <?php for ($i = 1; $i <= $total_paginas; $i++): ?>
+                                            <li class="page-item <?php echo ($i == $pagina_actual) ? 'active' : ''; ?>">
+                                                <a class="page-link" href="?pagina=<?php echo $i; ?>&search=<?php echo htmlspecialchars($search); ?>#example"><?php echo $i; ?></a>
+                                            </li>
+                                        <?php endfor; ?>
+                                    </ul>
+                                </nav>
+                                </div>
+                            </div>
                             <table id="example" class="table table-bordered dt-responsive nowrap table-striped align-middle" style="width:100%">
                                 <thead>
                                     <tr>
@@ -147,12 +186,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['action'])) {
                                 </thead>
                                 <tbody>
                                     <?php
-                                    $query = "SELECT * FROM marca ORDER BY marId DESC";
-                                    $result = mysqli_query($con, $query);
-                                    while ($row = mysqli_fetch_assoc($result)) {
+                                    $query = "SELECT * FROM marca WHERE marNombre LIKE ? ORDER BY marId DESC LIMIT ? OFFSET ?";
+                                    $stmt = $con->prepare($query);
+                                    $stmt->bind_param('sii', $search_param, $registros_por_pagina, $offset);
+                                    $stmt->execute();
+                                    $result = $stmt->get_result();
+                                    while ($row = $result->fetch_assoc()) {
+                                        $image_path = "../../recursos/uploads/marca/" . htmlspecialchars($row['marImg']);
                                         echo "<tr id='marca-{$row['marId']}'>
                                                 <td>" . htmlspecialchars($row['marNombre']) . "</td>
-                                                <td><img src='" . htmlspecialchars($row['marImg']) . "' alt='" . htmlspecialchars($row['marNombre']) . "' style='width: 50px; height: 50px;'></td>
+                                                <td><img src='" . $image_path . "' alt='" . htmlspecialchars($row['marNombre']) . "' style='width: 50px; height: 50px;'></td>
                                                 <td>
                                                    <a href='editarmarca.php?id={$row['marId']}' class='btn btn-soft-secondary btn-sm ms-2 me-1' aria-label='Editar' title='Editar'><i class='ri-pencil-fill align-bottom me-1' style='font-size: 1.5em;'></i></a>
                                                     <a href='javascript:void(0);' class='btn btn-soft-danger btn-sm' onclick='confirmDeleteMarca({$row['marId']})' aria-label='Eliminar' title='Eliminar'><i class='ri-delete-bin-fill align-bottom me-1' style='font-size: 1.5em;'></i></a>

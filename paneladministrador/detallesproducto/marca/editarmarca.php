@@ -44,7 +44,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if (!empty($marca_img['name'])) {
                 // Manejar la carga de la imagen
                 $target_dir = "../../recursos/uploads/marca/";
-                $target_file = $target_dir . basename($marca_img["name"]);
+                if (!is_dir($target_dir)) {
+                    mkdir($target_dir, 0755, true); // Crear el directorio si no existe
+                }
+                $unique_name = uniqid() . '-' . basename($marca_img["name"]);
+                $target_file = $target_dir . $unique_name; // Renombrar el archivo para evitar conflictos
                 $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
 
                 // Verificar si el archivo es una imagen real
@@ -70,14 +74,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 if (empty($marca_img['name'])) {
                     $stmt->bind_param('si', $marca_nombre, $marca_id);
                 } else {
-                    $stmt->bind_param('ssi', $marca_nombre, $target_file, $marca_id);
+                    $stmt->bind_param('ssi', $marca_nombre, $unique_name, $marca_id);
                 }
                 if ($stmt->execute()) {
                     $success = 'Marca actualizada exitosamente.';
                     // Actualizar los datos de la marca
                     $marca['marNombre'] = $marca_nombre;
                     if (!empty($marca_img['name'])) {
-                        $marca['marImg'] = $target_file; // Actualiza la imagen también
+                        $marca['marImg'] = $unique_name; // Actualiza la imagen también
                     }
                 } else {
                     $error = 'Error al actualizar la marca.';
@@ -124,10 +128,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <div class="tab-content">
                                 <div class="tab-pane active" id="marcaDetails" role="tabpanel">
                                     <?php if ($error): ?>
-                                        <div class="alert alert-danger alert-dismissible alert-outline fade show"><?php echo $error; ?><button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>
+                                        <div class="alert alert-danger alert-dismissible alert-outline fade show"><?php echo htmlspecialchars($error); ?><button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>
                                     <?php endif; ?>
                                     <?php if ($success): ?>
-                                        <div class="alert alert-success alert-dismissible alert-outline fade show"><?php echo $success; ?><button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>
+                                        <div class="alert alert-success alert-dismissible alert-outline fade show"><?php echo htmlspecialchars($success); ?><button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>
                                     <?php endif; ?>
                                     <form method="POST" action="" enctype="multipart/form-data">
                                         <div class="row">
@@ -141,7 +145,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                                 <div class="mb-3">
                                                     <label for="marca_img" class="form-label">Imagen</label>
                                                     <input type="file" class="form-control" id="marca_img" name="marImg">
-                                                    <img src="<?php echo htmlspecialchars($marca['marImg']); ?>" alt="<?php echo htmlspecialchars($marca['marNombre']); ?>" style="width: 100px; height: 100px; margin-top: 10px;">
+                                                    <img src="../../recursos/uploads/marca/<?php echo htmlspecialchars($marca['marImg']); ?>" alt="<?php echo htmlspecialchars($marca['marNombre']); ?>" style="width: 100px; height: 100px; margin-top: 10px;">
                                                 </div>
                                             </div>
 

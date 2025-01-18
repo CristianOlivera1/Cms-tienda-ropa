@@ -46,7 +46,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if (!empty($categoria_img['name'])) {
                 // Manejar la carga de la nueva imagen
                 $target_dir = "../../recursos/uploads/categoria/";
-                $target_file = $target_dir . basename($categoria_img["name"]);
+                if (!is_dir($target_dir)) {
+                    mkdir($target_dir, 0755, true); // Crear el directorio si no existe
+                }
+                $unique_name = uniqid() . '-' . basename($categoria_img["name"]);
+                $target_file = $target_dir . $unique_name; // Renombrar el archivo para evitar conflictos
                 $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
 
                 // Verificar si el archivo es una imagen real
@@ -55,8 +59,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $error = 'El archivo no es una imagen.';
                 } elseif ($categoria_img["size"] > 3000000) {
                     $error = 'El archivo es demasiado grande.';
-                } elseif (!in_array($imageFileType, ['jpg', 'png', 'jpeg', 'gif'])) {
-                    $error = 'Solo se permiten archivos JPG, JPEG, PNG y GIF.';
+                } elseif (!in_array($imageFileType, ['jpg', 'png', 'jpeg'])) {
+                    $error = 'Solo se permiten archivos JPG, JPEG, PNG.';
                 } else {
                     if (!move_uploaded_file($categoria_img["tmp_name"], $target_file)) {
                         $error = 'Error al cargar la imagen.';
@@ -67,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if (empty($error)) {
                 $query = "UPDATE categoria SET catNombre = ?, catDescripcion = ?, catDetalle = ?, catImg = ? WHERE catId = ?";
                 $stmt = $con->prepare($query);
-                $stmt->bind_param('ssssi', $categoria_nombre, $categoria_descripcion, $categoria_detalle, $target_file, $categoria_id);
+                $stmt->bind_param('ssssi', $categoria_nombre, $categoria_descripcion, $categoria_detalle, $unique_name, $categoria_id);
 
                 if ($stmt->execute()) {
                     $success = 'Categoría actualizada exitosamente.';
@@ -75,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $categoria['catNombre'] = $categoria_nombre;
                     $categoria['catDescripcion'] = $categoria_descripcion;
                     $categoria['catDetalle'] = $categoria_detalle;
-                    $categoria['catImg'] = $target_file;
+                    $categoria['catImg'] = $unique_name;
                 } else {
                     $error = 'Error al actualizar la categoría.';
                 }
@@ -121,10 +125,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <div class="tab-content">
                                 <div class="tab-pane active" id="categoriaDetails" role="tabpanel">
                                     <?php if ($error): ?>
-                                        <div class="alert alert-danger alert-dismissible alert-outline fade show"><?php echo $error; ?><button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>
+                                        <div class="alert alert-danger alert-dismissible alert-outline fade show"><?php echo htmlspecialchars($error); ?><button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>
                                     <?php endif; ?>
                                     <?php if ($success): ?>
-                                        <div class="alert alert-success alert-dismissible alert-outline fade show"><?php echo $success; ?><button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>
+                                        <div class="alert alert-success alert-dismissible alert-outline fade show"><?php echo htmlspecialchars($success); ?><button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>
                                     <?php endif; ?>
                                     <form method="POST" action="" enctype="multipart/form-data">
                                         <div class="row">
@@ -151,7 +155,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                                 <div class="mb-3">
                                                     <label for="categoria_img" class="form-label">Imagen</label>
                                                     <input type="file" class="form-control" id="categoria_img" name="catImg">
-                                                    <img src="<?php echo htmlspecialchars($categoria['catImg']); ?>" alt="<?php echo htmlspecialchars($categoria['catNombre']); ?>" style="width: 100px; height: 100px; margin-top: 10px;">
+                                                    <img src="../../recursos/uploads/categoria/<?php echo htmlspecialchars($categoria['catImg']); ?>" alt="<?php echo htmlspecialchars($categoria['catNombre']); ?>" style="width: 100px; height: 100px; margin-top: 10px;">
                                                 </div>
                                             </div>
                                             <div class="col-lg-12">

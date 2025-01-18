@@ -6,9 +6,26 @@ include "../../sidebar.php";
 $error = '';
 $success = '';
 
+// Configuración de la paginación
+$registros_por_pagina = 10;
+$pagina_actual = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
+$offset = ($pagina_actual - 1) * $registros_por_pagina;
+
+// Obtener el término de búsqueda
+$search = isset($_GET['search']) ? trim($_GET['search']) : '';
+
+// Obtener el total de registros
+$query_total = "SELECT COUNT(*) as total FROM talla WHERE talNombre LIKE ?";
+$search_param = "%$search%";
+$stmt_total = $con->prepare($query_total);
+$stmt_total->bind_param('s', $search_param);
+$stmt_total->execute();
+$result_total = $stmt_total->get_result();
+$total_registros = $result_total->fetch_assoc()['total'];
+$total_paginas = ceil($total_registros / $registros_por_pagina);
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['action'])) {
     $talla_nombre = trim($_POST['talla_nombre']); // Obtener y limpiar el valor ingresado
-
 
     if (empty($talla_nombre)) {
         $error = 'El campo de talla es obligatorio.'; // Validar que el campo no esté vacío
@@ -109,6 +126,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['action'])) {
                         <div class="alert-fk px-3 pt-3">
                         </div>
                         <div class="card-body">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <div class="input-group">
+                                        <input type="text" id="search" class="form-control" placeholder="Buscar talla" value="<?php echo htmlspecialchars($search); ?>">
+                                        <span class="input-group-text"><i class="ri-search-2-line"></i></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 d-flex justify-content-end">
+                                <!-- Paginación -->
+                                <nav aria-label="Page navigation example">
+                                    <ul class="pagination justify-content-center">
+                                        <?php for ($i = 1; $i <= $total_paginas; $i++): ?>
+                                            <li class="page-item <?php echo ($i == $pagina_actual) ? 'active' : ''; ?>">
+                                                <a class="page-link" href="?pagina=<?php echo $i; ?>&search=<?php echo htmlspecialchars($search); ?>#example"><?php echo $i; ?></a>
+                                            </li>
+                                        <?php endfor; ?>
+                                    </ul>
+                                </nav>
+                                </div>
+                            </div>
                             <table id="example" class="table table-bordered dt-responsive nowrap table-striped align-middle" style="width:100%">
                                 <thead>
                                     <tr>
@@ -118,9 +155,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['action'])) {
                                 </thead>
                                 <tbody>
                                     <?php
-                                    $query = "SELECT * FROM talla ORDER BY talId DESC";
-                                    $result = mysqli_query($con, $query);
-                                    while ($row = mysqli_fetch_assoc($result)) {
+                                    $query = "SELECT * FROM talla WHERE talNombre LIKE ? ORDER BY talId DESC LIMIT ? OFFSET ?";
+                                    $stmt = $con->prepare($query);
+                                    $stmt->bind_param('sii', $search_param, $registros_por_pagina, $offset);
+                                    $stmt->execute();
+                                    $result = $stmt->get_result();
+                                    while ($row = $result->fetch_assoc()) {
                                         echo "<tr id='talla-{$row['talId']}'>
                                                 <td>{$row['talNombre']}</td>
                                                 <td>

@@ -27,7 +27,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     } else {
         // Manejar la carga de la imagen
         $target_dir = "../../recursos/uploads/categoria/";
-        $target_file = $target_dir . basename($categoria_img["name"]);
+        if (!is_dir($target_dir)) {
+            mkdir($target_dir, 0755, true); // Crear el directorio si no existe
+        }
+        $unique_name = uniqid() . '-' . basename($categoria_img["name"]);
+        $target_file = $target_dir . $unique_name; // Renombrar el archivo para evitar conflictos
         $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
 
         // Verificar si el archivo es una imagen real
@@ -51,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 if (move_uploaded_file($categoria_img["tmp_name"], $target_file)) {
                     $query = "INSERT INTO categoria (catNombre, catDescripcion, catDetalle, catImg, catFechaRegis) VALUES (?, ?, ?, ?, NOW())";
                     $stmt = $con->prepare($query);
-                    $stmt->bind_param('ssss', $categoria_nombre, $categoria_descripcion, $categoria_detalle, $target_file);
+                    $stmt->bind_param('ssss', $categoria_nombre, $categoria_descripcion, $categoria_detalle, $unique_name); // Guardar solo el nombre del archivo
                     if ($stmt->execute()) {
                         $success = 'Categoría registrada exitosamente.';
                     } else {
@@ -102,10 +106,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <div class="tab-content">
                                 <div class="tab-pane active" id="categoriaDetails" role="tabpanel">
                                     <?php if ($error): ?>
-                                        <div class="alert alert-danger alert-dismissible alert-outline fade show"><?php echo $error; ?><button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>
+                                        <div class="alert alert-danger alert-dismissible alert-outline fade show"><?php echo htmlspecialchars($error); ?><button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>
                                     <?php endif; ?>
                                     <?php if ($success): ?>
-                                        <div class="alert alert-success alert-dismissible alert-outline fade show"><?php echo $success; ?><button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>
+                                        <div class="alert alert-success alert-dismissible alert-outline fade show"><?php echo htmlspecialchars($success); ?><button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>
                                     <?php endif; ?>
                                     <form method="POST" action="" enctype="multipart/form-data">
                                         <div class="row">
@@ -161,33 +165,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 </div>
                                 <div class="col-md-6 d-flex justify-content-end">
                                 <!-- Paginación -->
-                                <nav aria-label="Page navigation example">
+                                 <nav aria-label="Page navigation example">
                                     <ul class="pagination justify-content-center">
-                                        <?php if ($pagina_actual > 1): ?>
-                                            <li class="page-item">
-                                                <a class="page-link" href="?pagina=<?php echo $pagina_actual - 1; ?>#example" tabindex="-1">Anterior</a>
-                                            </li>
-                                        <?php else: ?>
-                                            <li class="page-item disabled">
-                                                <a class="page-link" href="#" tabindex="-1">Anterior</a>
-                                            </li>
-                                        <?php endif; ?>
-
                                         <?php for ($i = 1; $i <= $total_paginas; $i++): ?>
                                             <li class="page-item <?php echo ($i == $pagina_actual) ? 'active' : ''; ?>">
-                                                <a class="page-link" href="?pagina=<?php echo $i; ?>#example"><?php echo $i; ?></a>
+                                                <a class="page-link" href="?pagina=<?php echo $i; ?>&search=<?php echo htmlspecialchars($search); ?>&order_dir=<?php echo htmlspecialchars($order_dir); ?>#example"><?php echo $i; ?></a>
                                             </li>
                                         <?php endfor; ?>
-
-                                        <?php if ($pagina_actual < $total_paginas): ?>
-                                            <li class="page-item">
-                                                <a class="page-link" href="?pagina=<?php echo $pagina_actual + 1; ?>#example">Siguiente</a>
-                                            </li>
-                                        <?php else: ?>
-                                            <li class="page-item disabled">
-                                                <a class="page-link" href="#">Siguiente</a>
-                                            </li>
-                                        <?php endif; ?>
                                     </ul>
                                 </nav>
                                 </div>
@@ -206,10 +190,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     $query = "SELECT * FROM categoria ORDER BY catId DESC LIMIT $registros_por_pagina OFFSET $offset";
                                     $result = mysqli_query($con, $query);
                                     while ($row = mysqli_fetch_assoc($result)) {
+                                        $image_path = "../../recursos/uploads/categoria/" . htmlspecialchars($row['catImg']);
                                         echo "<tr id='categoria-{$row['catId']}'>
-                                                <td>{$row['catNombre']}</td>
-                                                <td>{$row['catDescripcion']}</td>
-                                                <td><img src='{$row['catImg']}' alt='{$row['catNombre']}' style='width: 50px; height: 50px;'></td>
+                                                <td>" . htmlspecialchars($row['catNombre']) . "</td>
+                                                <td>" . htmlspecialchars($row['catDescripcion']) . "</td>
+                                                <td><img src='" . $image_path . "' alt='" . htmlspecialchars($row['catNombre']) . "' style='width: 50px; height: 50px;'></td>
                                                 <td>
                                                   <a href='editarcategoria.php?id={$row['catId']}' class='btn btn-soft-secondary btn-sm ms-2 me-1 aria-label='Editar' title='Editar'><i class='ri-pencil-fill align-bottom me-1' style='font-size: 1.5em;'></i></a>
                                                     <a href='javascript:void(0);' class='btn btn-soft-danger btn-sm' onclick='confirmDeleteCategoria({$row['catId']})' aria-label='Eliminar' title='Eliminar'><i class='ri-delete-bin-fill align-bottom me-1' style='font-size: 1.5em;'></i></a>
