@@ -62,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $error = 'El archivo de la imagen principal no es una imagen.';
                 } elseif ($producto_img["size"] > 3000000) {
                     $error = 'La imagen principal es demasiado grande.';
-                } elseif (!in_array($imageFileType, ['jpg', 'png', 'jpeg'])) {
+                } elseif (!in_array($imageFileType, ['jpg', 'png', 'jpeg', 'webp'])) {
                     $error = 'Solo se permiten archivos JPG, JPEG, PNG para la imagen principal.';
                 } else {
                     move_uploaded_file($producto_img["tmp_name"], $target_file);

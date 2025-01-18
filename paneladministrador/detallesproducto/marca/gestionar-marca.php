@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['action'])) {
                 $error = 'El archivo no es una imagen válida.';
             } elseif ($marca_img["size"] > 3000000) {
                 $error = 'El archivo es demasiado grande.';
-            } elseif (!in_array($imageFileType, ['jpg', 'png', 'jpeg'])) {
+            } elseif (!in_array($imageFileType, ['jpg', 'png', 'jpeg','webp'])) {
                 $error = 'Solo se permiten archivos JPG, JPEG, PNG.';
             } else {
                 // Si no existe, proceder a insertar

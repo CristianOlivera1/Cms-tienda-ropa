@@ -73,33 +73,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $imageFileType2 = strtolower(pathinfo($target_file2, PATHINFO_EXTENSION));
 
             // Validaciones de imagen
-            if (getimagesize($producto_img["tmp_name"]) === false || getimagesize($producto_img2["tmp_name"]) === false) {
-                $error = 'Uno de los archivos no es una imagen.';
-            } elseif ($producto_img["size"] > 30000000 || $producto_img2["size"] > 30000000) {
-                $error = 'Uno de los archivos es demasiado grande.';
-            } elseif (!in_array($imageFileType, ['jpg', 'png', 'jpeg']) || !in_array($imageFileType2, ['jpg', 'png', 'jpeg'])) {
-                $error = 'Solo se permiten archivos JPG, JPEG, PNG.';
-            } else {
-                if (move_uploaded_file($producto_img["tmp_name"], $target_file) && move_uploaded_file($producto_img2["tmp_name"], $target_file2)) {
-                    // Inserción en la base de datos
-                    $query_insert = "INSERT INTO producto (catId, marId, proNombre, proDescripcion, proImg, proImg2, proPrecio, proFechaRegistro) VALUES (?, ?, ?, ?, ?, ?, ?, NOW())";
-                    $stmt_insert = $con->prepare($query_insert);
-                    $stmt_insert->bind_param('iissssi', $_POST['catId'], $_POST['marId'], $producto_nombre, $producto_descripcion, $target_file, $target_file2, $producto_precio);
-                    if ($stmt_insert->execute()) {
-                        // Redirigir a la misma página para actualizar la tabla
-                        header("Location: " . $_SERVER['PHP_SELF'] . "?success=1&pagina=" . $pagina_actual);
-                        exit();
-                    } else {
-                        $error = 'Error al registrar el producto.';
-                    } 
-                    
-                } else {
-                    $error = 'Error al cargar las imágenes.';
-                }
-            }
-        }
+            // Validaciones de imagen
+if (getimagesize($producto_img["tmp_name"]) === false || getimagesize($producto_img2["tmp_name"]) === false) {
+    $error = 'Uno de los archivos no es una imagen.';
+} elseif ($producto_img["size"] > 30000000 || $producto_img2["size"] > 30000000) {
+    $error = 'Uno de los archivos es demasiado grande.';
+} elseif (!in_array($imageFileType, ['jpg', 'jpeg', 'png', 'webp']) || !in_array($imageFileType2, ['jpg', 'jpeg', 'png', 'webp'])) {
+    $error = 'Solo se permiten archivos JPG, JPEG, PNG y WEBP.';
+} else {
+    // Manejar la carga de imágenes
+    if (move_uploaded_file($producto_img["tmp_name"], $target_file) && move_uploaded_file($producto_img2["tmp_name"], $target_file2)) {
+        // Inserción en la base de datos
+        $query_insert = "INSERT INTO producto (catId, marId, proNombre, proDescripcion, proImg, proImg2, proPrecio, proFechaRegistro) VALUES (?, ?, ?, ?, ?, ?, ?, NOW())";
+        $stmt_insert = $con->prepare($query_insert);
+        $stmt_insert->bind_param('iissssi', $_POST['catId'], $_POST['marId'], $producto_nombre, $producto_descripcion, $target_file, $target_file2, $producto_precio);
+        if ($stmt_insert->execute()) {
+            // Redirigir a la misma página para actualizar la tabla
+            header("Location: " . $_SERVER['PHP_SELF'] . "?success=1&pagina=" . $pagina_actual);
+            exit();
+        } else {
+            $error = 'Error al registrar el producto.';
+        } 
+    } else {
+        $error = 'Error al cargar las imágenes.';
     }
-}
+}}}}
 
 // Verificar el mensaje de éxito
 if (isset($_GET['success'])) {
