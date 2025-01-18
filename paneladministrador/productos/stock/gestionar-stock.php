@@ -275,6 +275,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <table class="table table-bordered dt-responsive nowrap table-striped align-middle" style="width:100%">
                                 <thead>
                                     <tr>
+                                    <th>N</th>
                                         <th>Producto</th>
                                         <th>Estado</th>
                                         <th>Color</th>
