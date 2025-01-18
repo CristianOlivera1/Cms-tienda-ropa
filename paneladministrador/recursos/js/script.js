@@ -1,5 +1,24 @@
-
+//Limpiar filtros
+function limpiarFiltros() {
+    const form = document.getElementById('filterForm');
+    form.nombre.value = '';
+    form.categoria.selectedIndex = 0;
+    form.marca.selectedIndex = 0;
+    form.submit();
+}
+function openProductModal(id, name, description, image, price, category, brand) {
+    document.getElementById('modalProductName').innerText = name;
+    document.getElementById('modalProductDescription').innerText = description;
+    document.getElementById('modalProductImage').src = image;
+    document.getElementById('modalProductPrice').innerText = ' S/ '+ price.toFixed(2) ; // Formato de precio
+    document.getElementById('modalProductCategory').innerText = category; // Agregar categoría
+    document.getElementById('modalProductBrand').innerText = brand; // Agregar marca
+    
+    var myModal = new bootstrap.Modal(document.getElementById('productModal'));
+    myModal.show();
+}
 //eliminar producto
+
 function confirmDeleteProducto(productoId) {
     $('#deleteModal').modal('show');
     $('#confirmDeleteBtnProducto').off('click').on('click', function() {
@@ -17,7 +36,12 @@ function confirmDeleteProducto(productoId) {
                     $('#deleteModal').modal('hide');
                     $('#producto-' + productoId).remove();
                 } else {
-                    alert(result.error);
+                    $('#deleteModal').modal('hide');
+                    // alert(result.error);
+                     // Mostrar el mensaje de error en la alerta
+                     $('.alert-danger').remove();
+                     $('.alert-success').remove();
+                     $('.alert-fk').prepend('<div class="alert alert-danger alert-dismissible alert-outline fade show">' + result.error + '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
                 }
             }
         });
