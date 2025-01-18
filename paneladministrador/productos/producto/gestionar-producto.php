@@ -318,26 +318,22 @@ if (isset($_GET['success'])) {
    
    
 <!-- Modal para mostrar detalles del producto -->
-<!-- Modal para mostrar detalles del producto -->
 <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog">
         <div class="modal-content">
-        <div class="modal-header">
-    <h4 class="modal-title" id="productModalLabel">Detalles del Producto</h4>
-    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-</div>
-            <div class="modal-body d-flex">
-                <div class="me-4" style="flex: 1;">
-                    <img id="modalProductImage1" src="" alt="" class="img-fluid rounded mb-2">
-                    <img id="modalProductImage2" src="" alt="" class="img-fluid rounded">
+            <div class="modal-body">
+                <div class="me-3" style="display: flex; flex-direction: column;">
+                    <img id="modalProductImage1" src="ruta/a/tu/imagen1.jpg" alt="Miniatura 1" class="img-fluid rounded thumbnail" onclick="changeImage('modalProductImage1')">
+                    <img id="modalProductImage2" src="ruta/a/tu/imagen2.jpg" alt="Miniatura 2" class="img-fluid rounded thumbnail" onclick="changeImage('modalProductImage2')">
                 </div>
-                <div style="flex: 2;">
-                    <h4 id="modalProductName" class="product-name"></h4>
-                    <p id="modalProductPrice" class="text-danger" style="font-size: 20px; font-weight: bold;"></p>
-                    <p><strong>Descripción: </strong>
-                    <p id="modalProductDescription" class="product-description"></p>
-                    <p><strong>Categoría: </strong><span id="modalProductCategory"></span></p>
-                    <p><strong>Marca: </strong><span id="modalProductBrand"></span></p>
+                <img id="modalProductMainImage" src="ruta/a/tu/imagen_principal.jpg" alt="Imagen del Producto" class="img-fluid rounded main-image">
+                <div style="flex: 1; padding-left: 20px;">
+                    <h4 id="modalProductName" class="product-name">Polera Pell</h4>
+                    <p id="modalProductPrice" class="text-success">S/. 60.00</p>
+                    <p><strong>Descripción:</strong></p>
+                    <p id="modalProductDescription" class="product-description">Polera Pell casual y urbano</p>
+                    <p><strong>Categoría:</strong> <span id="modalProductCategory" class="product-category">Polera</span></p>
+                    <p><strong>Marca:</strong> <span id="modalProductBrand" class="product-brand">Levis</span></p>
                 </div>
             </div>
             <div class="modal-footer">

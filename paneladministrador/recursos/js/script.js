@@ -1,3 +1,25 @@
+// Cambiar imagen principal al hacer clic en una miniatura
+function changeImage(thumbnailId) {
+    const mainImage = document.getElementById('modalProductMainImage');
+    const thumbnail = document.getElementById(thumbnailId);
+    
+    if (thumbnail) {
+        mainImage.src = thumbnail.src;
+    }
+}
+
+// Cargar la primera imagen cuando se abre el modal
+function loadFirstImage() {
+    const firstThumbnail = document.getElementById('modalProductImage1');
+    const mainImage = document.getElementById('modalProductMainImage');
+    
+    if (firstThumbnail) {
+        mainImage.src = firstThumbnail.src; // Cargar la primera imagen
+    }
+}
+$('#productModal').on('show.bs.modal', loadFirstImage);
+// Establecer la imagen principal al abrir el modal
+
 //Limpiar filtros
 function limpiarFiltros() {
     const form = document.getElementById('filterForm');
@@ -6,17 +28,26 @@ function limpiarFiltros() {
     form.marca.selectedIndex = 0;
     form.submit();
 }
-function openProductModal(id, nombre, descripcion, img1, img2, precio, categoria, marca) {
+function openProductModal(id, nombre, descripcion, imagen1, imagen2, precio, categoria, marca) {
+    // Asignar valores a los elementos del modal
     document.getElementById('modalProductName').innerText = nombre;
     document.getElementById('modalProductDescription').innerText = descripcion;
-    document.getElementById('modalProductImage1').src = img1;
-    document.getElementById('modalProductImage2').src = img2;
     document.getElementById('modalProductPrice').innerText = `S/. ${precio.toFixed(2)}`;
-    document.getElementById('modalProductCategory').innerText = categoria; // Asegúrate de que este valor se esté pasando correctamente
-    document.getElementById('modalProductBrand').innerText = marca; // Asegúrate de que este valor se esté pasando correctamente
+    document.getElementById('modalProductCategory').innerText = categoria;
+    document.getElementById('modalProductBrand').innerText = marca;
 
-    // Muestra el modal
-    $('#productModal').modal('show');
+    // Asignar imágenes al modal
+    const mainImage = document.getElementById('modalProductMainImage');
+    const thumbnail1 = document.getElementById('modalProductImage1');
+    const thumbnail2 = document.getElementById('modalProductImage2');
+
+    mainImage.src = imagen1; // Imagen principal
+    thumbnail1.src = imagen1; // Miniatura 1
+    thumbnail2.src = imagen2; // Miniatura 2
+
+    // Mostrar el modal
+    const productModal = new bootstrap.Modal(document.getElementById('productModal'));
+    productModal.show();
 }
 //eliminar producto
 

@@ -1,26 +1,43 @@
+ /*estilos del modal detalle Producto*/
  
- /*Hover*/
- .table tbody tr {
-    transition: background-color 0.3s ease;
+ .main-image {
+    width: 60%; /* Ajusta el ancho de la imagen principal */
+    max-height: 400px; /* Altura máxima */
+    object-fit: cover; /* Mantiene la proporción sin distorsionar */
+    margin-right: 60px; /* Aumentar el margen a la derecha */
 }
 
-.table tbody tr:hover {
-    background-color: #f2f2f2; /* Color de fondo al pasar el mouse */
+.thumbnail {
+    width: 80px; /* Ajustar el ancho de las miniaturas */
+    height: auto; /* Mantener proporciones */
+    margin: 5px; /* Espacio entre miniaturas */
+    cursor: pointer;
+    border: 2px solid transparent; /* Espacio para el borde */
 }
- /* Estilos para el modal */
+
+.modal-body {
+    display: flex; /* Establecer flexbox */
+    align-items: center; /* Centrar verticalmente */
+    padding: 30px;
+}
+
+.thumbnail:hover {
+    border: 2px solid #007bff; /* Color del borde al pasar el mouse */
+}
+
 .modal-content {
-    border-radius: 12px; /* Bordes más suaves */
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1); /* Sombra más pronunciada */
-    background-color: rgba(255, 255, 255, 255); /* Fondo blanco con transparencia */
+    border-radius: 8px; /* Bordes menos redondeados */
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2); /* Sombra más pronunciada */
 }
-.modal-title{
+
+.modal-title {
     color: #ffffff;
     justify-content: center;
     align-items: center; 
     text-align: center;
     flex: 1;
-    
 }
+
 .modal-header {
     background-color: #3577f1; /* Color de fondo del encabezado */
     color: white; /* Color del texto */
@@ -31,23 +48,28 @@
     justify-content: center; /* Centrar horizontalmente */
     align-items: center; /* Centrar verticalmente */
     height: 60px; /* Altura del encabezado (ajustable según necesidad) */
-    width: 100%;
-    display: flex; /* Asegúrate de que el encabezado ocupe el 100% del ancho */
+}
+
+.modal-dialog {
+    max-width: 900px; /* Aumentar el ancho máximo del modal */
+    width: 100%; /* Asegúrate de que use el 100% del ancho disponible */
 }
 
 .product-name {
     font-size: 1.8rem; /* Tamaño de fuente más grande */
     font-weight: 600; /* Negrita */
     color: #333; /* Color oscuro */
+    margin-bottom: 20px; /* Aumentar margen inferior */
 }
 
 .product-description {
-    margin: 15px 0; /* Espaciado alrededor de la descripción */
+    margin: 20px 0; /* Aumentar el espaciado alrededor de la descripción */
     color: #555; /* Color más suave */
 }
 
 .text-danger {
     color: #5cbe36b5 !important; /* Color verde para el precio */
+    margin-bottom: 15px;
 }
 
 .img-fluid {
@@ -56,9 +78,10 @@
     height: auto; /* Mantener proporciones de imagen */
 }
 
-.modal-body {
-    display: flex; /* Flexbox para el layout */
-    padding: 20px; /* Espaciado interno */
+#modalProductPrice {
+    margin-bottom: 20px; /* Espacio adicional antes de la descripción */
+    font-size: 28px; /* Aumentar el tamaño del precio para mayor visibilidad */
+    font-weight: bold; /* Asegurar que el precio sea destacado */
 }
 
 .modal-footer {
@@ -66,7 +89,6 @@
     padding: 10px 20px; /* Espaciado interno */
 }
 
-/* Estilo para el fondo oscuro del modal */
 .modal-backdrop {
     background-color: rgba(0, 0, 0, 0.5); /* Fondo oscuro para el overlay */
 }
