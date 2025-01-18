@@ -11,11 +11,12 @@ function openProductModal(id, nombre, descripcion, img1, img2, precio, categoria
     document.getElementById('modalProductDescription').innerText = descripcion;
     document.getElementById('modalProductImage1').src = img1;
     document.getElementById('modalProductImage2').src = img2;
-    document.getElementById('modalProductPrice').innerText = `S/. ${precio.toFixed(2)}`; // Agregar símbolo de precio
+    document.getElementById('modalProductPrice').innerText = `S/. ${precio.toFixed(2)}`;
+    document.getElementById('modalProductCategory').innerText = categoria; // Asegúrate de que este valor se esté pasando correctamente
+    document.getElementById('modalProductBrand').innerText = marca; // Asegúrate de que este valor se esté pasando correctamente
 
-    // Mostrar el modal
-    var modal = new bootstrap.Modal(document.getElementById('productModal'));
-    modal.show();
+    // Muestra el modal
+    $('#productModal').modal('show');
 }
 //eliminar producto
 

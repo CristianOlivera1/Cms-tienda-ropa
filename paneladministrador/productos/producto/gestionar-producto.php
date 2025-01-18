@@ -320,13 +320,14 @@ if (isset($_GET['success'])) {
    
    
 <!-- Modal para mostrar detalles del producto -->
+<!-- Modal para mostrar detalles del producto -->
 <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
         <div class="modal-header">
-                <h5 class="modal-title" id="productModalLabel">Detalles del Producto</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
+    <h4 class="modal-title" id="productModalLabel">Detalles del Producto</h4>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
             <div class="modal-body d-flex">
                 <div class="me-4" style="flex: 1;">
                     <img id="modalProductImage1" src="" alt="" class="img-fluid rounded mb-2">
