@@ -149,6 +149,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['action'])) {
                             <table id="example" class="table table-bordered dt-responsive nowrap table-striped align-middle" style="width:100%">
                                 <thead>
                                     <tr>
+                                    <th>N</th>
                                         <th>Nombre de la Talla</th>
                                         <th class="accion-col">Acción</th>
                                     </tr>
@@ -160,14 +161,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['action'])) {
                                     $stmt->bind_param('sii', $search_param, $registros_por_pagina, $offset);
                                     $stmt->execute();
                                     $result = $stmt->get_result();
+                                    $numeracion=$offset+1;
                                     while ($row = $result->fetch_assoc()) {
                                         echo "<tr id='talla-{$row['talId']}'>
+                                                <td>{$numeracion}</td>
                                                 <td>{$row['talNombre']}</td>
                                                 <td>
                                                     <a href='editartalla.php?id={$row['talId']}' class='btn btn-soft-secondary btn-sm ms-2 me-1' aria-label='Editar' title='Editar'><i class='ri-pencil-fill align-bottom me-1' style='font-size: 1.5em;'></i></a>
                                                     <a href='javascript:void(0);' class='btn btn-soft-danger btn-sm' onclick='confirmDeleteTalla({$row['talId']})' aria-label='Eliminar' title='Eliminar'><i class='ri-delete-bin-fill align-bottom me-1' style='font-size: 1.5em;'></i></a>
                                                 </td>
                                             </tr>";
+                                            $numeracion++;
                                     }
                                     ?>
                                 </tbody>

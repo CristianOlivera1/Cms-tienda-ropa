@@ -10,11 +10,25 @@ $registros_por_pagina = 10;
 $pagina_actual = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
 $offset = ($pagina_actual - 1) * $registros_por_pagina;
 
-// Obtener el total de registros
-$query_total = "SELECT COUNT(*) as total FROM categoria";
-$result_total = mysqli_query($con, $query_total);
-$total_registros = mysqli_fetch_assoc($result_total)['total'];
+// Obtener el término de búsqueda
+$search = isset($_GET['search']) ? trim($_GET['search']) : '';
+
+// Actualizar la consulta para incluir el término de búsqueda
+$query_total = "SELECT COUNT(*) as total FROM categoria WHERE catNombre LIKE ? OR catDescripcion LIKE ?";
+$stmt_total = $con->prepare($query_total);
+$search_param = "%$search%";
+$stmt_total->bind_param('ss', $search_param, $search_param);
+$stmt_total->execute();
+$result_total = $stmt_total->get_result();
+$total_registros = $result_total->fetch_assoc()['total'];
 $total_paginas = ceil($total_registros / $registros_por_pagina);
+
+// Obtener las categorías con el término de búsqueda y la paginación
+$query = "SELECT * FROM categoria WHERE catNombre LIKE ? OR catDescripcion LIKE ? ORDER BY catId DESC LIMIT ? OFFSET ?";
+$stmt = $con->prepare($query);
+$stmt->bind_param('ssii', $search_param, $search_param, $registros_por_pagina, $offset);
+$stmt->execute();
+$result = $stmt->get_result();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $categoria_nombre = trim($_POST['catNombre']);
@@ -159,7 +173,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <div class="row mb-3">
                                 <div class="col-md-6">
                                     <div class="input-group">
-                                        <input type="text" id="search" class="form-control" placeholder="Buscar producto">
+                                        <input type="text" id="search" name="search" class="form-control" placeholder="Buscar categoría" value="<?php echo htmlspecialchars($search); ?>">
                                         <span class="input-group-text"><i class="ri-search-2-line"></i></span>
                                     </div>
                                 </div>
@@ -169,7 +183,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     <ul class="pagination justify-content-center">
                                         <?php for ($i = 1; $i <= $total_paginas; $i++): ?>
                                             <li class="page-item <?php echo ($i == $pagina_actual) ? 'active' : ''; ?>">
-                                                <a class="page-link" href="?pagina=<?php echo $i; ?>&search=<?php echo htmlspecialchars($search); ?>&order_dir=<?php echo htmlspecialchars($order_dir); ?>#example"><?php echo $i; ?></a>
+                                                <a class="page-link" href="?pagina=<?php echo $i; ?>&search=<?php echo htmlspecialchars($search); ?>"><?php echo $i; ?></a>
                                             </li>
                                         <?php endfor; ?>
                                     </ul>
@@ -179,6 +193,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <table id="example" class="table table-bordered dt-responsive nowrap table-striped align-middle" style="width:100%">
                                 <thead>
                                     <tr>
+                                        <th>N</th>
                                         <th>Nombre de la Categoría</th>
                                         <th>Descripción</th>
                                         <th>Imagen</th>
@@ -187,19 +202,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 </thead>
                                 <tbody>
                                     <?php
-                                    $query = "SELECT * FROM categoria ORDER BY catId DESC LIMIT $registros_por_pagina OFFSET $offset";
-                                    $result = mysqli_query($con, $query);
-                                    while ($row = mysqli_fetch_assoc($result)) {
+                                    $numeracion = $offset + 1;
+                                    while ($row = $result->fetch_assoc()) {
                                         $image_path = "../../recursos/uploads/categoria/" . htmlspecialchars($row['catImg']);
                                         echo "<tr id='categoria-{$row['catId']}'>
+                                                <td>{$numeracion}</td>
                                                 <td>" . htmlspecialchars($row['catNombre']) . "</td>
                                                 <td>" . htmlspecialchars($row['catDescripcion']) . "</td>
                                                 <td><img src='" . $image_path . "' alt='" . htmlspecialchars($row['catNombre']) . "' style='width: 50px; height: 50px;'></td>
                                                 <td>
-                                                  <a href='editarcategoria.php?id={$row['catId']}' class='btn btn-soft-secondary btn-sm ms-2 me-1 aria-label='Editar' title='Editar'><i class='ri-pencil-fill align-bottom me-1' style='font-size: 1.5em;'></i></a>
+                                                    <a href='editarcategoria.php?id={$row['catId']}' class='btn btn-soft-secondary btn-sm ms-2 me-1' aria-label='Editar' title='Editar'><i class='ri-pencil-fill align-bottom me-1' style='font-size: 1.5em;'></i></a>
                                                     <a href='javascript:void(0);' class='btn btn-soft-danger btn-sm' onclick='confirmDeleteCategoria({$row['catId']})' aria-label='Eliminar' title='Eliminar'><i class='ri-delete-bin-fill align-bottom me-1' style='font-size: 1.5em;'></i></a>
                                                 </td>
                                             </tr>";
+                                        $numeracion++;
                                     }
                                     ?>
                                 </tbody>

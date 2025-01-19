@@ -27,9 +27,9 @@ $total_paginas = ceil($total_registros / $registros_por_pagina);
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['action'])) {
     $marca_nombre = trim($_POST['marca_nombre']);
     $marca_img = $_FILES['marImg'];
-
+    $marca_nombre = strtoupper($marca_nombre);
     // Sanitizar el nombre de la marca
-    $marca_nombre = filter_var($marca_nombre, FILTER_SANITIZE_STRING);
+    $marca_nombre = filter_var($marca_nombre, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
     if (empty($marca_nombre)) {
         $error = 'El campo de marca es obligatorio.';
@@ -68,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['action'])) {
                 if (move_uploaded_file($marca_img["tmp_name"], $target_file)) {
                     $query = "INSERT INTO marca (marNombre, marImg, marFechaRegis) VALUES (?, ?, NOW())";
                     $stmt = $con->prepare($query);
-                    $stmt->bind_param('ss', $marca_nombre, $unique_name); // Guardar solo el nombre del archivo
+                    $stmt->bind_param('ss', $marca_nombre, $unique_name);
                     if ($stmt->execute()) {
                         $success = 'Marca registrada exitosamente.';
                     } else {

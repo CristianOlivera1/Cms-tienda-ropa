@@ -26,6 +26,7 @@ if (isset($_GET['id'])) {
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $marca_nombre = trim($_POST['marca_nombre']);
     $marca_img = $_FILES['marImg'];
+    $marca_nombre = strtoupper($marca_nombre);
 
     if (empty($marca_nombre)) {
         $error = 'El campo de marca es obligatorio.';

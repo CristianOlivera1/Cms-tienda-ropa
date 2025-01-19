@@ -264,7 +264,7 @@ $result = $stmt->get_result();
                             <table class="table table-bordered dt-responsive nowrap table-striped align-middle" style="width:100%">
                                 <thead>
                                     <tr>
-                                        <th>#</th>
+                                        <th>N</th>
                                         <th>Nombre del Producto</th>
                                         <th>Imagen Principal</th>
                                         <th>Precio</th>
