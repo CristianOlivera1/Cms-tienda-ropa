@@ -61,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['action'])) {
                 $error = 'El archivo no es una imagen válida.';
             } elseif ($marca_img["size"] > 3000000) {
                 $error = 'El archivo es demasiado grande.';
-            } elseif (!in_array($imageFileType, ['jpg', 'png', 'jpeg'])) {
+            } elseif (!in_array($imageFileType, ['jpg', 'png', 'jpeg','webp'])) {
                 $error = 'Solo se permiten archivos JPG, JPEG, PNG.';
             } else {
                 // Si no existe, proceder a insertar
@@ -179,6 +179,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['action'])) {
                             <table id="example" class="table table-bordered dt-responsive nowrap table-striped align-middle" style="width:100%">
                                 <thead>
                                     <tr>
+                                    <th>N</th>
                                         <th>Nombre de la Marca</th>
                                         <th>Imagen</th>
                                         <th class="accion-col">Acción</th>
@@ -191,9 +192,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['action'])) {
                                     $stmt->bind_param('sii', $search_param, $registros_por_pagina, $offset);
                                     $stmt->execute();
                                     $result = $stmt->get_result();
+                                    $numero_registro = $offset + 1;
+
                                     while ($row = $result->fetch_assoc()) {
                                         $image_path = "../../recursos/uploads/marca/" . htmlspecialchars($row['marImg']);
                                         echo "<tr id='marca-{$row['marId']}'>
+                                        <td>{$numero_registro}</td>
                                                 <td>" . htmlspecialchars($row['marNombre']) . "</td>
                                                 <td><img src='" . $image_path . "' alt='" . htmlspecialchars($row['marNombre']) . "' style='width: 50px; height: 50px;'></td>
                                                 <td>
@@ -201,6 +205,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['action'])) {
                                                     <a href='javascript:void(0);' class='btn btn-soft-danger btn-sm' onclick='confirmDeleteMarca({$row['marId']})' aria-label='Eliminar' title='Eliminar'><i class='ri-delete-bin-fill align-bottom me-1' style='font-size: 1.5em;'></i></a>
                                                 </td>
                                             </tr>";
+                                            $numero_registro++;
                                     }
                                     ?>
                                 </tbody>

@@ -1,4 +1,22 @@
-
+function openProductModal(id, nombre, descripcion, img1, img2, precio, categoria, marca) {
+    document.getElementById('modalProductName').innerText = nombre;
+    document.getElementById('modalProductDescription').innerText = descripcion;
+    document.getElementById('modalProductImage1').src = `../../recursos/uploads/producto/${img1}`;
+    document.getElementById('modalProductImage2').src = `../../recursos/uploads/producto/${img2}`;
+    document.getElementById('modalProductPrice').innerText = `S/. ${precio.toFixed(2)}`;
+    document.getElementById('modalProductCategory').innerText = categoria; 
+    document.getElementById('modalProductBrand').innerText = marca;
+    // Muestra el modal
+    $('#productModal').modal('show');
+}
+//intercambiar imagenes en productos
+function swapImages() {
+    const img1 = document.getElementById('modalProductImage1');
+    const img2 = document.getElementById('modalProductImage2');
+    const tempSrc = img1.src;
+    img1.src = img2.src;
+    img2.src = tempSrc;
+}
 //eliminar producto
 function confirmDeleteProducto(productoId) {
     $('#deleteModal').modal('show');
@@ -17,7 +35,12 @@ function confirmDeleteProducto(productoId) {
                     $('#deleteModal').modal('hide');
                     $('#producto-' + productoId).remove();
                 } else {
-                    alert(result.error);
+                    $('#deleteModal').modal('hide');
+                    // alert(result.error);
+                     // Mostrar el mensaje de error en la alerta
+                     $('.alert-danger').remove();
+                     $('.alert-success').remove();
+                     $('.alert-fk').prepend('<div class="alert alert-danger alert-dismissible alert-outline fade show">' + result.error + '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
                 }
             }
         });
