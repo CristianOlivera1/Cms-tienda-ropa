@@ -237,7 +237,7 @@ $result = $stmt->get_result();
                     </div>
                     <div class="card mt-4">
                         <div class="card-header">
-                            <h5 class="card-title mb-0">Lista de Productos</h5>
+                            <h5 class="card-title mb-0">Lista de Productos<div class="badge-total">Total: <?php echo $total_registros; ?></div></h5>
                         </div>
                         <div class="card-body">
                         <div class="row mb-3">
@@ -247,6 +247,7 @@ $result = $stmt->get_result();
                                         <span class="input-group-text"><i class="ri-search-2-line"></i></span>
                                     </div>
                                 </div>
+                                
                                 <div class="col-md-6 d-flex justify-content-end">
                                 <!-- Paginación -->
                                 <nav aria-label="Page navigation example">

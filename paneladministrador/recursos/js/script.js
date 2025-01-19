@@ -335,6 +335,9 @@ $(document).ready(function() {
             if ($('#filterCategory').val()) {
                 url += '&filterCategory=' + $('#filterCategory').val();
             }
+            if ($('#filterMarca').val()) {
+                url += '&filterMarca=' + $('#filterMarca').val();
+            }
             if ($('#filterState').val()) {
                 url += '&filterState=' + $('#filterState').val();
             }
@@ -346,10 +349,13 @@ $(document).ready(function() {
     });
 
     //filtros independientes(varia para cada tabla) para todas las tablas
-    $('#filterCategory, #filterState, #order_dir').on('change', function() {
+    $('#filterCategory, #filterState, #order_dir,#filterMarca').on('change', function() {
         var url = '?search=' + $('#search').val();
         if ($('#filterCategory').val()) {
             url += '&filterCategory=' + $('#filterCategory').val();
+        }
+        if ($('#filterMarca').val()) {
+            url += '&filterMarca=' + $('#filterMarca').val();
         }
         if ($('#filterState').val()) {
             url += '&filterState=' + $('#filterState').val();

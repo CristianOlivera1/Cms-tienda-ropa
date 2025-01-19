@@ -121,7 +121,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['action'])) {
 
                     <div class="card mt-4">
                         <div class="card-header">
-                            <h5 class="card-title mb-0">Lista de Tallas</h5>
+                            <h5 class="card-title mb-0">Lista de Tallas<div class="badge-total">Total: <?php echo $total_registros; ?></div></h5>
                         </div>
                         <div class="alert-fk px-3 pt-3">
                         </div>

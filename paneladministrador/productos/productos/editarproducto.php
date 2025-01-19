@@ -54,7 +54,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // Manejar imagen principal
             if (!empty($producto_img['name'])) {
-                $target_file = $target_dir . basename($producto_img["name"]);
+                $unique_name1 = uniqid() . '-' . basename($producto_img["name"]);
+                $target_file = $target_dir . $unique_name1;
                 $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
 
                 // Validaciones de imagen
@@ -71,7 +72,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // Manejar imagen secundaria
             if (!empty($producto_img2['name'])) {
-                $target_file2 = $target_dir . basename($producto_img2["name"]);
+                $unique_name2 = uniqid() . '-' . basename($producto_img2["name"]);
+                $target_file2 = $target_dir . $unique_name2;
                 $imageFileType2 = strtolower(pathinfo($target_file2, PATHINFO_EXTENSION));
 
                 // Validaciones de imagen
@@ -79,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $error = 'El archivo de la imagen secundaria no es una imagen.';
                 } elseif ($producto_img2["size"] > 3000000) {
                     $error = 'La imagen secundaria es demasiado grande.';
-                } elseif (!in_array($imageFileType2, ['jpg', 'png', 'jpeg'])) {
+                } elseif (!in_array($imageFileType2, ['jpg', 'png', 'jpeg', 'webp', 'svg'])) {
                     $error = 'Solo se permiten archivos JPG, JPEG, PNG para la imagen secundaria.';
                 } else {
                     move_uploaded_file($producto_img2["tmp_name"], $target_file2);
@@ -90,7 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 // Actualizar en la base de datos
                 $query_update = "UPDATE producto SET catId = ?, marId = ?, proNombre = ?, proDescripcion = ?, proImg = ?, proImg2 = ?, proPrecio = ? WHERE proId = ?";
                 $stmt_update = $con->prepare($query_update);
-                $stmt_update->bind_param('iissssdi', $categoria_id, $marca_id, $producto_nombre, $producto_descripcion, $target_file, $target_file2, $producto_precio, $producto_id);
+                $stmt_update->bind_param('iissssdi', $categoria_id, $marca_id, $producto_nombre, $producto_descripcion, $unique_name1, $unique_name2, $producto_precio, $producto_id);
 
                 if ($stmt_update->execute()) {
                     $success = 'Producto actualizado exitosamente.';
@@ -101,6 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
+
 
 // Obtener categorías y marcas
 $query_categorias = "SELECT catId, catNombre FROM categoria";
@@ -191,14 +194,14 @@ $result_marcas = mysqli_query($con, $query_marcas);
                                                 <div class="mb-3">
                                                     <label for="producto_img" class="form-label">Imagen Principal</label>
                                                     <input type="file" class="form-control" id="producto_img" name="proImg">
-                                                    <img src="<?php echo htmlspecialchars($producto['proImg']); ?>" alt="<?php echo htmlspecialchars($producto['proNombre']); ?>" style="width: 100px; height: 100px; margin-top: 10px;">
+                                                    <img src="../../recursos/uploads/producto/<?php echo htmlspecialchars($producto['proImg']); ?>" alt="<?php echo htmlspecialchars($producto['proNombre']); ?>" style="width: 100px; height: 100px; margin-top: 10px;">
                                                 </div>
                                             </div>
                                             <div class="col-lg-6">
                                                 <div class="mb-3">
                                                     <label for="producto_img2" class="form-label">Imagen Secundaria</label>
                                                     <input type="file" class="form-control" id="producto_img2" name="proImg2">
-                                                    <img src="<?php echo htmlspecialchars($producto['proImg2']); ?>" alt="<?php echo htmlspecialchars($producto['proNombre']); ?>" style="width: 100px; height: 100px; margin-top: 10px;">
+                                                    <img src="../../recursos/uploads/producto/<?php echo htmlspecialchars($producto['proImg2']); ?>" alt="<?php echo htmlspecialchars($producto['proNombre']); ?>" style="width: 100px; height: 100px; margin-top: 10px;">
                                                 </div>
                                             </div>
                                             <div class="col-lg-6">
