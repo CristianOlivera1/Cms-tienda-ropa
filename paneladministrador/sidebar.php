@@ -51,6 +51,9 @@ if($_SESSION['cargo_gerente']=='Gerente'){
                                     <li class="nav-item">
                                       <a href="/paneladministrador/productos/stock/gestionar-stock.php" class="nav-link" data-key="t-nft-landing">Gestionar Stock</a>
                                     </li>
+                                    <li class="nav-item">
+                                      <a href="/paneladministrador/productos/oferta/gestionar-oferta.php" class="nav-link" data-key="t-nft-landing">Gestionar oferta</a>
+                                    </li>
                                 </ul>
                             </div>
                       </li>
@@ -74,10 +77,6 @@ if($_SESSION['cargo_gerente']=='Gerente'){
                                       <hr class="dropdown-divider mt-0 mb-0 me-4">
                                     </li>
 
-                                    <!-- <li class="nav-item">
-                                      <a href="/paneladministrador/detallesproducto/oferta/gestionar-oferta.php" class="nav-link" data-key="t-nft-landing">Gestionar oferta</a>
-                                    </li> -->
-
                                     <li class="nav-item">
                                         <a href="/paneladministrador/detallesproducto/talla/gestionar-talla.php" class="nav-link" data-key="t-nft-landing">Gestionar talla</a>
                                     </li>
@@ -96,9 +95,9 @@ if($_SESSION['cargo_gerente']=='Gerente'){
                           <div class="menu-dropdown collapse" id="sidebarAdmin">
                             <ul class="nav nav-sm flex-column">
 
-                              <!-- <li class="nav-item">
+                              <li class="nav-item">
                                 <a href="/paneladministrador/ventasclientes/ventas/gestionar-ventas.php" class="nav-link" data-key="t-nft-landing">Gestionar Ventas</a>
-                              </li> -->
+                              </li>
 
                               <li class="nav-item">
                                 <a href="/paneladministrador/ventasclientes/clientes/gestionar-clientes.php" class="nav-link" data-key="t-nft-landing">Gestionar Clientes</a>

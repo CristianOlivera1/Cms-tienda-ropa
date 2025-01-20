@@ -308,7 +308,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                               WHERE (p.proNombre LIKE ? OR c.colNombre LIKE ? OR t.talNombre LIKE ? OR s.stoCantidad LIKE ?)";
                                     $params = [$search_param, $search_param, $search_param, $search_param];
 
-                                    if ($filterCategory) {
+                                    if ($filterCategory) {  
                                         $query .= " AND p.catId = ?";
                                         $params[] = $filterCategory;
                                     }

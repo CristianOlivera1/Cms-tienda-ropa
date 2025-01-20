@@ -54,7 +54,7 @@
 <div class='single-service color-1 bg-hover bg-white hover-bottom text-center' style='padding:5px 15px 15px'>
     <h3 class='my-2 mt-2'>$serviceg</h3>
     <p>$service_desc</p>
-    <img src='dashboard/uploads/categorias/$img' alt='img' class='category-img'>
+    <img src='../../paneladministrador/recursos/uploads/categoria/$img' alt='img' class='category-img'>
     <a class='service-btn mt-3 mb-1' href='producto.php?category=$id'>Ver modelos</a>
 </div>
 </a>
@@ -79,7 +79,7 @@
              <div class="col-12 col-md-10 col-lg-7">
 
                  <div class="section-heading text-center">
-                     <h2 class="text-white">Portafolios</h2>
+                     <h2 class="text-white">Ofertas</h2>
                      <p class="text-white d-none d-sm-block mt-4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt eaque at excepturi accusamus illo, adipisci, laudantium expedita saepe ad quo nobis maiores pariatur! Sit pariatur repellendus minima reiciendis ullam molestiae?</p>
                  </div>
              </div>

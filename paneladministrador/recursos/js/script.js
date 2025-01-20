@@ -48,29 +48,40 @@ function confirmDeleteProducto(productoId) {
 }
 
 //eliminar oferta
-function confirmDeleteOferta(ofertaId) {
+function confirmDeleteOfertas(ofertaId) {
+    ofertaIdToDelete = ofertaId; // Guardar el ID de la oferta a eliminar
     $('#deleteModal').modal('show');
-    $('#confirmDeleteBtnOferta').off('click').on('click', function() {
+    $('#confirmDeleteBtnOferta').on('click', function() {
         $.ajax({
-            url: 'eliminaroferta.php',
+            url: 'eliminaroferta.php', // Cambia esta ruta a tu script de eliminación
             type: 'POST',
             data: {
                 action: 'delete',
-                oferta_id: ofertaId
+                oferta_id: ofertaIdToDelete
             },
             success: function(response) {
-                // console.log(response); // Agregar este console.log para depurar la respuesta
                 var result = JSON.parse(response);
                 if (result.success) {
                     $('#deleteModal').modal('hide');
-                    $('#oferta-' + ofertaId).remove();
+                    $('#oferta-' + ofertaIdToDelete).remove(); // Eliminar la fila de la tabla
                 } else {
-                    alert(result.error);
+                    $('#deleteModal').modal('hide');
+                    // Mostrar el mensaje de error en la alerta
+                    $('.alert-danger').remove();
+                    $('.alert-success').remove();
+                    $('.alert-fk').prepend('<div class="alert alert-danger alert-dismissible fade show">' + result.error + '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
                 }
+            },
+            error: function() {
+                $('#deleteModal').modal('hide');
+                $('.alert-danger').remove();
+                $('.alert-fk').prepend('<div class="alert alert-danger alert-dismissible fade show">Error en la solicitud. Inténtalo de nuevo.<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
             }
         });
     });
+    
 }
+
 
 //eliminar administrador
 function confirmDeleteAdministrador(administradorId) {

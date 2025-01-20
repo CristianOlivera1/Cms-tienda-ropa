@@ -134,7 +134,7 @@ $numrows = $row[0];
                         <!-- Encabezado de Sección -->
 
                         <div class="section-heading text-center">
-                            <h2 class="text-white">Portafolio</h2>
+                            <h2 class="text-white">Ofertas</h2>
                             <p class="text-white d-none d-sm-block mt-4">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ex error vel laborum optio nulla provident atque iure beatae et dolore! Nostrum, commodi accusamus. Dicta incidunt maiores quisquam, est nam voluptatem.</p>
                         </div>
                     </div>

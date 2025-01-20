@@ -57,7 +57,7 @@ $selectedCategory = isset($_GET['category']) ? $_GET['category'] : '';
                     $categories = mysqli_query($con, "SELECT catId, catNombre FROM categoria");
                     while ($category = mysqli_fetch_assoc($categories)) {
                         $category_id = $category['catId'];
-                        $product_count_query = mysqli_query($con, "SELECT count(*) FROM Producto WHERE catId = $category_id");
+                        $product_count_query = mysqli_query($con, "SELECT count(*) FROM producto WHERE catId = $category_id");
                         $product_count = mysqli_fetch_row($product_count_query)[0];
                         $activeClass = $selectedCategory == $category_id ? 'active' : '';
                         $ariaSelected = $selectedCategory == $category_id ? 'true' : 'false';
@@ -83,7 +83,7 @@ $selectedCategory = isset($_GET['category']) ? $_GET['category'] : '';
                                 <div class='col-12 col-md-6 col-lg-4 mb-3'>
                                     <!-- Servicio Individual -->
                                    <a href='detalleproducto.php?id=$id' class='hover-products'><div class='single-service color-1 bg-hover hover-bottom text-center' style='padding:5px 15px 15px'>
-                                        <img src='dashboard/uploads/productos/$ufile' alt='img' class='category-img'>
+                                        <img src='../../paneladministrador/recursos/uploads/producto/$ufile' alt='img' class='category-img'>
                                         <h5 class='my-3'>$name</h5>
                                         <p>S/. $price.00</p>
                                     </div>  </a>
@@ -94,7 +94,7 @@ $selectedCategory = isset($_GET['category']) ? $_GET['category'] : '';
                         </div>
                     </div>
                     <?php //Categorias por individual
-                    $categories = mysqli_query($con, "SELECT catId, catNombre FROM Categoria");
+                    $categories = mysqli_query($con, "SELECT catId, catNombre FROM categoria");
                     while ($category = mysqli_fetch_assoc($categories)) {
                         $activeClass = $selectedCategory == $category['catId'] ? 'show active' : '';
                         echo "<div class='tab-pane fade $activeClass' id='v-pills-{$category['catId']}' role='tabpanel' aria-labelledby='v-pills-{$category['catId']}-tab'>";
@@ -112,7 +112,7 @@ $selectedCategory = isset($_GET['category']) ? $_GET['category'] : '';
                             <div class='col-12 col-md-6 col-lg-4 res-margin'>
                                 <!-- Servicio Individual -->
                               <a href='detalleproducto.php?id=$id' class='hover-products'>  <div class='single-service color-1 bg-hover bg-white hover-bottom text-center' style='padding:5px 15px 15px'>
-                                    <img src='dashboard/uploads/productos/$ufile' alt='img' class='category-img'>
+                                    <img src='../../paneladministrador/recursos/uploads/producto/$ufile' alt='img' class='category-img'>
                                     <h5 class='my-3'>$name</h5>
                                     <p>S/. $price.00</p>
                                 </div>

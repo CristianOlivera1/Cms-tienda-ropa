@@ -2404,12 +2404,18 @@ progress {
     border-color: #bfd4df
 }
 
-.badge-dark, .badge-success, .badge-danger, .badge-total,.badge-warning { 
+.badge-dark, .badge-success, .badge-danger, .badge-total,.badge-warning,.badge-pdf { 
     display: inline-block;
     padding: 3px 5px;
     border-radius: 5px;
     white-space: nowrap;
     vertical-align: baseline;
+}
+.badge-pdf{
+    width: 32px;
+    height: 32px;
+    background-color:#EFF2F7;
+    border: 1px solid #c2c6cd;
 }
 .badge-dark{
     background-color: #343a40;
@@ -8269,7 +8275,7 @@ fieldset:disabled .btn {
 }
 
 .opacity-50 {
-    opacity: .5 !important
+    opacity: 50% !important
 }
 
 .opacity-75 {

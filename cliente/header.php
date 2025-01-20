@@ -21,7 +21,7 @@ $conEmail = "$tr[conEmail]";
 </head>
 
 <body>
-    <div id="preloader">
+    <!-- <div id="preloader">
         <div id="digimax-preloader" class="digimax-preloader">
             <div class="preloader-animation">
                 <div class="spinner"></div>
@@ -51,7 +51,7 @@ $conEmail = "$tr[conEmail]";
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
 
     <div id="scrollUp" title="Desplazarse al Inicio">
         <i class="fas fa-arrow-up"></i>

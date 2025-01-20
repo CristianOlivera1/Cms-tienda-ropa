@@ -49,7 +49,7 @@ $product_brand_img = $tr['marImg'];
                     <p class="text-dark mb-3"><strong>Categoría:</strong> <?php echo $product_category; ?></p>
                     <p class="text-dark mb-3"><strong>Marca:</strong> <?php echo $product_brand; ?></p>
                     <?php if ($product_brand_img): ?>
-                        <img src="../../paneladministrador/recursos/uploads/marca/<?php echo $product_brand_img; ?>" alt="img" class="img-fluid mt-3">
+                        <img src="../../paneladministrador/recursos/uploads/marca/<?php echo $product_brand_img; ?>" alt="img" class="img-fluid mt-3 text-opacity20">
                     <?php endif; ?>
                     <!-- Buttons -->
                     <div class="button-group mt-5">
