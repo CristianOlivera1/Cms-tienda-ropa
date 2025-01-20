@@ -16,6 +16,8 @@ $marca_id = '';
 
 // Variables de búsqueda y paginación
 $search = isset($_GET['search']) ? trim($_GET['search']) : '';
+$filter_categoria = isset($_GET['categoria']) ? trim($_GET['categoria']) : '';
+$filter_marca = isset($_GET['marca']) ? trim($_GET['marca']) : '';
 $pagina_actual = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
 $registros_por_pagina = 10;
 $offset = ($pagina_actual - 1) * $registros_por_pagina;
@@ -97,10 +99,10 @@ if (isset($_GET['success'])) {
 }
 
 // Obtener el total de registros con filtros
-$query_total = "SELECT COUNT(*) as total FROM producto WHERE proNombre LIKE ?";
+$query_total = "SELECT COUNT(*) as total FROM producto WHERE proNombre LIKE ? AND (catId = ? OR ? = '') AND (marId = ? OR ? = '')";
 $stmt_total = $con->prepare($query_total);
 $search_param = "%$search%";
-$stmt_total->bind_param('s', $search_param);
+$stmt_total->bind_param('sssss', $search_param, $filter_categoria, $filter_categoria, $filter_marca, $filter_marca);
 $stmt_total->execute();
 $result_total = $stmt_total->get_result();
 $total_registros = $result_total->fetch_assoc()['total'];
@@ -110,11 +112,11 @@ $total_paginas = ceil($total_registros / $registros_por_pagina);
 $query = "SELECT p.*, c.catNombre, m.marNombre FROM producto p
           JOIN categoria c ON p.catId = c.catId
           JOIN marca m ON p.marId = m.marId
-          WHERE p.proNombre LIKE ?
+          WHERE p.proNombre LIKE ? AND (p.catId = ? OR ? = '') AND (p.marId = ? OR ? = '')
           ORDER BY p.proId DESC
           LIMIT ? OFFSET ?";
 $stmt = $con->prepare($query);
-$stmt->bind_param('sii', $search_param, $registros_por_pagina, $offset);
+$stmt->bind_param('ssssiii', $search_param, $filter_categoria, $filter_categoria, $filter_marca, $filter_marca, $registros_por_pagina, $offset);
 $stmt->execute();
 $result = $stmt->get_result();
 ?>
@@ -240,15 +242,44 @@ $result = $stmt->get_result();
                             <h5 class="card-title mb-0">Lista de Productos<div class="badge-total">Total: <?php echo $total_registros; ?></div></h5>
                         </div>
                         <div class="card-body">
+                        <form method="GET" action="" id="filterForm">
                         <div class="row mb-3">
-                                <div class="col-md-6">
+                       
+                                <div class="col-md-3">
                                     <div class="input-group">
                                         <input type="text" id="search" class="form-control" placeholder="Buscar marca" value="<?php echo htmlspecialchars($search); ?>" onkeyup="if(event.keyCode == 13) window.location.href='?search='+this.value">
                                         <span class="input-group-text"><i class="ri-search-2-line"></i></span>
                                     </div>
                                 </div>
-                                
-                                <div class="col-md-6 d-flex justify-content-end">
+                                <div class="col-md-3">
+                                    <select name="categoria" class="form-select me-2" onchange="this.form.submit()">
+                                        <option value="">Todas las categorías</option>
+                                        <?php
+                                        $query_categorias = "SELECT * FROM categoria";
+                                        $result_categorias = mysqli_query($con, $query_categorias);
+                                        while ($row_categoria = mysqli_fetch_assoc($result_categorias)) {
+                                            $selected = ($filter_categoria == $row_categoria['catId']) ? 'selected' : '';
+                                            echo "<option value='{$row_categoria['catId']}' $selected>{$row_categoria['catNombre']}</option>";
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <select name="marca" class="form-select me-2" onchange="this.form.submit()">
+                                        <option value="">Todas las marcas</option>
+                                        <?php
+                                        $query_marcas = "SELECT * FROM marca";
+                                        $result_marcas = mysqli_query($con, $query_marcas);
+                                        while ($row_marca = mysqli_fetch_assoc($result_marcas)) {
+                                            $selected = ($filter_marca == $row_marca['marId']) ? 'selected' : '';
+                                            echo "<option value='{$row_marca['marId']}' $selected>{$row_marca['marNombre']}</option>";
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                                <div class="col-md-3 d-flex justify-content-end">
+                        </form>
+
                                 <!-- Paginación -->
                                 <nav aria-label="Page navigation example">
                                     <ul class="pagination justify-content-center">
@@ -283,8 +314,8 @@ $result = $stmt->get_result();
                                                 <td><img src='" . $image_path1 . "' alt='" . htmlspecialchars($row['proNombre']) . "' style='width: 50px; height: 50px;'></td>
                                                 <td>S/. " . htmlspecialchars($row['proPrecio']) . "</td>
                                                 <td>
-                                                    <a href='editarproducto.php?id={$row['proId']}' class='btn btn-soft-secondary btn-sm' aria-label='Editar' title='Editar'><i class='ri-pencil-fill'></i></a>
-                                                    <a href='javascript:void(0);' class='btn btn-soft-danger btn-sm' onclick='confirmDeleteProducto({$row['proId']})' aria-label='Eliminar' title='Eliminar'><i class='ri-delete-bin-fill'></i></a>
+                                                    <a href='editarproducto.php?id={$row['proId']}' class='btn btn-soft-secondary btn-sm ms-2 me-1' aria-label='Editar' title='Editar'><i class='ri-pencil-fill align-bottom me-1' style='font-size: 1.5em;'></i></a>
+                                                    <a href='javascript:void(0);' class='btn btn-soft-danger btn-sm' onclick='confirmDeleteProducto({$row['proId']})' aria-label='Eliminar' title='Eliminar'><i class=ri-delete-bin-fill align-bottom me-1' style='font-size: 1.5em;'></i></a>
                                                 </td>
                                             </tr>";
                                         $numero++;

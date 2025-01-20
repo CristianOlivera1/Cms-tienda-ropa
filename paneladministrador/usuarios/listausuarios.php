@@ -4,6 +4,10 @@
 if($_SESSION['cargo_gerente']=='Gerente'){
     $gerente=$_SESSION['cargo_gerente'];
 }
+
+$query = "SELECT count(*) FROM usuario a inner join cargo c on a.carId=c.carId";
+$result = mysqli_query($con, $query);
+$total_usuarios = mysqli_fetch_array($result)[0];
 ?>
 <div class="main-content">
     <div class="page-content">
@@ -11,7 +15,7 @@ if($_SESSION['cargo_gerente']=='Gerente'){
             <div class="row">
                 <div class="col-12">
                     <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                        <h4 class="mb-sm-0">Lista de Usuarios</h4>
+                        <h4 class="mb-sm-0">Lista de Usuarios  </h4>
                     </div>
                 </div>
             </div>
@@ -20,12 +24,13 @@ if($_SESSION['cargo_gerente']=='Gerente'){
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-header">
-                            <h5 class="card-title mb-0">Todos los Usuarios</h5>
+                            <h5 class="card-title mb-0">Todos los Usuarios <div class="badge-total">Total: <?php echo "$total_usuarios" ?></div></h5>
                         </div>
                         <div class="card-body">
                             <table id="example" class="table table-bordered dt-responsive nowrap table-striped align-middle" style="width:100%">
                                 <thead>
                                     <tr>
+                                    <th>N</th>
                                         <th>Nombre de Usuario</th>
                                         <th>Cargo</th>
                                         <?php if (isset($gerente)): ?>
@@ -37,8 +42,10 @@ if($_SESSION['cargo_gerente']=='Gerente'){
                                     <?php
                                     $query = "SELECT admId,admUser,carNombre as cargo_nombre FROM usuario a inner join cargo c on a.carId=c.carId  ORDER BY admId DESC";
                                     $result = mysqli_query($con, $query);
+                                    $numeracion = 1;
                                     while ($row = mysqli_fetch_assoc($result)) {
                                         echo "<tr id='usuario-{$row['admId']}'>
+                                                <td>{$numeracion}</td>
                                                 <td>{$row['admUser']}</td>
                                                   <td>{$row['cargo_nombre']}</td>";
                                         if (isset($gerente)) {
@@ -48,6 +55,7 @@ if($_SESSION['cargo_gerente']=='Gerente'){
                                                 </td>";
                                         }
                                         echo "</tr>";
+                                        $numeracion++;
                                     }
                                     ?>
                                 </tbody>

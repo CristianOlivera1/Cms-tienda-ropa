@@ -135,19 +135,36 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                             <div class="col-lg-6">
                                                 <div class="mb-3">
                                                     <label for="proId" class="form-label">Producto</label>
-                                                    <select class="form-select" id="proId" name="proId" required>
+                                                    <select class="form-select" id="proId" name="proId" required onchange="showProductImage(this.value)">
+                                                        <option value="" selected>Seleccione producto</option>
                                                         <?php
-                                                        $query = "SELECT proId, proNombre FROM producto";
+                                                        $query = "SELECT proId, proNombre, proImg FROM producto";
                                                         $result = mysqli_query($con, $query);
                                                         while ($row = mysqli_fetch_assoc($result)) {
                                                             $selected = ($row['proId'] == $proId) ? 'selected' : '';
-                                                            echo "<option value='{$row['proId']}' $selected>{$row['proNombre']}</option>";
+                                                            echo "<option value='{$row['proId']}' data-img='{$row['proImg']}' $selected>{$row['proNombre']}</option>";
                                                         }
                                                         ?>
                                                     </select>
                                                 </div>
+                                                <div class="mb-3">
+                                                    <label for="proImg" class="form-label">Imagen del Producto</label>
+                                                    <div id="productImageContainer">
+                                                        <?php
+                                                        if ($proId) {
+                                                            $query = "SELECT proImg FROM producto WHERE proId = ?";
+                                                            $stmt = $con->prepare($query);
+                                                            $stmt->bind_param('i', $proId);
+                                                            $stmt->execute();
+                                                            $result = $stmt->get_result();
+                                                            if ($row = $result->fetch_assoc()) {
+                                                                echo "<img src='../../recursos/uploads/producto/{$row['proImg']}' alt='Imagen del Producto' class='img-fluid' id='productImage' style='width: 50%; height: auto;'>";
+                                                            }
+                                                        }
+                                                        ?>
+                                                    </div>
+                                                </div>
                                             </div>
-
                                             <div class="col-lg-6">
                                                 <div class="mb-3">
                                                     <label for="estId" class="form-label">Estado</label>
@@ -163,28 +180,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                                         ?>
                                                     </select>
                                                 </div>
-                                            </div>
-
-                                            <div class="col-lg-6">
                                                 <div class="mb-3">
                                                     <label for="colId" class="form-label">Color</label>
-                                                    <select class="form-select" id="colId" name="colId" required>
-                                                        <?php
-                                                        $query = "SELECT colId, colNombre FROM color";
-                                                        $result = mysqli_query($con, $query);
-                                                        while ($row = mysqli_fetch_assoc($result)) {
-                                                            $selected = ($row['colId'] == $colId) ? 'selected' : '';
-                                                            echo "<option value='{$row['colId']}' $selected>{$row['colNombre']}</option>";
-                                                        }
-                                                        ?>
-                                                    </select>
+                                                    <div class="d-flex align-items-center">
+                                                        <select class="form-select me-2" id="colId" name="colId" required onchange="updateColorPreview(this)">
+                                                        <option value="" selected>Seleccione color</option>
+                                                            <?php
+                                                            $query = "SELECT colId, colNombre, colCodigoHex FROM color";
+                                                            $result = mysqli_query($con, $query);
+                                                            while ($row = mysqli_fetch_assoc($result)) {
+                                                                $selected = ($row['colId'] == $colId) ? 'selected' : '';
+                                                                echo "<option value='{$row['colId']}' data-hex='{$row['colCodigoHex']}' $selected>{$row['colNombre']}</option>";
+                                                            }
+                                                            ?>
+                                                        </select>
+                                                        <span id="colorPreview" style="background-color: <?php echo $colId ? $row['colCodigoHex'] : '#ffffff'; ?>; width: 35px; height: 35px; display: inline-block; border: 1px solid #000;   border-radius: 6px;"></span>
+                                                    </div>
                                                 </div>
-                                            </div>
 
-                                            <div class="col-lg-6">
                                                 <div class="mb-3">
                                                     <label for="talId" class="form-label">Talla</label>
                                                     <select class="form-select" id="talId" name="talId" required>
+                                                    <option value="" selected>Seleccione talla</option>
                                                         <?php
                                                         $query = "SELECT talId, talNombre FROM talla";
                                                         $result = mysqli_query($con, $query);
@@ -195,9 +212,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                                         ?>
                                                     </select>
                                                 </div>
-                                            </div>
-
-                                            <div class="col-lg-6">
                                                 <div class="mb-3">
                                                     <label for="stoCantidad" class="form-label">Cantidad</label>
                                                     <div class="input-group">
@@ -207,7 +221,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                                     </div>
                                                 </div>
                                             </div>
-
                                             <div class="col-lg-12">
                                                 <div class="hstack gap-2 justify-content-end">
                                                     <button type="submit" class="btn btn-primary">Registrar</button>

@@ -367,7 +367,24 @@ $(document).ready(function() {
     });
 
 });
-
+//mostrar la imagen al seleccionar un producto en Stock
+function showProductImage(proId) {
+    const select = document.getElementById('proId');
+    const selectedOption = select.options[select.selectedIndex];
+    const imgSrc = selectedOption.getAttribute('data-img');
+    const imgContainer = document.getElementById('productImageContainer');
+    imgContainer.innerHTML = `<img src='../../recursos/uploads/producto/${imgSrc}' alt='Imagen del Producto' class='img-fluid' id='productImage'style='width: 50%; height: auto;'>`;
+const productImage = document.getElementById('productImage');
+productImage.onerror = function() {
+    this.src = '../../recursos/images/imagen-no-encontrada/img-not-found.jpg';
+};
+}
+//al seleccionar un color se ve la representaacion en Stock
+function updateColorPreview(select) {
+    var selectedOption = select.options[select.selectedIndex];
+    var colorHex = selectedOption.getAttribute('data-hex');
+    document.getElementById('colorPreview').style.backgroundColor = colorHex;
+}
 //Incrementar y decremnetar input de cantidad
 function increment() {
     var input = document.getElementById('stoCantidad');
