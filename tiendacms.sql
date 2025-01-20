@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 20-01-2025 a las 00:26:34
+-- Tiempo de generación: 20-01-2025 a las 21:23:11
 -- Versión del servidor: 10.4.27-MariaDB
 -- Versión de PHP: 8.2.0
 
@@ -181,6 +181,15 @@ CREATE TABLE `detalleventa` (
   `detVenFechaRegis` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Volcado de datos para la tabla `detalleventa`
+--
+
+INSERT INTO `detalleventa` (`detVenId`, `venId`, `stoId`, `detVenCantidad`, `detVenPrecio`, `detVenFechaRegis`) VALUES
+(1, 3, 41, 2, '20.00', '2025-01-20 13:19:11'),
+(2, 4, 42, 1, '25.00', '2025-01-20 13:25:14'),
+(3, 5, 44, 3, '10.00', '2025-01-20 13:28:41');
+
 -- --------------------------------------------------------
 
 --
@@ -255,6 +264,14 @@ CREATE TABLE `oferta` (
   `ofeFechaRegis` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Volcado de datos para la tabla `oferta`
+--
+
+INSERT INTO `oferta` (`ofeId`, `stoId`, `ofePorcentaje`, `ofeTiempo`, `ofeFechaRegis`) VALUES
+(15, 41, 12, '2025-01-22 13:29:00', '2025-01-20 13:29:34'),
+(16, 44, 10, '2025-01-20 14:46:00', '2025-01-20 14:45:29');
+
 -- --------------------------------------------------------
 
 --
@@ -298,7 +315,7 @@ CREATE TABLE `producto` (
 --
 
 INSERT INTO `producto` (`proId`, `catId`, `marId`, `proNombre`, `proDescripcion`, `proImg`, `proImg2`, `proPrecio`, `proFechaRegistro`) VALUES
-(1, 28, 4, 'Camiseta Deportiva', 'Camiseta de fútbol Nike', 'camiseta_deportiva.jpg', 'camiseta_deportiva2.jpg', '25.99', '2025-01-19 11:27:55'),
+(1, 28, 4, 'Camiseta Deportiva', 'Camiseta de fútbol Nike', '678e3df0327b6-d2bd8030-73fc-4f9b-bb51-89bb0c1e8c19.webp', '678e3df033f83-2edc10b5-a98f-4fcc-a4ed-73621f952ff4.webp', '25.99', '2025-01-20 07:13:36'),
 (2, 28, 4, 'Camiseta Básica', 'Camiseta de algodón de varios colores', 'camiseta_basica.jpg', 'camiseta_basica2.jpg', '15.99', '2025-01-19 11:30:00'),
 (3, 28, 4, 'Camiseta Estampada', 'Camiseta con estampado gráfico', '678d85a83661b-5.jpg', '678d85a836a3e-6.jpg', '19.99', '2025-01-19 18:07:20'),
 (4, 29, 5, 'Pantalón Jeans', 'Pantalón de mezclilla azul', '678d850ca29d4-1pa.webp', '678d850ca2c5d-2.jpeg', '25.50', '2025-01-19 18:04:44'),
@@ -376,6 +393,17 @@ CREATE TABLE `stock` (
   `stoCantidad` int(11) DEFAULT NULL,
   `stoFechaRegis` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `stock`
+--
+
+INSERT INTO `stock` (`stoId`, `proId`, `estId`, `colId`, `talId`, `stoCantidad`, `stoFechaRegis`) VALUES
+(41, 1, 1, 26, 1, 30, '2025-01-20 07:17:37'),
+(42, 3, 1, 13, 2, 32, '2025-01-20 07:19:00'),
+(43, 4, 1, 13, 1, 14, '2025-01-20 07:19:36'),
+(44, 5, 1, 34, 11, 36, '2025-01-20 07:20:24'),
+(45, 10, 1, 19, 11, 10, '2025-01-20 14:46:53');
 
 -- --------------------------------------------------------
 
@@ -594,7 +622,7 @@ ALTER TABLE `contacto`
 -- AUTO_INCREMENT de la tabla `detalleventa`
 --
 ALTER TABLE `detalleventa`
-  MODIFY `detVenId` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `detVenId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `estado`
@@ -612,7 +640,7 @@ ALTER TABLE `marca`
 -- AUTO_INCREMENT de la tabla `oferta`
 --
 ALTER TABLE `oferta`
-  MODIFY `ofeId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `ofeId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT de la tabla `portada`
@@ -636,7 +664,7 @@ ALTER TABLE `resenhas`
 -- AUTO_INCREMENT de la tabla `stock`
 --
 ALTER TABLE `stock`
-  MODIFY `stoId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
+  MODIFY `stoId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
 
 --
 -- AUTO_INCREMENT de la tabla `talla`
