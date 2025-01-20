@@ -105,10 +105,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     <label for="stoId" class="form-label">Stock</label>
                                     <select class="form-select" id="stoId" name="stoId" required>
                                         <?php
-                                        $query = "SELECT stoId FROM stock"; // Asegúrate de que esta tabla tenga datos
+                                        $query = "SELECT producto.proNombre FROM stock
+                                                  INNER JOIN producto on producto.proId=stock.proId"; // Asegúrate de que esta tabla tenga datos
                                         $result = mysqli_query($con, $query);
                                         while ($row = mysqli_fetch_assoc($result)) {
-                                            echo "<option value='{$row['stoId']}'>Stock ID: {$row['stoId']}</option>";
+                                            echo "<option value='{$row['proNombre']}'> Producto: {$row['proNombre']}</option>";
                                         }
                                         ?>
                                     </select>

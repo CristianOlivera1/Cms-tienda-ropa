@@ -37,7 +37,11 @@
     text-align: center;
     flex: 1;
 }
-
+.hover {
+    cursor: pointer;
+    transition: 0.3s;
+    text-shadow: #000;
+}
 .modal-header {
     background-color: #3577f1; /* Color de fondo del encabezado */
     color: white; /* Color del texto */
