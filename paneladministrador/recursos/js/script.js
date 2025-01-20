@@ -7,6 +7,13 @@ function changeImage(thumbnailId) {
         mainImage.src = thumbnail.src;
     }
 }
+let debounceTimer;
+function searchOffers(query) {
+    clearTimeout(debounceTimer); // Limpiar el temporizador anterior
+    debounceTimer = setTimeout(() => {
+        window.location.href = '?search=' + encodeURIComponent(query); // Redirigir después del tiempo de espera
+    }, 500); // Ajusta el tiempo de espera según sea necesario (500ms)
+}
 
 // Cargar la primera imagen cuando se abre el modal
 function loadFirstImage() {
@@ -81,29 +88,39 @@ function confirmDeleteProducto(productoId) {
 }
 
 //eliminar oferta
-function confirmDeleteOferta(ofertaId) {
+function confirmDeleteOfertas(ofertaId) {
+    ofertaIdToDelete = ofertaId; // Guardar el ID de la oferta a eliminar
     $('#deleteModal').modal('show');
-    $('#confirmDeleteBtnOferta').off('click').on('click', function() {
-        $.ajax({
-            url: 'eliminaroferta.php',
-            type: 'POST',
-            data: {
-                action: 'delete',
-                oferta_id: ofertaId
-            },
-            success: function(response) {
-                // console.log(response); // Agregar este console.log para depurar la respuesta
-                var result = JSON.parse(response);
-                if (result.success) {
-                    $('#deleteModal').modal('hide');
-                    $('#oferta-' + ofertaId).remove();
-                } else {
-                    alert(result.error);
-                }
-            }
-        });
-    });
 }
+
+$('#confirmDeleteBtnOferta').on('click', function() {
+    $.ajax({
+        url: 'eliminaroferta.php', // Cambia esta ruta a tu script de eliminación
+        type: 'POST',
+        data: {
+            action: 'delete',
+            oferta_id: ofertaIdToDelete
+        },
+        success: function(response) {
+            var result = JSON.parse(response);
+            if (result.success) {
+                $('#deleteModal').modal('hide');
+                $('#oferta-' + ofertaIdToDelete).remove(); // Eliminar la fila de la tabla
+            } else {
+                $('#deleteModal').modal('hide');
+                // Mostrar el mensaje de error en la alerta
+                $('.alert-danger').remove();
+                $('.alert-success').remove();
+                $('.alert-fk').prepend('<div class="alert alert-danger alert-dismissible fade show">' + result.error + '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
+            }
+        },
+        error: function() {
+            $('#deleteModal').modal('hide');
+            $('.alert-danger').remove();
+            $('.alert-fk').prepend('<div class="alert alert-danger alert-dismissible fade show">Error en la solicitud. Inténtalo de nuevo.<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
+        }
+    });
+});
 
 //eliminar administrador
 function confirmDeleteAdministrador(administradorId) {

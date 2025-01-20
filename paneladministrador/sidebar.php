@@ -51,6 +51,8 @@ if($_SESSION['cargo_gerente']=='Gerente'){
                                     <li class="nav-item">
                                       <a href="/paneladministrador/productos/stock/gestionar-stock.php" class="nav-link" data-key="t-nft-landing">Gestionar Stock</a>
                                     </li>
+                                    <li class="nav-item">
+                                      <a href="/paneladministrador/productos/oferta/gestionar-oferta.php" class="nav-link" data-key="t-nft-landing">Gestionar oferta</a>
                                 </ul>
                             </div>
                       </li>
