@@ -61,7 +61,7 @@ $stock_quantity = $stock_data['totalCantidad'];
                 </div>
             </div>
             <div class="col-12 col-lg-5 d-flex position-relative">
-                <div class="product-content section-heading text-lg-left pl-md-1 mt-lg-0 mb-0">
+                <div class="product-content section-heading text-lg-left pl-md-1 mt-lg-0 mb-0 w-100">
                     <p class="text-muted"><?php echo $product_brand; ?></p>
                     <h2 class="nombre-producto"><?php echo $product_name; ?></h2>
                     <p class="text-dark mb-3 mt-2"><?php echo $product_desc; ?></p>
@@ -117,15 +117,17 @@ $stock_quantity = $stock_data['totalCantidad'];
 <!-- ***** Productos detalle fin***** -->
 </section>
 <!-- ***** Productos relacionados(sugerencias) inicio ***** -->
-<section class="section related-products ptb_100">
+<section class="section related-products ptb_50">
     <div class="container">
-        <div class="row">
+        <div class="row" style="height: 90px;">
             <div class="col-12">
-                <div class="section-heading text-center">
-                    <h2>Productos Relacionados</h2>
-                </div>
+            <div class="section-heading">
+                <h3 class="text-muted">Más opciones similares</h3>
+                <hr>
+            </div>
             </div>
         </div>
+      
         <div class="row">
             <?php
             $related_products = mysqli_query($con, "SELECT DISTINCT p.proId, p.proNombre, p.proPrecio, p.proImg,m.marNombre FROM Producto p
@@ -135,7 +137,7 @@ $stock_quantity = $stock_data['totalCantidad'];
                                                     ORDER BY p.proId DESC LIMIT 4");
             while ($related = mysqli_fetch_assoc($related_products)): ?>
                 <div class="col-12 col-md-6 col-lg-3 mb-4">
-                <a href="detalleproducto.php?id=<?php echo $related['proId']; ?>" class='hover-products'>  <div class='color-1 bg-hover bg-white hover-bottom text-center p-3'>
+                <a href="detalleproducto.php?id=<?php echo $related['proId']; ?>" class='hover-products'>  <div class='single-service color-1 bg-hover bg-white hover-bottom text-center p-3'>
                         <img src="../../paneladministrador/recursos/uploads/producto/<?php echo $related['proImg']; ?>" alt="img" class="img-fluid">
                         <p class='text-muted font-italic mt-2'><?php echo $related['marNombre']; ?></p>
                         <h5 class="mb-2"><?php echo $related['proNombre']; ?></h5>

@@ -56,7 +56,9 @@ $numrows = $row[0];
                                                                   INNER JOIN stock s ON p.proId = s.proId
                                                                   WHERE s.stoCantidad > 0 AND p.catId = $category_id");
                         $product_count = mysqli_fetch_row($product_count_query)[0];
+                        if ($product_count > 0) {
                         echo "<a class='nav-link d-flex justify-content-between align-items-center' id='v-pills-{$category['catId']}-tab' data-toggle='pill' href='#v-pills-{$category['catId']}' role='tab' aria-controls='v-pills-{$category['catId']}' aria-selected='false'>{$category['catNombre']} <span class='text-black-50 ml-2'>($product_count)</span></a>";
+                        }
                     }
                     ?>
                 </div>
