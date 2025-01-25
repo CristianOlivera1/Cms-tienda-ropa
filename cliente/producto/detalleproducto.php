@@ -47,12 +47,15 @@ $stock_quantity = $stock_data['totalCantidad'];
 <section class="section product-detail-area ptb_100">
     <div class="container">
         <div class="row justify-content-between">
+            
             <div class="col-12 col-lg-7 d-flex" style="position: relative; top: 0;">
-                <div class="product-image text-center">
+                <div class="product-image text-center d-flex align-items-center justify-content-center">
                     <?php if ($product_image2): ?>
-                        <img src="../../paneladministrador/recursos/uploads/producto/<?php echo $product_image2; ?>" alt="img" class="img-fluid mr-2" style="max-width: 100px;">
+                        <img src="../../paneladministrador/recursos/uploads/producto/<?php echo $product_image2; ?>" alt="img" class="img-fluid mr-2 small-image" style="max-width: 100px;">
                     <?php endif; ?>
-                    <img src="../../paneladministrador/recursos/uploads/producto/<?php echo $product_image; ?>" alt="img" class="img-fluid" style="width: 480px; max-width: 480px;">
+                    <div class="main-image-container" style="overflow: hidden; margin-left: 20px;">
+                        <img src="../../paneladministrador/recursos/uploads/producto/<?php echo $product_image; ?>" alt="img" class="img-fluid main-image" style="width: 480px; max-width: 480px;">
+                    </div>
                 </div>
             </div>
             <div class="col-12 col-lg-5 d-flex position-relative">
@@ -66,7 +69,7 @@ $stock_quantity = $stock_data['totalCantidad'];
                         <label class="form-label">Color: <span id="selected-color-name"><?php echo mysqli_fetch_assoc($colors)['colNombre']; ?></span></label>
                         <div class="d-flex align-items-center">
                             <?php 
-                            mysqli_data_seek($colors, 0); // Reset the pointer to the beginning
+                            mysqli_data_seek($colors, 0);
                             while ($color = mysqli_fetch_assoc($colors)): ?>
                                 <div class="color-circle" title="<?php echo $color['colNombre']; ?>" style="background-color: <?php echo $color['colCodigoHex']; ?>; width: 30px; height: 30px; border: 3px solid white; border-radius: 50%; margin-right: 10px; cursor: pointer;" onclick="selectColor('<?php echo $color['colNombre']; ?>', this)"></div>
                             <?php endwhile; ?>
@@ -140,6 +143,6 @@ $stock_quantity = $stock_data['totalCantidad'];
             </div>
         </div>
     </div>
-    
 </section>
+
 <?php include "../footer.php"; ?>

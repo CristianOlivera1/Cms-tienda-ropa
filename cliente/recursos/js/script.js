@@ -45,5 +45,28 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+
+      // Interacción de imágenes
+      const mainImage = document.querySelector('.main-image');
+      const smallImage = document.querySelector('.small-image');
+      const mainImageContainer = document.querySelector('.main-image-container');
+  
+      smallImage.addEventListener('mouseover', function() {
+          const tempSrc = mainImage.src;
+          mainImage.src = smallImage.src;
+          smallImage.src = tempSrc;
+      });
+  
+      mainImageContainer.addEventListener('mousemove', function(e) {
+          const rect = mainImageContainer.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          mainImage.style.transformOrigin = `${x}px ${y}px`;
+          mainImage.classList.add('zoom');
+      });
+  
+      mainImageContainer.addEventListener('mouseleave', function() {
+          mainImage.classList.remove('zoom');
+      });
 });
 //DETALLES DEL PRODUCTO

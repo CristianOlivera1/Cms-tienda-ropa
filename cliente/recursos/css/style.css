@@ -488,7 +488,22 @@ img {
     padding: 5px 10px;
 
 }
+.main-image-container {
+    overflow: hidden;
+}
 
+.main-image {
+    transition: transform 0.3s ease;
+    cursor: zoom-in;
+}
+
+.main-image.zoom {
+    transform: scale(2);
+}
+
+.small-image {
+    cursor: pointer;
+}
 /*BG SHAPE*/
 .shape {
     position: absolute;
