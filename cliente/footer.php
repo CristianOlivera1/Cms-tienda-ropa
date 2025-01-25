@@ -89,5 +89,6 @@
 
 <!-- Activo js -->
 <script src="/cliente/recursos/js/active.js"></script>
+<script src="/cliente/recursos/js/script.js"></script>
 </body>
 </html>

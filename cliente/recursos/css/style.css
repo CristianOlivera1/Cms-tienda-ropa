@@ -262,7 +262,6 @@ img {
     display: inline-block;
     font-size: 56px;
     font-weight: 700;
-    text-transform: lowercase;
     line-height: 1em;
     letter-spacing: -1.6px;
 }
@@ -483,6 +482,13 @@ img {
     transform-origin: left;
 }
 
+.btn-mutted{
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+
+}
+
 /*BG SHAPE*/
 .shape {
     position: absolute;
@@ -504,7 +510,10 @@ img {
     -webkit-transform: translateX(-50%);
     transform: translateX(-50%);
 }
-
+.nombre-producto{
+    font-size: 33px !important;
+    font-weight: bold;
+}
 /* Portada de fondo */
 .shape-bottom {
     bottom: 0;

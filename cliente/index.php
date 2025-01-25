@@ -5,7 +5,9 @@ $r = mysqli_fetch_row($rr);
 $porTitulo = $r[1];
 $porDescripcion = $r[2];
 
-$result = mysqli_query($con, "SELECT count(*) FROM producto");
+$result = mysqli_query($con, "SELECT COUNT(DISTINCT p.proId) FROM producto p
+                              INNER JOIN stock s ON p.proId = s.proId
+                              WHERE s.stoCantidad > 0");
 $row = mysqli_fetch_row($result);
 $numrows = $row[0];
 ?>
@@ -50,7 +52,9 @@ $numrows = $row[0];
                     $categories = mysqli_query($con, "SELECT catId, catNombre FROM categoria");
                     while ($category = mysqli_fetch_assoc($categories)) {
                         $category_id = $category['catId'];
-                        $product_count_query = mysqli_query($con, "SELECT count(*) FROM producto WHERE catId = $category_id");
+                        $product_count_query = mysqli_query($con, "SELECT COUNT(DISTINCT p.proId) FROM producto p
+                                                                  INNER JOIN stock s ON p.proId = s.proId
+                                                                  WHERE s.stoCantidad > 0 AND p.catId = $category_id");
                         $product_count = mysqli_fetch_row($product_count_query)[0];
                         echo "<a class='nav-link d-flex justify-content-between align-items-center' id='v-pills-{$category['catId']}-tab' data-toggle='pill' href='#v-pills-{$category['catId']}' role='tab' aria-controls='v-pills-{$category['catId']}' aria-selected='false'>{$category['catNombre']} <span class='text-black-50 ml-2'>($product_count)</span></a>";
                     }
@@ -62,7 +66,10 @@ $numrows = $row[0];
                     <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
                         <div class="row">
                             <?php //Todas las productos
-                            $qs = "SELECT * FROM producto ORDER BY proId DESC LIMIT 6";
+                            $qs = "SELECT DISTINCT p.proId, p.proNombre, p.proPrecio, p.proImg, m.marNombre FROM producto p
+                                   INNER JOIN stock s ON p.proId = s.proId INNER JOIN marca m on m.marId=p.marId
+                                   WHERE s.stoCantidad > 0
+                                   ORDER BY p.proId DESC LIMIT 6";
                             $r1 = mysqli_query($con, $qs);
 
                             while ($rod = mysqli_fetch_array($r1)) {
@@ -70,13 +77,16 @@ $numrows = $row[0];
                                 $name = "$rod[proNombre]";
                                 $price = "$rod[proPrecio]";
                                 $ufile = "$rod[proImg]";
+                                $marNombre = "$rod[marNombre]";
+                                
                                 echo "
                                 <div class='col-12 col-md-6 col-lg-4 mb-3'>
                                     <!-- Servicio Individual -->
                                    <a href='producto/detalleproducto.php?id=$id' class='hover-products'><div class='single-service color-1 bg-hover hover-bottom text-center' style='padding:5px 15px 15px'>
                                         <img src='../paneladministrador/recursos/uploads/producto/$ufile' alt='img' class='category-img'>
-                                        <h5 class='my-3'>$name</h5>
-                                        <p>S/. $price.00</p>
+                                        <p class='text-muted font-italic'>$marNombre</p>
+                                        <h5>$name</h5>
+                                        <p>S/. $price</p>
                                     </div>  </a>
                                 </div>
                                 ";
@@ -89,7 +99,10 @@ $numrows = $row[0];
                     while ($category = mysqli_fetch_assoc($categories)) {
                         echo "<div class='tab-pane fade' id='v-pills-{$category['catId']}' role='tabpanel' aria-labelledby='v-pills-{$category['catId']}-tab'>";
                         echo "<div class='row'>";
-                        $qs = "SELECT * FROM Producto WHERE catId = {$category['catId']} ORDER BY proId DESC LIMIT 6";
+                        $qs = "SELECT DISTINCT p.proId, p.proNombre, p.proPrecio, p.proImg FROM Producto p
+                               INNER JOIN stock s ON p.proId = s.proId
+                               WHERE s.stoCantidad > 0 AND p.catId = {$category['catId']}
+                               ORDER BY p.proId DESC LIMIT 6";
                         $r1 = mysqli_query($con, $qs);
 
                         while ($rod = mysqli_fetch_array($r1)) {
@@ -105,7 +118,6 @@ $numrows = $row[0];
                                     <img src='../paneladministrador/recursos/uploads/producto/$ufile' alt='img' class='category-img'>
                                     <h5 class='my-3'>$name</h5>
                                     <p>S/. $price.00</p>
-                                    <a class='service-btn mt-3' href='producto/detalleproducto.php?id=$id'>Ver descripción</a>
                                 </div>
                                 </a>
                             </div>
