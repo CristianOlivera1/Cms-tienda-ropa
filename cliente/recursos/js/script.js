@@ -51,12 +51,14 @@ document.addEventListener('DOMContentLoaded', function() {
       const smallImage = document.querySelector('.small-image');
       const mainImageContainer = document.querySelector('.main-image-container');
   
-      smallImage.addEventListener('mouseover', function() {
-          const tempSrc = mainImage.src;
-          mainImage.src = smallImage.src;
-          smallImage.src = tempSrc;
-      });
-  
+      if (smallImage) {
+          smallImage.addEventListener('mouseover', function() {
+              const tempSrc = mainImage.src;
+              mainImage.src = smallImage.src;
+              smallImage.src = tempSrc;
+          });
+      }
+      if (mainImageContainer) {
       mainImageContainer.addEventListener('mousemove', function(e) {
           const rect = mainImageContainer.getBoundingClientRect();
           const x = e.clientX - rect.left;
@@ -64,9 +66,11 @@ document.addEventListener('DOMContentLoaded', function() {
           mainImage.style.transformOrigin = `${x}px ${y}px`;
           mainImage.classList.add('zoom');
       });
-  
+    }
+      if (mainImageContainer) {
       mainImageContainer.addEventListener('mouseleave', function() {
           mainImage.classList.remove('zoom');
       });
+    }
 });
 //DETALLES DEL PRODUCTO

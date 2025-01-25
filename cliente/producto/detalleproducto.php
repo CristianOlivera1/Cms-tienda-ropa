@@ -14,6 +14,8 @@ $product_price = $tr['proPrecio'];
 $product_image = $tr['proImg'];
 $product_image2 = $tr['proImg2'];
 $product_category = $tr['catNombre'];
+$product_category_id = $tr['catId'];
+
 $product_brand = $tr['marNombre'];
 $product_brand_img = $tr['marImg'];
 
@@ -113,36 +115,37 @@ $stock_quantity = $stock_data['totalCantidad'];
     </div>
 </section>
 <!-- ***** Productos detalle fin***** -->
-
-<!-- ***** Inicio área contacto ***** -->
-<section id="contact" class="contact-area ptb_100">
+</section>
+<!-- ***** Productos relacionados(sugerencias) inicio ***** -->
+<section class="section related-products ptb_100">
     <div class="container">
-        <div class="row justify-content-between align-items-center">
-            <div class="col-12 col-lg-5">
-                <div class="section-heading text-center mb-3">
-                    <h2>Contáctanos</h2>
-                    <p class="d-none d-sm-block mt-4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus sit quisquam voluptas adipisci reprehenderit laudantium temporibus eveniet, exercitationem dolorem voluptatum itaque nostrum rerum ipsum dicta quod error, sunt modi! Dolorem?</p>
-                </div>
-                <!-- Contáctanos -->
-                <div class="contact-us">
-                    <ul>
-                        <li class="contact-info color-1 bg-hover active hover-bottom text-center p-5 m-3">
-                            <span><i class="fas fa-mobile-alt fa-3x"></i></span>
-                            <a class="d-block my-2" href="tel:<?php print $conTelefono ?>">
-                                <h3>+51 <?php print $conTelefono ?></h3>
-                            </a>
-                        </li>
-                        <li class="contact-info color-3 bg-hover active hover-bottom text-center p-5 m-3">
-                            <span><i class="fas fa-envelope-open-text fa-3x"></i></span>
-                            <a class="d-none d-sm-block my-2" href="mailto:<?php print $conEmail ?>">
-                                <h3><?php print $conEmail ?></h3>
-                            </a>
-                        </li>
-                    </ul>
+        <div class="row">
+            <div class="col-12">
+                <div class="section-heading text-center">
+                    <h2>Productos Relacionados</h2>
                 </div>
             </div>
         </div>
+        <div class="row">
+            <?php
+            $related_products = mysqli_query($con, "SELECT DISTINCT p.proId, p.proNombre, p.proPrecio, p.proImg,m.marNombre FROM Producto p
+                                                    INNER JOIN stock s ON p.proId = s.proId
+                                                    INNER JOIN marca m on m.marId=p.marId
+                                                    WHERE p.catId = '$product_category_id' AND p.proId != '$todo' AND s.stoCantidad > 0
+                                                    ORDER BY p.proId DESC LIMIT 4");
+            while ($related = mysqli_fetch_assoc($related_products)): ?>
+                <div class="col-12 col-md-6 col-lg-3 mb-4">
+                <a href="detalleproducto.php?id=<?php echo $related['proId']; ?>" class='hover-products'>  <div class='color-1 bg-hover bg-white hover-bottom text-center p-3'>
+                        <img src="../../paneladministrador/recursos/uploads/producto/<?php echo $related['proImg']; ?>" alt="img" class="img-fluid">
+                        <p class='text-muted font-italic mt-2'><?php echo $related['marNombre']; ?></p>
+                        <h5 class="mb-2"><?php echo $related['proNombre']; ?></h5>
+                        <p>S/. <?php echo $related['proPrecio']; ?></p>
+                    </div>
+                    </a>
+                </div>
+            <?php endwhile; ?>
+        </div>
     </div>
 </section>
-
+</section>
 <?php include "../footer.php"; ?>

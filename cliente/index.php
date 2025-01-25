@@ -81,7 +81,7 @@ $numrows = $row[0];
                                 
                                 echo "
                                 <div class='col-12 col-md-6 col-lg-4 mb-3'>
-                                    <!-- Servicio Individual -->
+                                    <!-- producto Individual -->
                                    <a href='producto/detalleproducto.php?id=$id' class='hover-products'><div class='single-service color-1 bg-hover hover-bottom text-center' style='padding:5px 15px 15px'>
                                         <img src='../paneladministrador/recursos/uploads/producto/$ufile' alt='img' class='category-img'>
                                         <p class='text-muted font-italic'>$marNombre</p>
@@ -116,6 +116,7 @@ $numrows = $row[0];
                                 <!-- Servicio Individual -->
                                 <a href='producto/detalleproducto.php?id=$id' class='hover-products'> <div class='single-service color-1 bg-hover bg-white hover-bottom text-center' style='padding:5px 15px 15px'>
                                     <img src='../paneladministrador/recursos/uploads/producto/$ufile' alt='img' class='category-img'>
+                                    <p class='text-muted font-italic'>$marNombre</p>
                                     <h5 class='my-3'>$name</h5>
                                     <p>S/. $price.00</p>
                                 </div>
