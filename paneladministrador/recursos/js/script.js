@@ -378,11 +378,83 @@ $(document).ready(function() {
     });
 
 });
+
+//mostrar tooltip en Stock
+
+document.addEventListener('DOMContentLoaded', () => {
+    const tooltip = document.getElementById('stock-tooltip');
+    const imgElement = document.getElementById('tooltip-img');
+    const categoryElement = document.getElementById('tooltip-category');
+    const priceElement = document.getElementById('tooltip-price');
+    const marcaElement = document.getElementById('tooltip-marca');
+
+    document.querySelectorAll('td.product-name').forEach(cell => {
+        cell.addEventListener('mouseover', event => {
+            const imgSrc = `../../recursos/uploads/producto/${cell.getAttribute('data-img')}`;
+            const category = cell.getAttribute('data-category');
+            const price = cell.getAttribute('data-price');
+            const marca = cell.getAttribute('data-marca');
+
+
+            imgElement.src = imgSrc;
+            categoryElement.textContent = `${category}`;
+            priceElement.textContent = `$${price}`;
+            marcaElement.textContent = `${marca}`;
+
+
+            tooltip.style.display = 'block';
+            tooltip.style.left = `${event.pageX + 10}px`;
+            tooltip.style.top = `${event.pageY + 10}px`;
+        });
+
+        cell.addEventListener('mouseout', () => {
+            tooltip.style.display = 'none';
+        });
+
+        cell.addEventListener('mousemove', event => {
+            tooltip.style.left = `${event.pageX + 10}px`;
+            tooltip.style.top = `${event.pageY + 10}px`;
+        });
+    });
+});
+
+function filtrarTallas(proId) {
+    const talId = document.getElementById('talId');
+
+    if (!proId) {
+        talId.innerHTML = '<option value="" selected>Seleccione talla</option>';
+        return;
+    }
+
+    // Llamada AJAX
+    fetch('../../productos/stock/obtener-tallas.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `proId=${proId}`,
+    })
+        .then((response) => response.json())
+        .then((data) => {
+            talId.innerHTML = '<option value="" selected>Seleccione talla</option>';
+            if (data.length === 0) {
+                console.error('No se encontraron tallas para el producto seleccionado.');
+                return;
+            }
+
+            data.forEach((talla) => {
+                talId.innerHTML += `<option value="${talla.talId}">${talla.talNombre}</option>`;
+            });
+        })
+        .catch((error) => console.error('Error:', error));
+}
+
+
 //mostrar la imagen al seleccionar un producto en Stock
 function showProductImage(proId) {
     const select = document.getElementById('proId');
     const selectedOption = select.options[select.selectedIndex];
-    const imgSrc = selectedOption.getAttribute('data-img');
+    const imgSrc = selectedOption.getAttribute('data-img-pro');
     const imgContainer = document.getElementById('productImageContainer');
     imgContainer.innerHTML = `<img src='../../recursos/uploads/producto/${imgSrc}' alt='Imagen del Producto' class='img-fluid' id='productImage'style='width: 50%; height: auto;'>`;
 const productImage = document.getElementById('productImage');
@@ -390,12 +462,14 @@ productImage.onerror = function() {
     this.src = '../../recursos/images/imagen-no-encontrada/img-not-found.jpg';
 };
 }
+
 //al seleccionar un color se ve la representaacion en Stock
 function updateColorPreview(select) {
     var selectedOption = select.options[select.selectedIndex];
     var colorHex = selectedOption.getAttribute('data-hex');
     document.getElementById('colorPreview').style.backgroundColor = colorHex;
 }
+
 //Incrementar y decremnetar input de cantidad
 function increment() {
     var input = document.getElementById('stoCantidad');

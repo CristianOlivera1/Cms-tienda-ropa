@@ -133,20 +133,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     <form method="POST" action="">
                                         <div class="row">
                                             <div class="col-lg-6">
-                                                <div class="mb-3">
-                                                    <label for="proId" class="form-label">Producto</label>
-                                                    <select class="form-select" id="proId" name="proId" required onchange="showProductImage(this.value)">
-                                                        <option value="" selected>Seleccione producto</option>
-                                                        <?php
-                                                        $query = "SELECT proId, proNombre, proImg FROM producto";
-                                                        $result = mysqli_query($con, $query);
-                                                        while ($row = mysqli_fetch_assoc($result)) {
-                                                            $selected = ($row['proId'] == $proId) ? 'selected' : '';
-                                                            echo "<option value='{$row['proId']}' data-img='{$row['proImg']}' $selected>{$row['proNombre']}</option>";
-                                                        }
-                                                        ?>
-                                                    </select>
-                                                </div>
+                                            <div class="mb-3">
+                                                <label for="proId" class="form-label">Producto</label>
+                                                <select class="form-select" id="proId" name="proId" required onchange="filtrarTallas(this.value); showProductImage(this.value)">
+                                                    <option value="" selected>Seleccione producto</option>
+                                                    <?php
+                                                    $query = "SELECT proId, proNombre, proImg FROM producto";
+                                                    $result = mysqli_query($con, $query);
+                                                    while ($row = mysqli_fetch_assoc($result)) {
+                                                        echo "<option value='{$row['proId']}'  data-img-pro='{$row['proImg']}'>{$row['proNombre']} </option>";
+                                                    }
+                                                    ?>
+                                               </select>
+                                            </div>
+
                                                 <div class="mb-3">
                                                     <label for="proImg" class="form-label">Imagen del Producto</label>
                                                     <div id="productImageContainer">
@@ -199,19 +199,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                                 </div>
 
                                                 <div class="mb-3">
-                                                    <label for="talId" class="form-label">Talla</label>
-                                                    <select class="form-select" id="talId" name="talId" required>
-                                                    <option value="" selected>Seleccione talla</option>
-                                                        <?php
-                                                        $query = "SELECT talId, talNombre FROM talla";
-                                                        $result = mysqli_query($con, $query);
-                                                        while ($row = mysqli_fetch_assoc($result)) {
-                                                            $selected = ($row['talId'] == $talId) ? 'selected' : '';
-                                                            echo "<option value='{$row['talId']}' $selected>{$row['talNombre']}</option>";
-                                                        }
-                                                        ?>
-                                                    </select>
-                                                </div>
+    <label for="talId" class="form-label">Talla</label>
+    <select class="form-select" id="talId" name="talId" required>
+        <option value="" selected>Seleccione talla</option>
+    </select>
+</div>
                                                 <div class="mb-3">
                                                     <label for="stoCantidad" class="form-label">Cantidad</label>
                                                     <div class="input-group">
@@ -299,13 +291,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 </thead>
                                 <tbody>
                                     <?php
-                                    $query = "SELECT s.stoId, p.proNombre, e.estDisponible, c.colNombre, t.talNombre, s.stoCantidad, p.catId 
-                                              FROM stock AS s
-                                              INNER JOIN producto AS p ON s.proId = p.proId
-                                              INNER JOIN estado AS e ON s.estId = e.estId
-                                              INNER JOIN color AS c ON s.colId = c.colId
-                                              INNER JOIN talla AS t ON s.talId = t.talId
-                                              WHERE (p.proNombre LIKE ? OR c.colNombre LIKE ? OR t.talNombre LIKE ? OR s.stoCantidad LIKE ?)";
+                             $query = "SELECT s.stoId, p.proNombre, e.estDisponible, c.colNombre, t.talNombre, s.stoCantidad, p.proImg, p.proPrecio, cat.catNombre, m.marNombre 
+                             FROM stock AS s
+                             INNER JOIN producto AS p ON s.proId = p.proId
+                             INNER JOIN estado AS e ON s.estId = e.estId
+                             INNER JOIN color AS c ON s.colId = c.colId
+                             INNER JOIN talla AS t ON s.talId = t.talId
+                             INNER JOIN categoria AS cat ON p.catId = cat.catId
+                            INNER JOIN marca as m on p.marId= m.marId
+                             WHERE (p.proNombre LIKE ? OR c.colNombre LIKE ? OR t.talNombre LIKE ? OR s.stoCantidad LIKE ?)";
+                   
                                     $params = [$search_param, $search_param, $search_param, $search_param];
 
                                     if ($filterCategory) {  
@@ -333,18 +328,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                         } elseif ($row['stoCantidad'] < 15) {
                                             $estadoClass = 'badge-warning';
                                         }
-                                        echo "<tr id='stock-{$row['stoId']}' data-category='{$row['catId']}'>
-                                             <td>{$numero_registro}</td>
-                                                <td>{$row['proNombre']}</td>
-                                                <td><span class='{$estadoClass}'>{$estado}</span></td>
-                                                <td>{$row['colNombre']}</td>
-                                                <td>{$row['talNombre']}</td>
-                                                <td>{$row['stoCantidad']}</td>
-                                                <td>
-                                                   <a href='editarstock.php?id={$row['stoId']}' class='btn btn-soft-secondary btn-sm ms-2 me-1' aria-label='Editar' title='Editar'><i class='ri-pencil-fill align-bottom me-1' style='font-size: 1.5em;'></i></a>
-                                                    <a href='javascript:void(0);' class='btn btn-soft-danger btn-sm' onclick='confirmDeleteStock({$row['stoId']})' aria-label='Eliminar' title='Eliminar'><i class='ri-delete-bin-fill align-bottom me-1' style='font-size: 1.5em;'></i></a>
-                                                </td>
-                                            </tr>";
+                                        echo "<tr id='stock-{$row['stoId']}'>
+                                   <td>{$numero_registro}</td>
+                                <td data-img='{$row['proImg']}' data-marca='{$row['marNombre']}' data-price='{$row['proPrecio']}' data-category='{$row['catNombre']}' 
+                                class='product-name'>{$row['proNombre']}</td>
+                                   <td><span class='{$estadoClass}'>{$estado}</span></td>
+                                   <td>{$row['colNombre']}</td>
+                                   <td>{$row['talNombre']}</td>
+                                   <td>{$row['stoCantidad']}</td>
+                                   <td>
+                                      <a href='editarstock.php?id={$row['stoId']}' class='btn btn-soft-secondary btn-sm ms-2 me-1' aria-label='Editar' title='Editar'>
+                                          <i class='ri-pencil-fill align-bottom me-1' style='font-size: 1.5em;'></i>
+                                      </a>
+                                      <a href='javascript:void(0);' class='btn btn-soft-danger btn-sm' onclick='confirmDeleteStock({$row['stoId']})' aria-label='Eliminar' title='Eliminar'>
+                                          <i class='ri-delete-bin-fill align-bottom me-1' style='font-size: 1.5em;'></i>
+                                      </a>
+                                   </td>
+                              </tr>";
+                              
                                             $numero_registro++;
                                     }
                                     ?>
@@ -357,6 +358,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
         </div>
     </div>
+    <!-- tooltip hal hacer hover en la fila de la tabla -->
+    <div id="stock-tooltip" style="position: absolute; display: none; background: white; border: 1px solid #ddd; padding: 10px; border-radius: 5px; z-index: 1000; text-align: center;">
+        <img id="tooltip-img" src=" " alt="Producto" style="width: 200px; height: auto; margin-bottom: 10px;">
+        <p id="tooltip-marca" style="margin: 0; font-weight: 500; font-style:italic"></p>
+        <p id="tooltip-category" style="margin: 0; font-weight: bold;"></p>
+        <p id="tooltip-price" style="margin: 0;"></p>
+    </div>
+
 
     <!-- Modal de confirmación -->
     <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">

@@ -247,7 +247,7 @@ $result = $stmt->get_result();
                        
                                 <div class="col-md-3">
                                     <div class="input-group">
-                                        <input type="text" id="search" class="form-control" placeholder="Buscar marca" value="<?php echo htmlspecialchars($search); ?>" onkeyup="if(event.keyCode == 13) window.location.href='?search='+this.value">
+                                        <input type="text" id="search" class="form-control" placeholder="Buscar producto" value="<?php echo htmlspecialchars($search); ?>" onkeyup="if(event.keyCode == 13) window.location.href='?search='+this.value">
                                         <span class="input-group-text"><i class="ri-search-2-line"></i></span>
                                     </div>
                                 </div>

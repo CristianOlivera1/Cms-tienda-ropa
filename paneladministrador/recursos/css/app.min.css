@@ -46,10 +46,13 @@
 }
 
 .product-name {
-    font-size: 20px;
-    font-weight: 1000;
-    color: #333;
     font-style: italic;
+}
+
+td.product-name:hover {
+    cursor: pointer;
+    text-decoration: underline;
+    color: #007bff;
 }
 
 .product-description {

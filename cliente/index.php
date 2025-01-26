@@ -20,7 +20,7 @@ $numrows = $row[0];
                     <p class="white-70 my-4"><?php echo $porDescripcion ?></p>
                     <div class="button-group">
                         <a href="producto/producto.php" class="btn btn-bordered-white">Ver productos</a>
-                        <a href="#" class="btn btn-bordered-white d-none d-sm-inline-block">Contáctanos</a>
+                        <a href="/cliente/categoria/todascategorias.php" class="btn btn-bordered-white d-none d-sm-inline-block">Ver categorías</a>
                     </div>
                 </div>
             </div>

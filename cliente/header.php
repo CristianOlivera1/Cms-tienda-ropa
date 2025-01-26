@@ -79,7 +79,11 @@ $conEmail = "$tr[conEmail]";
                                 <a class="dropdown-item" href="/cliente/categoria/todascategorias.php">Todas</a>
                                 <div class="dropdown-divider"></div>
                                 <?php
-                                $categories = mysqli_query($con, "SELECT catId, catNombre FROM categoria");
+                                $categories = mysqli_query($con, "SELECT DISTINCT c.catId, c.catNombre 
+                                                                  FROM categoria c 
+                                                                  JOIN producto p ON c.catId = p.catId 
+                                                                  JOIN stock s ON p.proId = s.proId 
+                                                                  WHERE s.stoCantidad > 0");
                                 while ($category = mysqli_fetch_assoc($categories)) {
                                     echo "<a class='dropdown-item' href='/cliente/producto/producto.php?category={$category['catId']}'>{$category['catNombre']}</a>";
                                 }
