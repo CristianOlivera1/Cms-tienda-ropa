@@ -18,6 +18,7 @@ $conEmail = "$tr[conEmail]";
     <link rel="icon" href="/cliente/recursos/img/favicon/favicon.ico">
     <link rel="stylesheet" href="/cliente/recursos/css/style.css">
     <link rel="stylesheet" href="/cliente/recursos/css/responsive.css">
+    
 </head>
 
 <body>

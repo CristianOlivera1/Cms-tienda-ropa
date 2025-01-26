@@ -138,7 +138,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                                 <select class="form-select" id="proId" name="proId" required onchange="filtrarTallas(this.value); showProductImage(this.value)">
                                                     <option value="" selected>Seleccione producto</option>
                                                     <?php
-                                                    $query = "SELECT proId, proNombre, proImg FROM producto";
+                                                    $query = "SELECT proId, proNombre, proImg FROM producto order by proNombre asc";
                                                     $result = mysqli_query($con, $query);
                                                     while ($row = mysqli_fetch_assoc($result)) {
                                                         echo "<option value='{$row['proId']}'  data-img-pro='{$row['proImg']}'>{$row['proNombre']} </option>";
@@ -146,7 +146,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                                     ?>
                                                </select>
                                             </div>
-
                                                 <div class="mb-3">
                                                     <label for="proImg" class="form-label">Imagen del Producto</label>
                                                     <div id="productImageContainer">
@@ -199,11 +198,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                                 </div>
 
                                                 <div class="mb-3">
-    <label for="talId" class="form-label">Talla</label>
-    <select class="form-select" id="talId" name="talId" required>
-        <option value="" selected>Seleccione talla</option>
-    </select>
-</div>
+                                                    <label for="talId" class="form-label">Talla</label>
+                                                    <select class="form-select" id="talId" name="talId" required>
+                                                        <option value="" selected>Seleccione talla</option>
+                                                    </select>
+                                                </div>
                                                 <div class="mb-3">
                                                     <label for="stoCantidad" class="form-label">Cantidad</label>
                                                     <div class="input-group">

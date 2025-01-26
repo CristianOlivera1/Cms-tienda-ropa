@@ -418,6 +418,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+//mostrar tallas dependiendo a la categoria
 function filtrarTallas(proId) {
     const talId = document.getElementById('talId');
 
@@ -448,7 +449,6 @@ function filtrarTallas(proId) {
         })
         .catch((error) => console.error('Error:', error));
 }
-
 
 //mostrar la imagen al seleccionar un producto en Stock
 function showProductImage(proId) {

@@ -114,8 +114,7 @@ $stock_quantity = $stock_data['totalCantidad'];
         </div>
     </div>
 </section>
-<!-- ***** Productos detalle fin***** -->
-</section>
+
 <!-- ***** Productos relacionados(sugerencias) inicio ***** -->
 <section class="section related-products ptb_50">
     <div class="container">
