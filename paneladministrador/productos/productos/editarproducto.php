@@ -51,6 +51,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $target_dir = "../../recursos/uploads/producto/";
             $target_file = $producto['proImg'];
             $target_file2 = $producto['proImg2'];
+            $unique_name1 = $producto['proImg'];
+            $unique_name2 = $producto['proImg2'];
 
             // Manejar imagen principal
             if (!empty($producto_img['name'])) {

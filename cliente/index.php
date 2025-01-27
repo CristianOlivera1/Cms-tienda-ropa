@@ -52,9 +52,7 @@ $numrows = $row[0];
                     $categories = mysqli_query($con, "SELECT catId, catNombre FROM categoria");
                     while ($category = mysqli_fetch_assoc($categories)) {
                         $category_id = $category['catId'];
-                        $product_count_query = mysqli_query($con, "SELECT COUNT(DISTINCT p.proId) FROM producto p
-                                                                  INNER JOIN stock s ON p.proId = s.proId
-                                                                  WHERE s.stoCantidad > 0 AND p.catId = $category_id");
+                        $product_count_query = mysqli_query($con, "SELECT COUNT(DISTINCT p.proId) FROM producto p INNER JOIN stock s ON p.proId = s.proId WHERE s.stoCantidad > 0 AND p.catId = $category_id");
                         $product_count = mysqli_fetch_row($product_count_query)[0];
                         if ($product_count > 0) {
                         echo "<a class='nav-link d-flex justify-content-between align-items-center' id='v-pills-{$category['catId']}-tab' data-toggle='pill' href='#v-pills-{$category['catId']}' role='tab' aria-controls='v-pills-{$category['catId']}' aria-selected='false'>{$category['catNombre']} <span class='text-black-50 ml-2'>($product_count)</span></a>";
@@ -65,13 +63,11 @@ $numrows = $row[0];
             </div>
             <div class="col-9">
                 <div class="tab-content" id="v-pills-tabContent">
-                    <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
+                    <div class="tab-pane fade show active"
+                      id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
                         <div class="row">
                             <?php //Todas las productos
-                            $qs = "SELECT DISTINCT p.proId, p.proNombre, p.proPrecio, p.proImg, m.marNombre FROM producto p
-                                   INNER JOIN stock s ON p.proId = s.proId INNER JOIN marca m on m.marId=p.marId
-                                   WHERE s.stoCantidad > 0
-                                   ORDER BY p.proId DESC LIMIT 6";
+                            $qs = "SELECT DISTINCT p.proId, p.proNombre, p.proPrecio, p.proImg, m.marNombre FROM producto p INNER JOIN stock s ON p.proId = s.proId INNER JOIN marca m on m.marId=p.marId WHERE s.stoCantidad > 0 ORDER BY p.proId DESC LIMIT 6";
                             $r1 = mysqli_query($con, $qs);
 
                             while ($rod = mysqli_fetch_array($r1)) {
@@ -82,12 +78,12 @@ $numrows = $row[0];
                                 $marNombre = "$rod[marNombre]";
                                 
                                 echo "
-                                <div class='col-12 col-md-6 col-lg-4 mb-3'>
-                                    <!-- producto Individual -->
+                                <div class='col-12 col-md-6 col-lg-4'>
+                                    <!-- producto todos -->
                                    <a href='producto/detalleproducto.php?id=$id' class='hover-products'><div class='single-service color-1 bg-hover hover-bottom text-center' style='padding:5px 15px 15px'>
                                         <img src='../paneladministrador/recursos/uploads/producto/$ufile' alt='img' class='category-img'>
                                         <p class='text-muted font-italic mt-2'>$marNombre</p>
-                                        <h5 class='my-1'>$name</h5>
+                                        <h5 class='my-1 d-inline''>$name</h5>
                                         <p>S/ $price</p>
                                     </div>  </a>
                                 </div>
@@ -115,7 +111,7 @@ $numrows = $row[0];
 
                             echo "
                             <div class='col-12 col-md-6 col-lg-4 res-margin'>
-                                <!-- Servicio Individual -->
+                                <!-- poroducto Individual -->
                                 <a href='producto/detalleproducto.php?id=$id' class='hover-products'> <div class='single-service color-1 bg-hover bg-white hover-bottom text-center' style='padding:5px 15px 15px'>
                                     <img src='../paneladministrador/recursos/uploads/producto/$ufile' alt='img' class='category-img'>
                                     <p class='text-muted font-italic mt-2'>$marNombre</p>

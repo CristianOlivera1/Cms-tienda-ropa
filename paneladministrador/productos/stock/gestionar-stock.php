@@ -185,7 +185,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                                         <select class="form-select me-2" id="colId" name="colId" required onchange="updateColorPreview(this)">
                                                         <option value="" selected>Seleccione color</option>
                                                             <?php
-                                                            $query = "SELECT colId, colNombre, colCodigoHex FROM color";
+                                                            $query = "SELECT colId, colNombre, colCodigoHex FROM color order by colNombre asc";
                                                             $result = mysqli_query($con, $query);
                                                             while ($row = mysqli_fetch_assoc($result)) {
                                                                 $selected = ($row['colId'] == $colId) ? 'selected' : '';

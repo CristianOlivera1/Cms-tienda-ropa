@@ -1777,9 +1777,9 @@ body.dark,
     -webkit-transition: all 0.3s ease 0s;
     transition: all 0.3s ease 0s;
     overflow: hidden;
-    margin-bottom: 30px;
     width: 100%; /* Reduce width */
     background: white;
+    margin-bottom: 28px;
 }
 
 .single-service:hover {

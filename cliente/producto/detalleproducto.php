@@ -60,14 +60,15 @@ $stock_quantity = $stock_data['totalCantidad'];
                     </div>
                 </div>
             </div>
-            <div class="col-12 col-lg-5 d-flex position-relative">
+            <div class="col-12 col-lg-5 d-flex position-relative" style="border-left: 1px solid #ddd;">
                 <div class="product-content section-heading text-lg-left pl-md-1 mt-lg-0 mb-0 w-100">
                     <p class="text-muted"><?php echo $product_brand; ?></p>
                     <h2 class="nombre-producto"><?php echo $product_name; ?></h2>
-                    <p class="text-dark mb-3 mt-2"><?php echo $product_desc; ?></p>
+                    <p class="text-dark mt-2"><?php echo $product_desc; ?></p>
+                     <hr class="mt-2">
                     <h3> S/. <?php echo $product_price; ?></h3>
                     <!-- Colores disponibles -->
-                    <div class="mb-3 mt-4">
+                    <div class="mb-4 mt-4">
                         <label class="form-label">Color: <span id="selected-color-name"><?php echo mysqli_fetch_assoc($colors)['colNombre']; ?></span></label>
                         <div class="d-flex align-items-center">
                             <?php 
@@ -78,7 +79,7 @@ $stock_quantity = $stock_data['totalCantidad'];
                         </div>
                     </div> 
                     <!-- Tallas disponibles -->
-                    <div class="mb-3">
+                    <div class="mb-4">
                         <label for="talla" class="form-label">Talla:</label> <br>
                         <select id="talla" class="form-select w-100" style="height: 45px;">
                             <?php while ($talla = mysqli_fetch_assoc($tallas)): ?>

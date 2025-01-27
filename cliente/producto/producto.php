@@ -74,7 +74,7 @@ $selectedCategory = isset($_GET['category']) ? $_GET['category'] : '';
             <div class="tab-content" id="v-pills-tabContent">
             <div class="tab-pane fade <?php echo $selectedCategory == '' ? 'show active' : ''; ?>" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
                 <div class="row">
-                <?php //Todas las categorias
+                <?php //Todas los productos
                 $qs = "SELECT DISTINCT p.proId, p.proNombre, p.proPrecio, p.proImg, m.marNombre FROM producto p
                        INNER JOIN stock s ON p.proId = s.proId INNER JOIN marca m on m.marId=p.marId
                        WHERE s.stoCantidad > 0
@@ -89,8 +89,8 @@ $selectedCategory = isset($_GET['category']) ? $_GET['category'] : '';
                     $marNombre = "$rod[marNombre]";
                     
                     echo "
-                    <div class='col-12 col-md-6 col-lg-4 mb-3'>
-                    <!-- producto Individual -->
+                    <div class='col-12 col-md-6 col-lg-4'>
+                    <!-- producto todos -->
                        <a href='detalleproducto.php?id=$id' class='hover-products'><div class='single-service color-1 bg-hover hover-bottom text-center' style='padding:5px 15px 15px'>
                         <img src='../../paneladministrador/recursos/uploads/producto/$ufile' alt='img' class='category-img'>
                         <p class='text-muted font-italic mt-2'>$marNombre</p>

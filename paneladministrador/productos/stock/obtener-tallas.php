@@ -18,9 +18,9 @@ if (isset($_POST['proId'])) {
 
         if (strtolower($categoria) === 'zapatillas' || strtolower($categoria) === 'zapatos') {
             // Filtrar solo tallas numéricas
-            $query = "SELECT talId, talNombre FROM talla WHERE talNombre REGEXP '^[0-9]+$'";
+            $query = "SELECT talId, talNombre FROM talla WHERE talNombre REGEXP '^[0-9]+$' order by talNombre asc";
         } else {
-            $query = "SELECT talId, talNombre FROM talla WHERE talNombre NOT REGEXP '^[0-9]+$'";
+            $query = "SELECT talId, talNombre FROM talla WHERE talNombre NOT REGEXP '^[0-9]+$' order by talNombre asc";
         }
         
         $result = mysqli_query($con, $query);

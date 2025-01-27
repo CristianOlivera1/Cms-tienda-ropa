@@ -11,46 +11,59 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $cliAp = trim($_POST['cliApellidoPaterno']);
     $cliAm = trim($_POST['cliApellidoMaterno']);
     $correo = trim($_POST['cliCorreo']);
+    $fechaNacimiento = trim($_POST['cliFechaNacimiento']); // Se obtiene en formato YYYY-MM-DD
 
     // Check for empty fields
-    if (empty($cliNombre) || empty($cliAp) || empty($cliAm) || empty($correo)) {
+    if (empty($cliNombre) || empty($cliAp) || empty($cliAm) || empty($correo) || empty($fechaNacimiento)) {
         $error = 'Todos los campos son obligatorios excepto el DNI.';
     } else {
-        // Prepare query to check for existing email
-        $checkEmailQuery = "SELECT * FROM cliente WHERE cliCorreo = ?";
-        $checkEmailStmt = $con->prepare($checkEmailQuery);
-        $checkEmailStmt->bind_param('s', $correo);
-        $checkEmailStmt->execute();
-        $checkEmailResult = $checkEmailStmt->get_result();
+        // Validar si la fecha de nacimiento es válida y si el cliente es mayor de 18 años
+        $fechaNacimientoDate = new DateTime($fechaNacimiento);
+        $hoy = new DateTime();
 
-        // Check if email already exists
-        if ($checkEmailResult->num_rows > 0) {
-            $error = 'El correo ya está registrado.';
-        } else {
-            // If DNI is provided, check if it's unique
-            if (!empty($cliDni)) {
-                $checkDniQuery = "SELECT * FROM cliente WHERE cliDni = ?";
-                $checkDniStmt = $con->prepare($checkDniQuery);
-                $checkDniStmt->bind_param('s', $cliDni);
-                $checkDniStmt->execute();
-                $checkDniResult = $checkDniStmt->get_result();
+        // Calcular la edad
+        $edad = $hoy->diff($fechaNacimientoDate)->y;
 
-                // Check if DNI already exists
-                if ($checkDniResult->num_rows > 0) {
-                    $error = 'El DNI ya está registrado.';
+        if ($edad < 18) {
+            $error = 'El cliente debe ser mayor de 18 años.';
+        }
+
+        // Verificar si el DNI o el correo ya existen
+        if (empty($error)) {
+            $queryDni = "SELECT COUNT(*) FROM cliente WHERE cliDni = ?";
+            $stmtDni = $con->prepare($queryDni);
+            $stmtDni->bind_param('s', $cliDni);
+            $stmtDni->execute();
+            $stmtDni->bind_result($dniCount);
+            $stmtDni->fetch();
+            $stmtDni->close();
+
+            if ($dniCount > 0) {
+                $error = 'El DNI ya está registrado.';
+            } else {
+                $queryCorreo = "SELECT COUNT(*) FROM cliente WHERE cliCorreo = ?";
+                $stmtCorreo = $con->prepare($queryCorreo);
+                $stmtCorreo->bind_param('s', $correo);
+                $stmtCorreo->execute();
+                $stmtCorreo->bind_result($correoCount);
+                $stmtCorreo->fetch();
+                $stmtCorreo->close();
+
+                if ($correoCount > 0) {
+                    $error = 'El correo ya está registrado.';
                 }
             }
+        }
 
-            // If no errors, proceed to insert the new client
-            if (empty($error)) {
-                $query = "INSERT INTO cliente (cliDni, cliNombre, cliApellidoPaterno, cliApellidoMaterno, cliCorreo, cliFechaRegis) VALUES (?, ?, ?, ?, ?, NOW())";
-                $stmt = $con->prepare($query);
-                $stmt->bind_param('sssss', $cliDni, $cliNombre, $cliAp, $cliAm, $correo);
-                if ($stmt->execute()) {
-                    $success = 'Cliente registrado exitosamente.';
-                } else {
-                    $error = 'Error al registrar el cliente.';
-                }
+        // If no errors, proceed to insert the new client
+        if (empty($error)) {
+            $query = "INSERT INTO cliente (cliDni, cliNombre, cliApellidoPaterno, cliApellidoMaterno, cliCorreo, cliFechaNacimiento, cliFechaRegis) VALUES (?, ?, ?, ?, ?, ?, NOW())";
+            $stmt = $con->prepare($query);
+            $stmt->bind_param('ssssss', $cliDni, $cliNombre, $cliAp, $cliAm, $correo, $fechaNacimiento);
+            if ($stmt->execute()) {
+                $success = 'Cliente registrado exitosamente.';
+            } else {
+                $error = 'Error al registrar el cliente.';
             }
         }
     }
@@ -130,7 +143,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                                     <input type="email" class="form-control" id="cliCorreo" name="cliCorreo" required>
                                                 </div>
                                             </div>
-                                            <div class="col-lg-12">
+                                            <div class="col-lg-6">
+                                                <div class="mb-3">
+                                                    <label for="cliFechaNacimiento" class="form-label">Fecha de Nacimiento</label>
+                                                    <input type="date" class="form-control" id="cliFechaNacimiento" name="cliFechaNacimiento" required>
+                                                </div>
+                                            </div>
+                                            
+                                                <div class="col-lg-12">
                                                 <div class="hstack gap-2 justify-content-end">
                                                     <button type="submit" class="btn btn-primary">Registrar</button>
                                                 </div>
@@ -157,6 +177,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                         <th>Apellido Paterno</th>
                                         <th>Apellido Materno</th>
                                         <th>Correo</th>
+                                        <th>Fecha de Nacimiento</th>
                                         <th class="accion-col">Acción</th>
                                     </tr>
                                 </thead>
@@ -171,6 +192,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                                 <td>{$row['cliApellidoPaterno']}</td>
                                                 <td>{$row['cliApellidoMaterno']}</td>
                                                 <td>{$row['cliCorreo']}</td>
+                                                <td>{$row['cliFechaNacimiento']}</td>
                                                 <td>
                                                 <a href='editarcliente.php?id={$row['cliId']}' class='btn btn-soft-secondary btn-sm ms-2 me-1' aria-label='Editar' title='Editar'><i class='ri-pencil-fill align-bottom me-1' style='font-size: 1.5em;'></i></a>
                                                 <a href='javascript:void(0);' class='btn btn-soft-danger btn-sm' onclick='confirmDeleteCliente({$row['cliId']})' aria-label='Eliminar' title='Eliminar'><i class='ri-delete-bin-fill align-bottom me-1' style='font-size: 1.5em;'></i></a>
