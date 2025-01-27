@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 20-01-2025 a las 21:23:11
+-- Tiempo de generación: 27-01-2025 a las 01:50:17
 -- Versión del servidor: 10.4.27-MariaDB
 -- Versión de PHP: 8.2.0
 
@@ -139,12 +139,7 @@ INSERT INTO `color` (`colId`, `colNombre`, `colCodigoHex`, `colFechaRegis`) VALU
 (33, 'Dorado', '#ffd700', '2025-01-14 08:18:24'),
 (34, 'Plateado', '#c0c0c0', '2025-01-14 08:18:39'),
 (35, 'Caramelo', '#d2691d', '2025-01-14 08:19:17'),
-(37, 'Ocre', '#cc7722', '2025-01-14 08:20:54'),
-(42, 'ssssssssss', '#efebeb', '2025-01-15 20:01:38'),
-(43, 'ss', '#f71d1d', '2025-01-15 20:02:32'),
-(45, 'ffff', '#7e6363', '2025-01-15 20:04:53'),
-(48, 'sssssssss', '#973535', '2025-01-15 20:13:18'),
-(49, 'fffffffff', '#d79393', '2025-01-15 20:13:43');
+(37, 'Ocre', '#cc7722', '2025-01-14 08:20:54');
 
 -- --------------------------------------------------------
 
@@ -316,7 +311,7 @@ CREATE TABLE `producto` (
 
 INSERT INTO `producto` (`proId`, `catId`, `marId`, `proNombre`, `proDescripcion`, `proImg`, `proImg2`, `proPrecio`, `proFechaRegistro`) VALUES
 (1, 28, 4, 'Camiseta Deportiva', 'Camiseta de fútbol Nike', '678e3df0327b6-d2bd8030-73fc-4f9b-bb51-89bb0c1e8c19.webp', '678e3df033f83-2edc10b5-a98f-4fcc-a4ed-73621f952ff4.webp', '25.99', '2025-01-20 07:13:36'),
-(2, 28, 4, 'Camiseta Básica', 'Camiseta de algodón de varios colores', 'camiseta_basica.jpg', 'camiseta_basica2.jpg', '15.99', '2025-01-19 11:30:00'),
+(2, 28, 4, 'Camiseta Básica', 'Camiseta de algodón de varios colores', '679652b78d569-ce0600a4-1827-4d76-8995-bbc0b4e20de6.webp', '679652b78ee0f-88894263-053f-445f-9e26-4f5e2a89bc09.webp', '15.99', '2025-01-26 10:20:23'),
 (3, 28, 4, 'Camiseta Estampada', 'Camiseta con estampado gráfico', '678d85a83661b-5.jpg', '678d85a836a3e-6.jpg', '19.99', '2025-01-19 18:07:20'),
 (4, 29, 5, 'Pantalón Jeans', 'Pantalón de mezclilla azul', '678d850ca29d4-1pa.webp', '678d850ca2c5d-2.jpeg', '25.50', '2025-01-19 18:04:44'),
 (5, 29, 5, 'Pantalón Chino', 'Pantalón chino para ocasiones casuales', '678d84280200e-3pa.jpg', '678d842802ec6-4pa.jpg', '28.75', '2025-01-19 18:00:56'),
@@ -326,23 +321,23 @@ INSERT INTO `producto` (`proId`, `catId`, `marId`, `proNombre`, `proDescripcion`
 (9, 31, 27, 'Zapatos Formales', 'Zapatos formales de cuero', '678d84bc7a3bf-19.webp', '678d84bc7a6fd-20.jpg', '60.00', '2025-01-19 18:03:24'),
 (10, 34, 28, 'Sudadera con Capucha', 'Sudadera de algodón con capucha', '678d8472ccc61-21.webp', '678d8472ccf59-22.jpg', '35.00', '2025-01-19 18:02:10'),
 (11, 34, 28, 'Sudadera Deportiva', 'Sudadera ligera para entrenamiento', '678d8450c3824-1pol.jpg', '678d8450c3acb-2pol.jpeg', '40.00', '2025-01-19 18:01:36'),
-(12, 35, 29, 'Chaqueta de Invierno', 'Chaqueta de abrigo para invierno', 'chaqueta_invierno.jpg', 'chaqueta_invierno2.jpg', '80.00', '2025-01-19 17:30:00'),
-(13, 35, 29, 'Chaqueta de Cuero', 'Chaqueta de cuero para estilo casual', 'chaqueta_cuero.jpg', 'chaqueta_cuero2.jpg', '120.00', '2025-01-19 17:31:00'),
-(14, 36, 30, 'Sombrero de Sol', 'Sombrero para protegerse del sol', 'sombrero_sol.jpg', 'sombrero_sol2.jpg', '18.99', '2025-01-19 11:37:00'),
-(15, 36, 30, 'Sombrero Estilo Fedora', 'Sombrero Fedora clásico', 'sombrero_fedora.jpg', 'sombrero_fedora2.jpg', '22.50', '2025-01-19 11:38:00'),
-(16, 37, 31, 'Bufanda de Lana', 'Bufanda de lana para invierno', 'bufanda_lana.jpg', 'bufanda_lana2.jpg', '14.00', '2025-01-19 11:37:00'),
-(17, 37, 31, 'Bufanda de Seda', 'Bufanda de seda para clima templado', 'bufanda_seda.jpg', 'bufanda_seda2.jpg', '25.00', '2025-01-19 11:38:00'),
-(18, 39, 32, 'Calcetines de Algodón', 'Pack de 3 calcetines de algodón', 'calcetines_algodon.jpg', 'calcetines_algodon2.jpg', '9.99', '2025-01-19 11:37:00'),
-(19, 39, 32, 'Calcetines de Lana', 'Pack de 2 calcetines de lana', 'calcetines_lana.jpg', 'calcetines_lana2.jpg', '12.50', '2025-01-19 11:38:00'),
-(20, 40, 33, 'Cinturón de Cuero', 'Cinturón de cuero para traje', 'cinturon_cuero.jpg', 'cinturon_cuero2.jpg', '20.00', '2025-01-19 11:36:00'),
-(21, 40, 33, 'Cinturón Deportivo', 'Cinturón deportivo para jeans', 'cinturon_deportivo.jpg', 'cinturon_deportivo2.jpg', '15.00', '2025-01-19 11:37:00'),
-(22, 45, 34, 'Traje Formal', 'Traje de corte slim para eventos', 'traje_formal.jpg', 'traje_formal2.jpg', '120.00', '2025-01-19 11:32:00'),
-(23, 45, 34, 'Traje Clásico', 'Traje clásico de dos piezas', 'traje_clasico.jpg', 'traje_clasico2.jpg', '150.00', '2025-01-19 11:33:00'),
-(24, 46, 35, 'Bañador de Hombre', 'Bañador para piscina', 'banador_hombre.jpg', 'banador_hombre2.jpg', '25.00', '2025-01-19 11:30:00'),
+(12, 35, 29, 'Chaqueta de Invierno', 'Chaqueta de abrigo para invierno', '679655de13ba7-08434bbf-6488-455b-aee5-89600c49871e.webp', '679655de1476f-24cbcf2d-bf33-4dc9-9d28-9c64c52e8f97.webp', '80.00', '2025-01-26 10:33:50'),
+(13, 35, 29, 'Chaqueta de Cuero', 'Chaqueta de cuero para estilo casual', '679655b433fc6-8f0140a36de3f7d8a7846ad23e180b87.webp', '679655b43436a-6740a86340503d403f74df996677797d.webp', '120.00', '2025-01-26 10:33:08'),
+(14, 36, 30, 'Sombrero de Sol', 'Sombrero para protegerse del sol', '6796558e3c87c-393fde27-b633-4ff1-8b25-df93124dd82c.webp', '6796558e3fbef-a511a69d-583a-40e9-a285-4fc33fe2fadc.webp', '18.99', '2025-01-26 10:32:30'),
+(15, 36, 30, 'Sombrero Estilo Fedora', 'Sombrero Fedora clásico', '679655680d27d-7a9503e8-0fec-4abd-b487-4ba6604d8812.webp', '679655680e190-dbcf0b10-9888-4301-ad3e-bd0f7836967c.webp', '22.50', '2025-01-26 10:31:52'),
+(16, 37, 31, 'Bufanda de Lana', 'Bufanda de lana para invierno', '6796554966142-63f48813-c17d-4557-bac8-4f1ebb1a3633.webp', '679655496654c-90650e41-f579-4d53-ac6c-590a03409bae.webp', '14.00', '2025-01-26 10:31:21'),
+(17, 37, 31, 'Bufanda de Seda', 'Bufanda de seda para clima templado', '6796551a2f501-7c9e63b309de4d3ca0ab5a632f22cc78-goods.webp', '6796551a30655-410e48a863da4449adf5a2a9be65ba25-goods.webp', '25.00', '2025-01-26 10:30:34'),
+(18, 39, 32, 'Calcetines de Algodón', 'Pack de 3 calcetines de algodón', '679654e274a2a-bb49a0ca-8a77-49cb-8a1e-7ece37b728d4.webp', '679654e27556c-fa712fbc-9b3f-454f-bf9f-1977f4fb6852.webp', '9.99', '2025-01-26 10:29:38'),
+(19, 39, 32, 'Calcetines de Lana', 'Pack de 2 calcetines de lana', '679654bc27898-a53b821dd583e0595f0e67b16a0de545_1722504425770.webp', '679654bc28503-1722499352987-0fae2d93e17f4898a159138599d4d290-goods.webp', '12.50', '2025-01-26 10:29:00'),
+(20, 40, 33, 'Cinturón de Cuero', 'Cinturón de cuero para traje', '6796549603cf6-ecaa5f7d-6c84-45f7-b492-2d0a37dc62af.webp', '67965496040be-7c45c39b43b23b5fccb33fd797da5a68.webp', '20.00', '2025-01-26 10:28:22'),
+(21, 40, 33, 'Cinturón Deportivo', 'Cinturón deportivo para jeans', '67965457268b3-91206d5a-b985-4be0-a5ec-537d1486aa56_1800x1800.webp', '6796545729056-63d6ab35f69f375649691a8988e7b573.webp', '15.00', '2025-01-26 10:27:19'),
+(22, 45, 34, 'Traje Formal', 'Traje de corte slim para eventos', '679654278cafb-e15715d3-0070-44ce-9570-4fb9a0b1dc18.webp', '679654278cdcf-a35831c2-5df2-43ae-a2db-a58c8407fd56.webp', '120.00', '2025-01-26 10:26:31'),
+(23, 45, 34, 'Traje Clásico', 'Traje clásico de dos piezas', '679653e2f30ee-f646711e-7277-4652-a94c-cc346914f564.webp', '679653e2f400b-60d9c8a2-c199-4b78-9460-845b5ab3b0b8.webp', '150.00', '2025-01-26 10:25:23'),
+(24, 46, 35, 'Bañador de Hombre', 'Bañador para piscina', '679653b7a5111-c613217b-1f59-4fad-a5ec-babc5276264a.webp', '679653b7aad92-a90f00ed-8439-40ff-860e-a7e43e2fdce6.webp', '25.00', '2025-01-26 10:24:39'),
 (26, 47, 36, 'Zapatillas Deportivas', 'Zapatillas para correr', '678d84f654e41-12.jpeg', '678d84f655182-11.webp', '50.00', '2025-01-19 18:04:22'),
 (27, 47, 36, 'Zapatillas Casuales', 'Zapatillas para uso diario', '678d8378ceb06-1.jpg', '678d8378cf9cf-2.jpg', '45.00', '2025-01-19 17:58:00'),
-(28, 48, 37, 'Abrigo de Invierno', 'Abrigo largo para el frío extremo', 'abrigo_invierno.jpg', 'abrigo_invierno2.jpg', '150.00', '2025-01-19 11:28:00'),
-(29, 48, 37, 'Abrigo Corto', 'Abrigo corto para clima templado', 'abrigo_corto.jpg', 'abrigo_corto2.jpg', '100.00', '2025-01-19 11:29:00'),
+(28, 48, 37, 'Abrigo de Invierno', 'Abrigo largo para el frío extremo', '6796536ac7ac9-7e1443e6-bf86-40dc-8eab-c336b35f43cc.webp', '6796536ac7e4f-4b5003d4-564c-40fc-8026-9c7e2ce54457.webp', '150.00', '2025-01-26 10:23:22'),
+(29, 48, 37, 'Abrigo Corto', 'Abrigo corto para clima templado', '6796532b07e4b-8724bd9e-d022-4e41-b4ff-289734ffcde9.webp', '6796532b0928e-11d1eae7-969f-4f4e-b6a4-54366c8be034.webp', '100.00', '2025-01-26 10:22:19'),
 (30, 34, 5, 'Sudadera negra con diseño', 'Este es una Sudadera negra con diseño', '678d8630197ed-11pol.jpg', '678d8630197f5-12pol.jpeg', '66.00', '2025-01-19 18:09:36'),
 (31, 34, 4, 'Sudadera blanca con deportiva', 'Sudadera blanca con deportiva de la seleccion peruana', '678d86a3701ed-23.webp', '678d86a3701f7-24.webp', '70.00', '2025-01-19 18:11:31'),
 (32, 30, 27, 'Gorra blanca urbana', 'Esta es una Gorra blanca urbana', '678d8715ababb-7g.jpg', '678d8715abac4-8g.jpg', '50.00', '2025-01-19 18:13:25'),
@@ -354,7 +349,12 @@ INSERT INTO `producto` (`proId`, `catId`, `marId`, `proNombre`, `proDescripcion`
 (38, 47, 4, 'Zapatillas deportivas color amarillo', 'Esta es una Zapatillas deportivas color amarillo/negro', '678d887a5d621-4.jpg.webp', '678d887a5d629-3.jpg.webp', '150.00', '2025-01-19 18:19:22'),
 (39, 47, 34, 'Zapatilla urbana color gris', 'Esta es una Zapatilla urbana color gris', '678d88a516b2a-9.webp', '678d88a516b32-10.webp', '200.00', '2025-01-19 18:20:05'),
 (40, 28, 37, 'Camiseta basica color plomo', 'Esta es una Camiseta basica color plomo', '678d88e4236f4-8.jpeg', '678d88e423701-7.jpg', '30.00', '2025-01-19 18:21:08'),
-(41, 29, 36, 'Pantalon stylo antigua', 'Este es un Pantalon stylo antigua', '678d891a7cfdb-9pa.jpg', '678d891a7cfe2-10pa.jpg', '88.00', '2025-01-19 18:22:02');
+(41, 29, 36, 'Pantalon stylo antigua', 'Este es un Pantalon stylo antigua', '678d891a7cfdb-9pa.jpg', '678d891a7cfe2-10pa.jpg', '88.00', '2025-01-19 18:22:02'),
+(42, 28, 39, 'Camisa de golf', 'Sólida para hombre, camisa de manga corta casual de alto estiramiento con cuello para actividades al aire libre', '67966c2b78492-88f3c976-66ea-4fb9-b057-56d82ff86847.webp', '67966c2b7849c-352b722c-104f-4b47-9b91-f4076d9f55c1.webp', '40.28', '2025-01-26 12:08:59'),
+(43, 28, 37, 'Camiseta de manga', 'Corta de color sólido para hombre - Estilo de trabajo de verano, ajuste regular, tejido de punto con ligero estiramiento, cuello con botones, longitud', '67966c9fbfb81-62bf0868-7b41-41eb-832f-f850c357c26d.webp', '67966c9fbfb87-804c9d14-8898-40d2-ba17-99a2b274d107.webp', '28.60', '2025-01-26 12:10:55'),
+(44, 28, 40, 'Camiseta Henley', 'Para hombre, tops deportivos casuales y cómodos para ropa de golf de verano y actividades al aire libre.', '67966ce3df37b-246af589-d267-4b52-8857-b47d46302c6d.webp', '67966ce3df388-80871105-7cf8-460a-9c57-d312c9866a31.webp', '30.33', '2025-01-26 12:12:03'),
+(45, 28, 41, 'Camiseta de mangas cortas', 'Cuello volteado con botones de color sólido, ropa de primavera y verano para hombres', '67966d46f10f1-f3336a4d-cee6-4454-9616-ca0275f2e67f.webp', '67966d46f10f8-9304db0f-786d-4ed0-8474-1f6bf5527ab7.webp', '33.00', '2025-01-26 12:13:43'),
+(46, 28, 35, 'GENIO LAMODE', 'Ajuste Holgado, Manga Corta Versátil con Cuello Clásico y Detalle de Botones, Mezcla de Poliéster, Lavable a Máquina, Ropa Versátil', '67966d85af471-802c87d2-7f65-4cb6-98c0-a08c8b404833.webp', '67966d85af47d-a13f451b-1da0-49cb-832a-d7d041357240.webp', '35.00', '2025-01-26 12:14:45');
 
 -- --------------------------------------------------------
 
@@ -403,7 +403,34 @@ INSERT INTO `stock` (`stoId`, `proId`, `estId`, `colId`, `talId`, `stoCantidad`,
 (42, 3, 1, 13, 2, 32, '2025-01-20 07:19:00'),
 (43, 4, 1, 13, 1, 14, '2025-01-20 07:19:36'),
 (44, 5, 1, 34, 11, 36, '2025-01-20 07:20:24'),
-(45, 10, 1, 19, 11, 10, '2025-01-20 14:46:53');
+(45, 10, 1, 19, 11, 10, '2025-01-20 14:46:53'),
+(46, 10, 1, 18, 11, 20, '2025-01-25 10:14:35'),
+(47, 10, 1, 13, 1, 20, '2025-01-25 12:12:06'),
+(51, 1, 1, 16, 1, 30, '2025-01-26 09:20:48'),
+(52, 1, 1, 16, 2, 15, '2025-01-26 09:21:04'),
+(53, 2, 1, 25, 13, 20, '2025-01-26 09:21:58'),
+(54, 2, 1, 19, 1, 35, '2025-01-26 09:22:10'),
+(55, 41, 1, 13, 13, 30, '2025-01-26 10:48:53'),
+(56, 3, 1, 26, 12, 33, '2025-01-26 10:49:14'),
+(57, 4, 1, 16, 14, 25, '2025-01-26 10:49:38'),
+(58, 6, 1, 13, 13, 22, '2025-01-26 10:50:48'),
+(59, 6, 1, 26, 11, 44, '2025-01-26 10:51:07'),
+(60, 7, 1, 18, 12, 25, '2025-01-26 10:51:29'),
+(61, 13, 1, 16, 2, 12, '2025-01-26 12:02:25'),
+(62, 10, 1, 21, 13, 8, '2025-01-26 12:02:41'),
+(63, 40, 1, 19, 12, 10, '2025-01-26 12:04:25'),
+(64, 2, 1, 18, 2, 10, '2025-01-26 12:04:41'),
+(65, 12, 1, 13, 13, 36, '2025-01-26 12:05:11'),
+(66, 16, 1, 26, 1, 25, '2025-01-26 12:06:31'),
+(67, 11, 1, 18, 1, 30, '2025-01-26 12:06:48'),
+(68, 20, 1, 13, 13, 10, '2025-01-26 12:07:10'),
+(69, 42, 1, 22, 11, 22, '2025-01-26 12:15:49'),
+(70, 42, 1, 13, 13, 24, '2025-01-26 12:16:08'),
+(71, 46, 1, 26, 14, 10, '2025-01-26 12:16:27'),
+(72, 46, 1, 35, 1, 5, '2025-01-26 12:16:43'),
+(73, 45, 1, 19, 1, 15, '2025-01-26 12:17:00'),
+(74, 43, 1, 26, 13, 14, '2025-01-26 12:17:34'),
+(75, 44, 1, 24, 12, 14, '2025-01-26 12:20:24');
 
 -- --------------------------------------------------------
 
@@ -427,7 +454,8 @@ INSERT INTO `talla` (`talId`, `talNombre`, `talFechaRegis`) VALUES
 (11, 'S', '2025-01-13 14:21:33'),
 (12, 'X', '2025-01-13 14:21:37'),
 (13, 'L', '2025-01-13 14:22:03'),
-(14, 'XS', '2025-01-13 14:22:19');
+(14, 'XS', '2025-01-13 14:22:19'),
+(15, '40', '2025-01-26 11:09:40');
 
 -- --------------------------------------------------------
 
@@ -652,7 +680,7 @@ ALTER TABLE `portada`
 -- AUTO_INCREMENT de la tabla `producto`
 --
 ALTER TABLE `producto`
-  MODIFY `proId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
+  MODIFY `proId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
 
 --
 -- AUTO_INCREMENT de la tabla `resenhas`
@@ -664,13 +692,13 @@ ALTER TABLE `resenhas`
 -- AUTO_INCREMENT de la tabla `stock`
 --
 ALTER TABLE `stock`
-  MODIFY `stoId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
+  MODIFY `stoId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=76;
 
 --
 -- AUTO_INCREMENT de la tabla `talla`
 --
 ALTER TABLE `talla`
-  MODIFY `talId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `talId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT de la tabla `usuario`
