@@ -109,7 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                                 inner join producto on producto.proId=stock.proId"; // Asegúrate de que esta tabla tenga datos
                                         $result = mysqli_query($con, $query);
                                         while ($row = mysqli_fetch_assoc($result)) {
-                                            echo "<option value='{$row['stoId']}'> Producto: {$row['proNombre']}</option>";
+                                            echo "<option value='{$row['stoId']}'>{$row['proNombre']}</option>";
                                         }
                                         ?>
                                     </select>
@@ -134,7 +134,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <div class="card-body">
                         <div class="row mb-3">
                             <div class="col-md-6 mt-3">
-                                <input type="text" class="form-control me-2" placeholder="Buscar por porcentaje" 
+                                <input type="text" id="search" class="form-control me-2" placeholder="Buscar por porcentaje" 
                                     value="<?php echo htmlspecialchars($search); ?>" 
                                     oninput="searchOffers(this.value)">
                             </div>
@@ -155,19 +155,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>
-                                    
+                                    <th>N</th>
                                         <th>Producto</th>
                                         <th>Porcentaje</th>
                                         <th>Tiempo de Oferta</th>
                                         <th>Fecha de Registro</th>
-                                        <th>Precio</th>
-                                        <th>Precio Descontado</th>
+                                        <th>Precio normal</th>
+                                        <th>Precio oferta</th>
                                         <th>Acción</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php
-
                                     $query = "
                                     SELECT p.proNombre,o.ofeId, s.stoId, o.ofePorcentaje, o.ofeTiempo, o.ofeFechaRegis, p.proPrecio AS precioNormal,
                                            (p.proPrecio * (1 - o.ofePorcentaje / 100)) AS precioDescontado
@@ -189,11 +188,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                                 <td>{$row['ofePorcentaje']}%</td>
                                                 <td>{$row['ofeTiempo']}</td>
                                                 <td>{$row['ofeFechaRegis']}</td>
-                                                <td>Precio Normal: " . number_format($row['precioNormal'], 2) . " Soles <br>
+                                                <td>" . number_format($row['precioNormal'], 2) . " Soles <br>
                                                     
                                                 </td>
                                                 <td>
-                                                    Precio en Oferta: " . number_format($row['precioDescontado'], 2) . " Soles
+                                                    " . number_format($row['precioDescontado'], 2) . " Soles
                                                 </td>
                                                 <td>
                                                     <a href='editaroferta.php?id={$row['ofeId']}' class='btn btn-soft-secondary btn-sm ms-2 me-1' aria-label='Editar' title='Editar'><i class='ri-pencil-fill align-bottom me-1' style='font-size: 1.5em;'></i></a>

@@ -2,12 +2,22 @@
 include "../header.php";
 $todo = mysqli_real_escape_string($con, $_GET["id"]);
 
-// Obtener detalles del producto
-$rt = mysqli_query($con, "SELECT p.*, c.catNombre, m.marNombre, m.marImg FROM Producto p 
-                          INNER JOIN categoria c ON p.catId = c.catId 
-                          INNER JOIN Marca m ON p.marId = m.marId 
-                          WHERE p.proId='$todo'");
+// Obtener detalles del producto en oferta
+$rt = mysqli_query($con, "
+SELECT producto.*, categoria.catNombre, marca.marNombre, marca.marImg, oferta.ofePorcentaje FROM oferta
+INNER join stock on stock.stoId=oferta.stoId
+inner join producto on producto.proId=stock.proId
+inner join marca on marca.marId=producto.marId
+inner join categoria on categoria.catId=producto.catId
+WHERE producto.proId=63 < NOW()");
+
 $tr = mysqli_fetch_array($rt);
+
+if (!$tr) {
+    echo "<h2>Producto no encontrado o la oferta ha expirado.</h2>";
+    exit;
+}
+
 $product_name = $tr['proNombre'];
 $product_desc = $tr['proDescripcion'];
 $product_price = $tr['proPrecio'];
@@ -15,9 +25,9 @@ $product_image = $tr['proImg'];
 $product_image2 = $tr['proImg2'];
 $product_category = $tr['catNombre'];
 $product_category_id = $tr['catId'];
-
 $product_brand = $tr['marNombre'];
 $product_brand_img = $tr['marImg'];
+$discount_percentage = $tr['ofePorcentaje'];
 
 // Obtener colores y tallas disponibles
 $colors = mysqli_query($con, "SELECT DISTINCT c.colNombre, c.colCodigoHex FROM stock s 
@@ -31,6 +41,8 @@ $tallas = mysqli_query($con, "SELECT DISTINCT t.talNombre FROM stock s
 $stock = mysqli_query($con, "SELECT SUM(stoCantidad) as totalCantidad FROM stock WHERE proId='$todo'");
 $stock_data = mysqli_fetch_array($stock);
 $stock_quantity = $stock_data['totalCantidad'];
+
+$discounted_price = $product_price - ($product_price * ($discount_percentage / 100));
 ?>
 
 <section class="section breadcrumb-area overlay-dark d-flex align-items-center">
@@ -38,7 +50,7 @@ $stock_quantity = $stock_data['totalCantidad'];
         <div class="row">
             <div class="col-12">
                 <div class="breadcrumb-content d-flex flex-column align-items-center text-center">
-                    <h2 class="text-uppercase mb-3 mt-3 text-opacity20">Detalles del producto</h2>
+                    <h2 class="text-uppercase mb-3 mt-3 text-opacity20">Detalles de la Oferta</h2>
                 </div>
             </div>
         </div>
@@ -49,7 +61,6 @@ $stock_quantity = $stock_data['totalCantidad'];
 <section class="section product-detail-area ptb_100">
     <div class="container">
         <div class="row justify-content-between">
-            
             <div class="col-12 col-lg-7 d-flex" style="position: relative; top: 0;">
                 <div class="product-image text-center d-flex align-items-center justify-content-center">
                     <?php if ($product_image2): ?>
@@ -60,15 +71,16 @@ $stock_quantity = $stock_data['totalCantidad'];
                     </div>
                 </div>
             </div>
-            <div class="col-12 col-lg-5 d-flex position-relative" style="border-left: 1px solid #ddd;">
+            <div class="col-12 col-lg-5 d-flex position-relative">
                 <div class="product-content section-heading text-lg-left pl-md-1 mt-lg-0 mb-0 w-100">
                     <p class="text-muted"><?php echo $product_brand; ?></p>
                     <h2 class="nombre-producto"><?php echo $product_name; ?></h2>
-                    <p class="text-dark mt-2"><?php echo $product_desc; ?></p>
-                     <hr class="mt-2">
-                    <h3> S/. <?php echo $product_price; ?></h3>
+                    <p class="text-dark mb-3 mt-2"><?php echo $product_desc; ?></p>
+                    <h3> S/. <?php echo number_format($discounted_price, 2); ?> <span class="text-muted"><s>S/. <?php echo number_format($product_price, 2); ?></s></span></h3>
+                    <p class="text-success">Descuento: <?php echo $discount_percentage; ?>%</p>
+
                     <!-- Colores disponibles -->
-                    <div class="mb-4 mt-4">
+                    <div class="mb-3 mt-4">
                         <label class="form-label">Color: <span id="selected-color-name"><?php echo mysqli_fetch_assoc($colors)['colNombre']; ?></span></label>
                         <div class="d-flex align-items-center">
                             <?php 
@@ -79,7 +91,7 @@ $stock_quantity = $stock_data['totalCantidad'];
                         </div>
                     </div> 
                     <!-- Tallas disponibles -->
-                    <div class="mb-4">
+                    <div class="mb-3">
                         <label for="talla" class="form-label">Talla:</label> <br>
                         <select id="talla" class="form-select w-100" style="height: 45px;">
                             <?php while ($talla = mysqli_fetch_assoc($tallas)): ?>
@@ -100,7 +112,8 @@ $stock_quantity = $stock_data['totalCantidad'];
                     <div class="button-group mt-5">
                         <div class="row">
                             <div class="col-12 mb-2">
-                            <button class="btn btn-block btn-bordered-black p-3 mb-1" onclick="addToCart(<?php echo $todo; ?>, '<?php echo $product_name; ?>', <?php echo $product_price; ?>, document.getElementById('cantidad').value)">Añadir a la cesta</button>                            </div>
+                                <a href="addtocart.php?id=<?php echo $todo; ?>" class="btn btn-block btn-bordered-black p-3 mb-1">Añadir a la cesta</a>
+                            </div>
                             <div class="col-12">
                                 <a href="checkout.php?id=<?php echo $todo; ?>" class="btn btn-block p-3 ">Comprar</a>
                             </div>
@@ -120,57 +133,36 @@ $stock_quantity = $stock_data['totalCantidad'];
     <div class="container">
         <div class="row" style="height: 90px;">
             <div class="col-12">
-            <div class="section-heading">
-                <h3 class="text-muted">Más opciones similares</h3>
-                <hr>
-            </div>
+                <div class="section-heading">
+                    <h3 class="text-muted">Más opciones similares</h3>
+                    <hr>
+                </div>
             </div>
         </div>
       
         <div class="row">
             <?php
-            $related_products = mysqli_query($con, "SELECT DISTINCT p.proId, p.proNombre, p.proPrecio, p.proImg,m.marNombre FROM Producto p
-                                                    INNER JOIN stock s ON p.proId = s.proId
-                                                    INNER JOIN marca m on m.marId=p.marId
-                                                    WHERE p.catId = '$product_category_id' AND p.proId != '$todo' AND s.stoCantidad > 0
-                                                    ORDER BY p.proId DESC LIMIT 4");
+            $related_products = mysqli_query($con, "
+                SELECT DISTINCT p.proId, p.proNombre, p.proPrecio, p.proImg, m.marNombre 
+                FROM Producto p
+                INNER JOIN stock s ON p.proId = s.proId
+                INNER JOIN marca m ON m.marId = p.marId
+                WHERE p.catId = '$product_category_id' AND p.proId != '$todo' AND s.stoCantidad > 0
+                ORDER BY p.proId DESC LIMIT 4");
             while ($related = mysqli_fetch_assoc($related_products)): ?>
                 <div class="col-12 col-md-6 col-lg-3 mb-4">
-                <a href="detalleproducto.php?id=<?php echo $related['proId']; ?>" class='hover-products'>  <div class='single-service color-1 bg-hover bg-white hover-bottom text-center p-3'>
-                        <img src="../../paneladministrador/recursos/uploads/producto/<?php echo $related['proImg']; ?>" alt="img" class="img-fluid">
-                        <p class='text-muted font-italic mt-2'><?php echo $related['marNombre']; ?></p>
-                        <h5 class="mb-2"><?php echo $related['proNombre']; ?></h5>
-                        <p>S/. <?php echo $related['proPrecio']; ?></p>
-                    </div>
+                    <a href="detalleofertaproducto.php?id=<?php echo $related['proId']; ?>" class='hover-products'>
+                        <div class='single-service color-1 bg-hover bg-white hover-bottom text-center p-3'>
+                            <img src="../../paneladministrador/recursos/uploads/producto/<?php echo $related['proImg']; ?>" alt="img" class="img-fluid">
+                            <p class='text-muted font-italic mt-2'><?php echo $related['marNombre']; ?></p>
+                            <h5 class="mb-2"><?php echo $related['proNombre']; ?></h5>
+                            <p>S/. <?php echo $related['proPrecio']; ?></p>
+                        </div>
                     </a>
                 </div>
             <?php endwhile; ?>
         </div>
     </div>
 </section>
-</section>
+
 <?php include "../footer.php"; ?>
-
-<script>
-    function addToCart(productId, productName, productPrice, quantity) {
-        let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
-        let index = carrito.findIndex(item => item.id === productId);
-
-        if (index === -1) {
-            // Si el producto no está en el carrito, lo agregamos
-            carrito.push({
-                id: productId,
-                nombre: productName,
-                precio: productPrice,
-                cantidad: parseInt(quantity),
-                img: '<?php echo $product_image; ?>' // Asegúrate de que la imagen esté disponible
-            });
-        } else {
-            // Si el producto ya está en el carrito, actualizamos la cantidad
-            carrito[index].cantidad += parseInt(quantity);
-        }
-
-        localStorage.setItem('carrito', JSON.stringify(carrito));
-        alert('Producto añadido al carrito');
-    }
-</script>

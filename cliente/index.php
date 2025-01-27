@@ -1,16 +1,33 @@
 <?php include "header.php"; ?>
+
 <?php
 $rr = mysqli_query($con, "SELECT * FROM portada");
 $r = mysqli_fetch_row($rr);
 $porTitulo = $r[1];
 $porDescripcion = $r[2];
 
+
 $result = mysqli_query($con, "SELECT COUNT(DISTINCT p.proId) FROM producto p
                               INNER JOIN stock s ON p.proId = s.proId
                               WHERE s.stoCantidad > 0");
 $row = mysqli_fetch_row($result);
 $numrows = $row[0];
+
+$sale_products_query = "
+    SELECT DISTINCT p.proId 
+    FROM oferta o
+    INNER JOIN stock s ON o.stoId = s.stoId
+    INNER JOIN producto p ON s.proId = p.proId
+    WHERE o.ofeTiempo > NOW() AND s.stoCantidad > 0
+";
+$sale_products_result = mysqli_query($con, $sale_products_query);
+$sale_product_ids = [];
+while ($sale_product = mysqli_fetch_assoc($sale_products_result)) {
+    $sale_product_ids[] = $sale_product['proId'];
+}
+$sale_product_ids_str = implode(',', $sale_product_ids);
 ?>
+
 <section id="home" class="section welcome-area bg-overlay overflow-hidden d-flex align-items-center">
     <div class="container">
         <div class="row align-items-center">
@@ -52,10 +69,12 @@ $numrows = $row[0];
                     $categories = mysqli_query($con, "SELECT catId, catNombre FROM categoria");
                     while ($category = mysqli_fetch_assoc($categories)) {
                         $category_id = $category['catId'];
-                        $product_count_query = mysqli_query($con, "SELECT COUNT(DISTINCT p.proId) FROM producto p INNER JOIN stock s ON p.proId = s.proId WHERE s.stoCantidad > 0 AND p.catId = $category_id");
+                        $product_count_query = mysqli_query($con, "SELECT COUNT(DISTINCT p.proId) FROM producto p
+                                                                  INNER JOIN stock s ON p.proId = s.proId
+                                                                  WHERE s.stoCantidad > 0 AND p.catId = $category_id AND p.proId NOT IN ($sale_product_ids_str)");
                         $product_count = mysqli_fetch_row($product_count_query)[0];
                         if ($product_count > 0) {
-                        echo "<a class='nav-link d-flex justify-content-between align-items-center' id='v-pills-{$category['catId']}-tab' data-toggle='pill' href='#v-pills-{$category['catId']}' role='tab' aria-controls='v-pills-{$category['catId']}' aria-selected='false'>{$category['catNombre']} <span class='text-black-50 ml-2'>($product_count)</span></a>";
+                            echo "<a class='nav-link d-flex justify-content-between align-items-center' id='v-pills-{$category['catId']}-tab' data-toggle='pill' href='#v-pills-{$category['catId']}' role='tab' aria-controls='v-pills-{$category['catId']}' aria-selected='false'>{$category['catNombre']} <span class='text-black-50 ml-2'>($product_count)</span></a>";
                         }
                     }
                     ?>
@@ -63,11 +82,13 @@ $numrows = $row[0];
             </div>
             <div class="col-9">
                 <div class="tab-content" id="v-pills-tabContent">
-                    <div class="tab-pane fade show active"
-                      id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
+                    <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
                         <div class="row">
-                            <?php //Todas las productos
-                            $qs = "SELECT DISTINCT p.proId, p.proNombre, p.proPrecio, p.proImg, m.marNombre FROM producto p INNER JOIN stock s ON p.proId = s.proId INNER JOIN marca m on m.marId=p.marId WHERE s.stoCantidad > 0 ORDER BY p.proId DESC LIMIT 6";
+                            <?php 
+                            $qs = "SELECT DISTINCT p.proId, p.proNombre, p.proPrecio, p.proImg, m.marNombre FROM producto p
+                                   INNER JOIN stock s ON p.proId = s.proId INNER JOIN marca m on m.marId=p.marId
+                                   WHERE s.stoCantidad > 0 AND p.proId NOT IN ($sale_product_ids_str)
+                                   ORDER BY p.proId DESC LIMIT 6";
                             $r1 = mysqli_query($con, $qs);
 
                             while ($rod = mysqli_fetch_array($r1)) {
@@ -79,27 +100,28 @@ $numrows = $row[0];
                                 
                                 echo "
                                 <div class='col-12 col-md-6 col-lg-4'>
-                                    <!-- producto todos -->
-                                   <a href='producto/detalleproducto.php?id=$id' class='hover-products'><div class='single-service color-1 bg-hover hover-bottom text-center' style='padding:5px 15px 15px'>
-                                        <img src='../paneladministrador/recursos/uploads/producto/$ufile' alt='img' class='category-img'>
-                                        <p class='text-muted font-italic mt-2'>$marNombre</p>
-                                        <h5 class='my-1 d-inline''>$name</h5>
-                                        <p>S/ $price</p>
-                                    </div>  </a>
+                                    <a href='producto/detalleproducto.php?id=$id' class='hover-products'>
+                                        <div class='single-service color-1 bg-hover hover-bottom text-center' style='padding:5px 15px 15px'>
+                                            <img src='../paneladministrador/recursos/uploads/producto/$ufile' alt='img' class='category-img'>
+                                            <p class='text-muted font-italic mt-2'>$marNombre</p>
+                                            <h5 class='my-1'>$name</h5>
+                                            <p>S/ $price</p>
+                                        </div>
+                                    </a>
                                 </div>
                                 ";
                             }
                             ?>
                         </div>
                     </div>
-                    <?php //Categorias por individual
+                    <?php 
                     $categories = mysqli_query($con, "SELECT catId, catNombre FROM Categoria");
                     while ($category = mysqli_fetch_assoc($categories)) {
                         echo "<div class='tab-pane fade' id='v-pills-{$category['catId']}' role='tabpanel' aria-labelledby='v-pills-{$category['catId']}-tab'>";
                         echo "<div class='row'>";
-                        $qs = "SELECT DISTINCT p.proId, p.proNombre, p.proPrecio, p.proImg FROM Producto p
-                               INNER JOIN stock s ON p.proId = s.proId
-                               WHERE s.stoCantidad > 0 AND p.catId = {$category['catId']}
+                        $qs = "SELECT DISTINCT p.proId, p.proNombre, p.proPrecio, p.proImg,m.marNombre  FROM Producto p
+                               INNER JOIN stock s ON p.proId = s.proId INNER JOIN marca m on m.marId=p.marId
+                               WHERE s.stoCantidad > 0 AND p.catId = {$category['catId']} AND p.proId NOT IN ($sale_product_ids_str)
                                ORDER BY p.proId DESC LIMIT 6";
                         $r1 = mysqli_query($con, $qs);
 
@@ -108,16 +130,17 @@ $numrows = $row[0];
                             $name = "$rod[proNombre]";
                             $price = "$rod[proPrecio]";
                             $ufile = "$rod[proImg]";
+                            $marNombre = "$rod[marNombre]";
 
                             echo "
                             <div class='col-12 col-md-6 col-lg-4 res-margin'>
-                                <!-- poroducto Individual -->
-                                <a href='producto/detalleproducto.php?id=$id' class='hover-products'> <div class='single-service color-1 bg-hover bg-white hover-bottom text-center' style='padding:5px 15px 15px'>
-                                    <img src='../paneladministrador/recursos/uploads/producto/$ufile' alt='img' class='category-img'>
-                                    <p class='text-muted font-italic mt-2'>$marNombre</p>
-                                    <h5 class='my-1'>$name</h5>
-                                    <p>S/ $price.00</p>
-                                </div>
+                                <a href='producto/detalleproducto.php?id=$id' class='hover-products'> 
+                                    <div class='single-service color-1 bg-hover bg-white hover-bottom text-center' style='padding:5px 15px 15px'>
+                                        <img src='../paneladministrador/recursos/uploads/producto/$ufile' alt='img' class='category-img'>
+                                        <p class='text-muted font-italic mt-2'>$marNombre</p>
+                                        <h5 class='my-1'>$name</h5>
+                                        <p>S/ $price.00</p>
+                                    </div>
                                 </a>
                             </div>
                             ";
@@ -131,71 +154,71 @@ $numrows = $row[0];
         </div>
     </div>
 </section>
+
 <!-- ***** Área de Servicios Fin ***** -->
 
 <!-- ***** Área de Portafolio Inicio ***** -->
 <section id="portfolio" class="portfolio-area overflow-hidden ptb_100">
     <div class="container">
-
         <!-- ***** Área de Reseñas Inicio ***** -->
         <section id="review" class="section review-area bg-overlay ptb_100" style="background-color: red;">
             <div class="container">
                 <div class="row justify-content-center">
                     <div class="col-12 col-md-10 col-lg-7">
-                        <!-- Encabezado de Sección -->
-
                         <div class="section-heading text-center">
                             <h2 class="text-white">Ofertas</h2>
-                            <p class="text-white d-none d-sm-block mt-4">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ex error vel laborum optio nulla provident atque iure beatae et dolore! Nostrum, commodi accusamus. Dicta incidunt maiores quisquam, est nam voluptatem.</p>
+                            <p class="text-white d-none d-sm-block mt-4">Explora nuestras ofertas exclusivas en productos seleccionados.</p>
                         </div>
                     </div>
                 </div>
+
                 <div class="row">
-                    <!-- Reseñas de Clientes -->
-                    <div class="client-reviews owl-carousel">
-                        <!-- Reseña Individual -->
+                    <?php
+                    // Consulta para obtener productos en oferta y disponibles en stock
+                    $ofertas_query = mysqli_query($con, "
+                        SELECT 
+                            p.proId, 
+                            p.proNombre, 
+                            p.proPrecio, 
+                            p.proImg, 
+                            o.ofePorcentaje,
+                            s.stoCantidad
+                        FROM 
+                            oferta o
+                        INNER JOIN 
+                            stock s ON o.stoId = s.stoId
+                        INNER JOIN 
+                            producto p ON s.proId = p.proId
+                        WHERE 
+                            o.ofeTiempo > NOW() AND s.stoCantidad > 0
+                    ");
 
-                        <?php
-                        $q = "SELECT * FROM  oferta ORDER BY ofeId DESC LIMIT 6";
+                    while ($oferta = mysqli_fetch_assoc($ofertas_query)) {
+                        $id = $oferta['proId'];
+                        $name = $oferta['proNombre'];
+                        $price = $oferta['proPrecio'];
+                        $img = $oferta['proImg'];
+                        $discount = $oferta['ofePorcentaje'];
 
-                        $r123 = mysqli_query($con, $q);
+                        // Calcular el precio con descuento
+                        $discountedPrice = $price - ($price * ($discount / 100));
 
-                        while ($ro = mysqli_fetch_array($r123)) {
-                            $name = "$ro[ofeTiempo]";
-                            $position = "$ro[ofeTiempo]";
-                            $message = "$ro[ofeTiempo]";
-                            $ufile = "$ro[ofeTiempo]";
-
-                            echo "
-
-<div class='single-review p-5'>
-<!-- Contenido de la Reseña -->
-<div class='review-content'>
-    <!-- Texto de la Reseña -->
-    <div class='review-text'>
-    <p>$message</p>
-    </div>
-    <!-- Icono de Cita -->
-
-</div>
-<!-- Reseñador -->
-<div class='reviewer media mt-3'>
-    <!-- Imagen del Reseñador -->
-    <div class='reviewer-thumb'>
-    <img class='avatar-lg radius-100' src='../paneladministrador/recursos/uploads/producto/$ufile' alt='img'>
-    </div>
-    <!-- Media del Reseñador -->
-    <div class='reviewer-meta media-body align-self-center ml-4'>
-    <h5 class='reviewer-name color-primary mb-2'>$name</h5>
-    <h6 class='text-secondary fw-6'>$position</h6>
-    </div>
-</div>
-</div>
-";
-                        }
-                        ?>
-                    </div>
+                        echo "
+                        <div class='col-12 col-md-6 col-lg-4 mb-3'>
+                            <a href='producto/detalleofertaproducto.php?id=$id' class='hover-products'>
+                                <div class='single-service color-1 bg-hover hover-bottom text-center' style='padding:5px 15px 15px'>
+                                    <img src='../../paneladministrador/recursos/uploads/producto/$img' alt='img' class='category-img'>
+                                    <h5 class='mb-2'>$name</h5>
+                                    <p class='text-muted'><s>S/. $price</s> S/. " . number_format($discountedPrice, 2) . "</p>
+                                    <p class='text-success'>Descuento: $discount%</p>
+                                </div>
+                            </a>
+                        </div>
+                        ";
+                    }
+                    ?>
                 </div>
+
             </div>
         </section>
         <!-- ***** Área de Reseñas Fin ***** -->

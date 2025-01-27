@@ -91,13 +91,14 @@ $conEmail = "$tr[conEmail]";
                                 ?>
                             </div>
                         </li>
-                        <li class="nav-item">
-                            <a class="navbar-brand-sticky" href="#"> <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                       <li class="nav-item">
+                            
+                            <a class="navbar-brand-sticky" href="/cliente/carrito_compras/carrito_compras.php"> <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M16.148 11.479c-.101-1.428-.125-2.985-.296-4.57C15.577 4.37 14.372 2.64 12 2.64S8.423 4.37 8.148 6.908c-.171 1.586-.195 3.142-.296 4.57" stroke="black" stroke-width="1.2" stroke-miterlimit="10" stroke-linejoin="bevel"></path>
                                     <path d="M20.701 20.438V8.816H3.3v11.622H20.7z" stroke="black" stroke-width="1.5" stroke-miterlimit="10"></path>
                                 </svg></a>
 
-                            <a class="navbar-brand-regular" href="#"> <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <a class="navbar-brand-regular" href="/cliente/carrito_compras/carrito_compras.php"> <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M16.148 11.479c-.101-1.428-.125-2.985-.296-4.57C15.577 4.37 14.372 2.64 12 2.64S8.423 4.37 8.148 6.908c-.171 1.586-.195 3.142-.296 4.57" stroke="white" stroke-width="1.2" stroke-miterlimit="10" stroke-linejoin="bevel"></path>
                                     <path d="M20.701 20.438V8.816H3.3v11.622H20.7z" stroke="white" stroke-width="1.5" stroke-miterlimit="10"></path>
                                 </svg></a>
