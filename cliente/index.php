@@ -6,7 +6,6 @@ $r = mysqli_fetch_row($rr);
 $porTitulo = $r[1];
 $porDescripcion = $r[2];
 
-
 $result = mysqli_query($con, "SELECT COUNT(DISTINCT p.proId) FROM producto p
                               INNER JOIN stock s ON p.proId = s.proId
                               WHERE s.stoCantidad > 0");
@@ -59,36 +58,42 @@ $sale_product_ids_str = implode(',', $sale_product_ids);
             </div>
         </div>
         <div class="row">
-            <div class="col-3">
+            <div class="col-2">
                 <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
                     <h5 class="mb-3">CATEGORIAS</h5>
                     <a class="nav-link active d-flex justify-content-between align-items-center" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home" aria-selected="true">
-                        Todos <span class="text-black-50 ml-2">(<?= $numrows ?>)</span>
+                        Todos <small class="text-black-50 ml-2"> (<?= $numrows ?>)</small>
                     </a>
                     <?php
                     $categories = mysqli_query($con, "SELECT catId, catNombre FROM categoria");
                     while ($category = mysqli_fetch_assoc($categories)) {
                         $category_id = $category['catId'];
-                        $product_count_query = mysqli_query($con, "SELECT COUNT(DISTINCT p.proId) FROM producto p
-                                                                  INNER JOIN stock s ON p.proId = s.proId
-                                                                  WHERE s.stoCantidad > 0 AND p.catId = $category_id AND p.proId NOT IN ($sale_product_ids_str)");
-                        $product_count = mysqli_fetch_row($product_count_query)[0];
+                        $product_count_query = "SELECT COUNT(DISTINCT p.proId) FROM producto p INNER JOIN stock s ON p.proId = s.proId
+                                                WHERE s.stoCantidad > 0 AND p.catId = $category_id";
+                        if (!empty($sale_product_ids_str)) {
+                            $product_count_query .= " AND p.proId NOT IN ($sale_product_ids_str)";
+                        }
+                        $product_count_result = mysqli_query($con, $product_count_query);
+                        $product_count = mysqli_fetch_row($product_count_result)[0];
                         if ($product_count > 0) {
-                            echo "<a class='nav-link d-flex justify-content-between align-items-center' id='v-pills-{$category['catId']}-tab' data-toggle='pill' href='#v-pills-{$category['catId']}' role='tab' aria-controls='v-pills-{$category['catId']}' aria-selected='false'>{$category['catNombre']} <span class='text-black-50 ml-2'>($product_count)</span></a>";
+                            echo "<a class='nav-link d-flex justify-content-between align-items-center' id='v-pills-{$category['catId']}-tab' data-toggle='pill' href='#v-pills-{$category['catId']}' role='tab' aria-controls='v-pills-{$category['catId']}' aria-selected='false'>{$category['catNombre']}  <small class='text-black-50 ml-2'>($product_count)</small></a>";
                         }
                     }
                     ?>
                 </div>
             </div>
-            <div class="col-9">
+            <div class="col-10">
                 <div class="tab-content" id="v-pills-tabContent">
                     <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
                         <div class="row">
                             <?php 
                             $qs = "SELECT DISTINCT p.proId, p.proNombre, p.proPrecio, p.proImg, m.marNombre FROM producto p
                                    INNER JOIN stock s ON p.proId = s.proId INNER JOIN marca m on m.marId=p.marId
-                                   WHERE s.stoCantidad > 0 AND p.proId NOT IN ($sale_product_ids_str)
-                                   ORDER BY p.proId DESC LIMIT 6";
+                                   WHERE s.stoCantidad > 0";
+                            if (!empty($sale_product_ids_str)) {
+                                $qs .= " AND p.proId NOT IN ($sale_product_ids_str)";
+                            }
+                            $qs .= " ORDER BY p.proId DESC LIMIT 6";
                             $r1 = mysqli_query($con, $qs);
 
                             while ($rod = mysqli_fetch_array($r1)) {
@@ -121,8 +126,11 @@ $sale_product_ids_str = implode(',', $sale_product_ids);
                         echo "<div class='row'>";
                         $qs = "SELECT DISTINCT p.proId, p.proNombre, p.proPrecio, p.proImg,m.marNombre  FROM Producto p
                                INNER JOIN stock s ON p.proId = s.proId INNER JOIN marca m on m.marId=p.marId
-                               WHERE s.stoCantidad > 0 AND p.catId = {$category['catId']} AND p.proId NOT IN ($sale_product_ids_str)
-                               ORDER BY p.proId DESC LIMIT 6";
+                               WHERE s.stoCantidad > 0 AND p.catId = {$category['catId']}";
+                        if (!empty($sale_product_ids_str)) {
+                            $qs .= " AND p.proId NOT IN ($sale_product_ids_str)";
+                        }
+                        $qs .= " ORDER BY p.proId DESC LIMIT 6";
                         $r1 = mysqli_query($con, $qs);
 
                         while ($rod = mysqli_fetch_array($r1)) {
@@ -187,7 +195,7 @@ $sale_product_ids_str = implode(',', $sale_product_ids);
                             oferta o
                         INNER JOIN 
                             stock s ON o.stoId = s.stoId
-                        INNER JOIN 
+                        INNER JOIN
                             producto p ON s.proId = p.proId
                         WHERE 
                             o.ofeTiempo > NOW() AND s.stoCantidad > 0

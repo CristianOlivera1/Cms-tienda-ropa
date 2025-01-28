@@ -52,7 +52,7 @@ $selectedCategory = isset($_GET['category']) ? $_GET['category'] : '';
             <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
             <h5 class="mb-3">CATEGORIAS</h5>
             <a class="nav-link <?php echo $selectedCategory == '' ? 'active' : ''; ?> d-flex justify-content-between align-items-center" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home" aria-selected="true">
-                Todos <span class="text-black-50 ml-2">(<?= $numrows ?>)</span>
+                Todos <small class='text-black-50 ml-2'>( <?= $numrows ?>)</small>
             </a>
             <?php
             $categories = mysqli_query($con, "SELECT catId, catNombre FROM categoria");
@@ -64,7 +64,7 @@ $selectedCategory = isset($_GET['category']) ? $_GET['category'] : '';
                 $product_count = mysqli_fetch_row($product_count_query)[0];
                 if ($product_count > 0) {
                 $activeClass = $selectedCategory == $category_id ? 'active' : '';
-                echo "<a class='nav-link d-flex justify-content-between align-items-center $activeClass' id='v-pills-{$category['catId']}-tab' data-toggle='pill' href='#v-pills-{$category['catId']}' role='tab' aria-controls='v-pills-{$category['catId']}' aria-selected='false'>{$category['catNombre']} <span class='text-black-50 ml-2'>($product_count)</span></a>";
+                echo "<a class='nav-link d-flex justify-content-between align-items-center $activeClass' id='v-pills-{$category['catId']}-tab' data-toggle='pill' href='#v-pills-{$category['catId']}' role='tab' aria-controls='v-pills-{$category['catId']}' aria-selected='false'>{$category['catNombre']} <small class='text-black-50 ml-2'>($product_count)</small></a>";
                 }
             }
             ?>

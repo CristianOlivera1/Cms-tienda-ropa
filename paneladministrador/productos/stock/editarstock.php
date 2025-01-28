@@ -129,9 +129,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                                         $query = "SELECT estId, estDisponible FROM estado";
                                                         $result = mysqli_query($con, $query);
                                                         while ($row = mysqli_fetch_assoc($result)) {
-                                                            $estado = $row['estDisponible'] ? 'Disponible' : 'No Disponible';
                                                             $selected = ($row['estId'] == $stock['estId']) ? 'selected' : '';
-                                                            echo "<option value='{$row['estId']}' {$selected}>{$estado}</option>";
+                                                            echo "<option value='{$row['estId']}' $selected>{$row['estDisponible']}</option>";
                                                         }
                                                         ?>
                                                     </select>

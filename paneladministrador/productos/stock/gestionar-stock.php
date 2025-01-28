@@ -25,6 +25,7 @@ $query_total = "SELECT COUNT(*) as total FROM stock s
                 INNER JOIN talla t ON s.talId=t.talId 
                 INNER JOIN color c ON s.colId=c.colId 
                 INNER JOIN estado e ON s.estId=e.estId 
+                LEFT JOIN oferta o ON s.stoId = o.stoId
                 WHERE (p.proNombre LIKE ? OR c.colNombre LIKE ? OR t.talNombre LIKE ? OR s.stoCantidad LIKE ?)";
 $params = [$search_param, $search_param, $search_param, $search_param];
 
@@ -34,7 +35,8 @@ if ($filterCategory) {
 }
 
 if ($filterState !== '') {
-    $query_total .= " AND e.estDisponible = ?";
+    $query_total .= " AND (e.estDisponible = ? OR (o.stoId IS NOT NULL AND ? = 'En oferta'))";
+    $params[] = $filterState;
     $params[] = $filterState;
 }
 
@@ -88,7 +90,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 ?>
-
 <div class="main-content">
     <div class="page-content">
         <div class="container-fluid">
@@ -165,16 +166,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                                 </div>
                                             </div>
                                             <div class="col-lg-6">
-                                                <div class="mb-3">
+                                            <div class="mb-3">
                                                     <label for="estId" class="form-label">Estado</label>
                                                     <select class="form-select" id="estId" name="estId" required>
                                                         <?php
                                                         $query = "SELECT estId, estDisponible FROM estado";
                                                         $result = mysqli_query($con, $query);
                                                         while ($row = mysqli_fetch_assoc($result)) {
-                                                            $estado = $row['estDisponible'] ? 'Disponible' : 'No Disponible';
                                                             $selected = ($row['estId'] == $estId) ? 'selected' : '';
-                                                            echo "<option value='{$row['estId']}' $selected>{$estado}</option>";
+                                                            echo "<option value='{$row['estId']}' $selected>{$row['estDisponible']}</option>";
                                                         }
                                                         ?>
                                                     </select>
@@ -253,8 +253,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 <div class="col-md-4 mt-3">
                                     <select id="filterState" class="form-select">
                                         <option value="">Filtrar por Estado</option>
-                                        <option value="1" <?php echo ($filterState === '1') ? 'selected' : ''; ?>>Disponible</option>
-                                        <option value="0" <?php echo ($filterState === '0') ? 'selected' : ''; ?>>No Disponible</option>
+                                        <option value="Disponible" <?php echo ($filterState === 'Disponible') ? 'selected' : ''; ?>>Disponible</option>
+                                        <option value="No disponible" <?php echo ($filterState === 'No disponible') ? 'selected' : ''; ?>>No Disponible</option>
+                                        <option value="En oferta" <?php echo ($filterState === 'En oferta') ? 'selected' : ''; ?>>En oferta</option>
                                     </select>
                                 </div>
                                 <div class="col-md-4 mt-3">
@@ -289,8 +290,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php
-                             $query = "SELECT s.stoId, p.proNombre, e.estDisponible, c.colNombre, t.talNombre, s.stoCantidad, p.proImg, p.proPrecio, cat.catNombre, m.marNombre 
+                                <?php
+                             $query = "SELECT s.stoId, p.proNombre, e.estDisponible, c.colNombre, t.talNombre, s.stoCantidad, p.proImg, p.proPrecio, cat.catNombre, m.marNombre, 
+                             CASE WHEN o.stoId IS NOT NULL THEN 'En oferta' ELSE e.estDisponible END AS estado
                              FROM stock AS s
                              INNER JOIN producto AS p ON s.proId = p.proId
                              INNER JOIN estado AS e ON s.estId = e.estId
@@ -298,6 +300,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                              INNER JOIN talla AS t ON s.talId = t.talId
                              INNER JOIN categoria AS cat ON p.catId = cat.catId
                             INNER JOIN marca as m on p.marId= m.marId
+                             LEFT JOIN oferta o ON s.stoId = o.stoId
                              WHERE (p.proNombre LIKE ? OR c.colNombre LIKE ? OR t.talNombre LIKE ? OR s.stoCantidad LIKE ?)";
                    
                                     $params = [$search_param, $search_param, $search_param, $search_param];
@@ -308,7 +311,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     }
 
                                     if ($filterState !== '') {
-                                        $query .= " AND e.estDisponible = ?";
+                                        $query .= " AND (e.estDisponible = ? OR (o.stoId IS NOT NULL AND ? = 'En oferta'))";
+                                        $params[] = $filterState;
                                         $params[] = $filterState;
                                     }
 
@@ -319,12 +323,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     $result = $stmt->get_result();
                                     $numero_registro = $offset + 1;
                                     while ($row = mysqli_fetch_assoc($result)) {
-                                        $estado = $row['estDisponible'] ? 'Disponible' : 'No Disponible';
-                                        $estadoClass = $row['estDisponible'] ? 'badge-success' : 'badge-danger';
-                                        if ($row['stoCantidad'] == 0 ||$row['estDisponible'] == 0) {
-                                            $estado = 'No Disponible';
+                                        $estado = $row['estado'];
+                                        $estadoClass = 'badge-secondary';
+                                        if ($estado == 'Disponible') {
+                                            $estadoClass = 'badge-success';
+                                        } elseif ($estado == 'No disponible') {
                                             $estadoClass = 'badge-danger';
-                                        } elseif ($row['stoCantidad'] < 15) {
+                                        } elseif ($estado == 'En oferta') {
                                             $estadoClass = 'badge-warning';
                                         }
                                         echo "<tr id='stock-{$row['stoId']}'>

@@ -50,7 +50,7 @@
                     print "
 <div class='col-12 col-md-6 col-lg-4 res-margin mb-20px'>
 <!-- Servicio Individual -->
-<a class='mt-3' href='producto.php?category=$id'>
+<a class='mt-3' href='../producto/producto.php?category=$id'> 
 <div class='single-service color-1 bg-hover bg-white hover-bottom text-center' style='padding:5px 15px 15px'>
     <h3 class='my-2 mt-2'>$serviceg</h3>
     <p>$service_desc</p>

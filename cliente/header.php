@@ -77,8 +77,7 @@ $conEmail = "$tr[conEmail]";
                                 Categorias
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="/cliente/categoria/todascategorias.php">Todas</a>
-                                <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="/cliente/producto/producto.php">Todas</a>                                <div class="dropdown-divider"></div>
                                 <?php
                                 $categories = mysqli_query($con, "SELECT DISTINCT c.catId, c.catNombre 
                                                                   FROM categoria c 
