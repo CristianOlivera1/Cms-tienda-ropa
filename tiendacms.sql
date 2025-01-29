@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 27-01-2025 a las 01:50:17
+-- Tiempo de generación: 29-01-2025 a las 21:52:09
 -- Versión del servidor: 10.4.27-MariaDB
 -- Versión de PHP: 8.2.0
 
@@ -89,17 +89,18 @@ CREATE TABLE `cliente` (
   `cliApellidoPaterno` varchar(100) DEFAULT NULL,
   `cliApellidoMaterno` varchar(100) DEFAULT NULL,
   `cliCorreo` varchar(150) DEFAULT NULL,
-  `cliFechaRegis` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `cliFechaRegis` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `cliFechaNacimiento` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `cliente`
 --
 
-INSERT INTO `cliente` (`cliId`, `cliDni`, `cliNombre`, `cliApellidoPaterno`, `cliApellidoMaterno`, `cliCorreo`, `cliFechaRegis`) VALUES
-(4, '14785236', 'Luis', 'Alfaro', 'Chirinos', 'miguel@gmail.com', '2025-01-13 14:19:29'),
-(6, '47859623', 'Luis F', 'Juarez', 'Peña', 'luis@gmail.com', '2025-01-13 14:19:43'),
-(7, '41256378', 'Marco', 'Mejia', 'Llamocca', 'marco@gmail.com', '2025-01-13 14:18:29');
+INSERT INTO `cliente` (`cliId`, `cliDni`, `cliNombre`, `cliApellidoPaterno`, `cliApellidoMaterno`, `cliCorreo`, `cliFechaRegis`, `cliFechaNacimiento`) VALUES
+(4, '14785236', 'Luis', 'Alfaro', 'Chirinos', 'miguel@gmail.com', '2025-01-13 14:19:29', NULL),
+(6, '47859623', 'Luis F', 'Juarez', 'Peña', 'luis@gmail.com', '2025-01-13 14:19:43', NULL),
+(7, '41256378', 'Marco', 'Mejia', 'Llamocca', 'marco@gmail.com', '2025-01-13 14:18:29', NULL);
 
 -- --------------------------------------------------------
 
@@ -193,7 +194,7 @@ INSERT INTO `detalleventa` (`detVenId`, `venId`, `stoId`, `detVenCantidad`, `det
 
 CREATE TABLE `estado` (
   `estId` int(11) NOT NULL,
-  `estDisponible` tinyint(1) DEFAULT NULL,
+  `estDisponible` varchar(20) DEFAULT NULL,
   `estFechaRegis` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -202,8 +203,9 @@ CREATE TABLE `estado` (
 --
 
 INSERT INTO `estado` (`estId`, `estDisponible`, `estFechaRegis`) VALUES
-(1, 1, '2025-01-08 09:30:25'),
-(2, 0, '2025-01-08 09:30:25');
+(1, 'Disponible', '2025-01-08 09:30:25'),
+(2, 'No disponible', '2025-01-08 09:30:25'),
+(3, 'En oferta', '2025-01-28 11:32:53');
 
 -- --------------------------------------------------------
 
@@ -258,14 +260,6 @@ CREATE TABLE `oferta` (
   `ofeTiempo` datetime DEFAULT NULL,
   `ofeFechaRegis` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `oferta`
---
-
-INSERT INTO `oferta` (`ofeId`, `stoId`, `ofePorcentaje`, `ofeTiempo`, `ofeFechaRegis`) VALUES
-(15, 41, 12, '2025-01-22 13:29:00', '2025-01-20 13:29:34'),
-(16, 44, 10, '2025-01-20 14:46:00', '2025-01-20 14:45:29');
 
 -- --------------------------------------------------------
 
@@ -348,13 +342,23 @@ INSERT INTO `producto` (`proId`, `catId`, `marId`, `proNombre`, `proDescripcion`
 (37, 34, 33, 'Sudadera con capucha urbana color piel', 'Esta es una Sudadera con capucha urbana color piel', '678d88424e82b-4pol.jpg', '678d88424e834-5pol.jpg', '66.00', '2025-01-19 18:18:26'),
 (38, 47, 4, 'Zapatillas deportivas color amarillo', 'Esta es una Zapatillas deportivas color amarillo/negro', '678d887a5d621-4.jpg.webp', '678d887a5d629-3.jpg.webp', '150.00', '2025-01-19 18:19:22'),
 (39, 47, 34, 'Zapatilla urbana color gris', 'Esta es una Zapatilla urbana color gris', '678d88a516b2a-9.webp', '678d88a516b32-10.webp', '200.00', '2025-01-19 18:20:05'),
-(40, 28, 37, 'Camiseta basica color plomo', 'Esta es una Camiseta basica color plomo', '678d88e4236f4-8.jpeg', '678d88e423701-7.jpg', '30.00', '2025-01-19 18:21:08'),
+(40, 28, 37, 'Camisa Elegante', 'Esta es una Camiseta basica color plomo', '679980afd9343-6b79e5c3-2bf6-4bf2-8296-7e088f6d5e4f.webp', '679980afd98f2-795602e7-2a4e-47eb-81d0-527deec3138a.webp', '30.00', '2025-01-28 20:14:50'),
 (41, 29, 36, 'Pantalon stylo antigua', 'Este es un Pantalon stylo antigua', '678d891a7cfdb-9pa.jpg', '678d891a7cfe2-10pa.jpg', '88.00', '2025-01-19 18:22:02'),
 (42, 28, 39, 'Camisa de golf', 'Sólida para hombre, camisa de manga corta casual de alto estiramiento con cuello para actividades al aire libre', '67966c2b78492-88f3c976-66ea-4fb9-b057-56d82ff86847.webp', '67966c2b7849c-352b722c-104f-4b47-9b91-f4076d9f55c1.webp', '40.28', '2025-01-26 12:08:59'),
 (43, 28, 37, 'Camiseta de manga', 'Corta de color sólido para hombre - Estilo de trabajo de verano, ajuste regular, tejido de punto con ligero estiramiento, cuello con botones, longitud', '67966c9fbfb81-62bf0868-7b41-41eb-832f-f850c357c26d.webp', '67966c9fbfb87-804c9d14-8898-40d2-ba17-99a2b274d107.webp', '28.60', '2025-01-26 12:10:55'),
 (44, 28, 40, 'Camiseta Henley', 'Para hombre, tops deportivos casuales y cómodos para ropa de golf de verano y actividades al aire libre.', '67966ce3df37b-246af589-d267-4b52-8857-b47d46302c6d.webp', '67966ce3df388-80871105-7cf8-460a-9c57-d312c9866a31.webp', '30.33', '2025-01-26 12:12:03'),
-(45, 28, 41, 'Camiseta de mangas cortas', 'Cuello volteado con botones de color sólido, ropa de primavera y verano para hombres', '67966d46f10f1-f3336a4d-cee6-4454-9616-ca0275f2e67f.webp', '67966d46f10f8-9304db0f-786d-4ed0-8474-1f6bf5527ab7.webp', '33.00', '2025-01-26 12:13:43'),
-(46, 28, 35, 'GENIO LAMODE', 'Ajuste Holgado, Manga Corta Versátil con Cuello Clásico y Detalle de Botones, Mezcla de Poliéster, Lavable a Máquina, Ropa Versátil', '67966d85af471-802c87d2-7f65-4cb6-98c0-a08c8b404833.webp', '67966d85af47d-a13f451b-1da0-49cb-832a-d7d041357240.webp', '35.00', '2025-01-26 12:14:45');
+(45, 28, 41, 'Camisa de manga corta', 'Cuello volteado con botones de color sólido, ropa de primavera y verano para hombres', '6797974d6f26d-67966d46f10f1-f3336a4d-cee6-4454-9616-ca0275f2e67f.webp', '6797974d6f60d-67966d46f10f8-9304db0f-786d-4ed0-8474-1f6bf5527ab7.webp', '33.00', '2025-01-27 09:25:17'),
+(46, 28, 35, 'GENIO LAMODE', 'Ajuste Holgado, Manga Corta Versátil con Cuello Clásico y Detalle de Botones, Mezcla de Poliéster, Lavable a Máquina, Ropa Versátil', '67966d85af471-802c87d2-7f65-4cb6-98c0-a08c8b404833.webp', '67966d85af47d-a13f451b-1da0-49cb-832a-d7d041357240.webp', '35.00', '2025-01-27 09:47:46'),
+(47, 28, 30, 'Camisa vintaje', 'Secado rápido para hombre, informal con solapa elástica media con botones, ropa de hombre para verano al aire libre', '67997c77e1bb0-edfe9c53-d448-48f3-80cb-df49f34bcb72.webp', '67997c77e1bbd-bfb4efd1-00a6-4964-b571-0712e6373187.webp', '12.00', '2025-01-28 19:55:19'),
+(48, 28, 32, 'Camisa Casual', 'Deportiva Jacquard Nueva 2024', '67997caada571-14192ac2-b69f-407b-8a1f-3a2d1948f00f.webp', '67997caada579-e0c0e727-236a-4712-a7e5-dbb5861abff1.webp', '5.00', '2025-01-28 19:56:10'),
+(49, 28, 41, 'Camisa blanca Depor', 'Casual, Cómoda de Poliéster, Manga Corta con Cuello y Placket de Botones, Ideal para Actividades al Aire Libre en Verano, Lavable a Máquina', '67997d10b6ed2-55f5b853-dbb7-4898-bb0d-068a7404b485.webp', '67997d10b6eda-c342a135-f43e-4d0a-a267-85237ac6219b.webp', '18.00', '2025-01-28 19:57:52'),
+(50, 29, 33, 'Pantalones holgados', 'Estilo vintage, tejido de poliéster, color liso, sin estiramiento, longitud de 9 pulgadas, para todas las estaciones, corte regular, adulto, tejido, d', '679996d2725f7-65cd769d-d395-4d70-b224-414f35f23054.webp', '679996d272606-708fcdac-22cc-4d09-8cce-d013cb484a82.webp', '70.00', '2025-01-28 21:47:46'),
+(51, 29, 29, 'Pantalon de traje', 'Casuales rectos para hombre de verano - 100% poliéster, tejido no elástico, diseño de color liso con bolsillos, estilo de ajuste regular', '6799971156d6b-46e553d1-b46b-4aac-a9ab-69ee16604280.webp', '6799971156d74-5804b0f7-ad12-414f-9bee-20a822aaef2f.webp', '60.00', '2025-01-28 21:48:49'),
+(52, 29, 33, 'Vaqueros Elásticos', 'Corte Slim para Hombre - Estilo Casual de Calle, Tiro Medio, Denim Azul Oscuro con Bolsillos, Para Todo Tipo de Clima', '6799973a02a27-3302a718261002fc521986a8558511eb.webp', '6799973a02a2f-af210b6e44098b7b8b8f0c7005ee8862.webp', '80.00', '2025-01-28 21:49:30'),
+(53, 29, 35, 'Pantalones Rectos', 'Ajuste Slim y Estilo Casual de Negocios 2024, Caramelo, Tejido Trenzado, Lavables a Máquina', '679997675190f-0788cc64-6a4e-472d-a0f2-c726ad38e8b2.webp', '6799976751918-2ee7a886-652d-4ecf-a85b-22801230516a.webp', '80.00', '2025-01-28 21:50:15'),
+(54, 29, 5, 'Pantalones Cargo', 'Algodón para Hombre, Mezcla de 97% Algodón y 3% Spandex, Color Sólido, Corte Regular, con Cierre de Cremallera y Múltiples Bolsillos, para Uso en Toda', '679997959c8bc-c2de146d-ce6e-4fbf-8045-7343e37d6687.webp', '679997959c8c2-76b67882-e3b1-4bfc-addc-e39971063949.webp', '66.00', '2025-01-28 21:51:01'),
+(55, 29, 42, 'Vaqueros de Mezclilla', 'Elásticos de Ajuste Slim para Hombre - Pierna Recta Clásica, Azul Lavado con Bigotes, Uso Todo el Año', '679997c7c0bcd-420f987e-9a7e-45a3-8a7d-684c54917c91.webp', '679997c7c0bd5-1902a9e3-153f-4d4b-aad5-145bbf2b5942.webp', '44.00', '2025-01-28 21:51:51'),
+(56, 29, 28, 'Pantalon de negocios', 'Para las cuatro estaciones, cómodos pantalones ajustados de mezcla de algodón con microelástico y bolsillos, largo regular, color sólido', '679998089297e-89a9c929-13bf-4cb5-8d22-34c04e08e309.webp', '679998089298a-b58cdd3a-35e6-4a7b-8227-91f256ae4bc5.webp', '70.00', '2025-01-28 21:52:56');
 
 -- --------------------------------------------------------
 
@@ -430,7 +434,28 @@ INSERT INTO `stock` (`stoId`, `proId`, `estId`, `colId`, `talId`, `stoCantidad`,
 (72, 46, 1, 35, 1, 5, '2025-01-26 12:16:43'),
 (73, 45, 1, 19, 1, 15, '2025-01-26 12:17:00'),
 (74, 43, 1, 26, 13, 14, '2025-01-26 12:17:34'),
-(75, 44, 1, 24, 12, 14, '2025-01-26 12:20:24');
+(75, 44, 1, 24, 12, 14, '2025-01-26 12:20:24'),
+(76, 39, 1, 19, 21, 35, '2025-01-27 10:02:51'),
+(77, 9, 1, 13, 15, 15, '2025-01-27 10:03:39'),
+(78, 8, 1, 13, 25, 14, '2025-01-27 10:05:13'),
+(79, 26, 1, 24, 24, 9, '2025-01-27 10:05:57'),
+(80, 27, 1, 16, 16, 5, '2025-01-27 10:06:11'),
+(81, 38, 1, 20, 23, 8, '2025-01-27 10:06:28'),
+(82, 34, 1, 16, 11, 8, '2025-01-27 10:07:21'),
+(83, 35, 1, 26, 12, 12, '2025-01-27 10:07:39'),
+(84, 36, 1, 13, 12, 11, '2025-01-27 10:07:55'),
+(85, 31, 1, 26, 12, 9, '2025-01-27 10:08:35'),
+(86, 30, 1, 13, 11, 7, '2025-01-27 10:09:17'),
+(87, 11, 1, 26, 1, 7, '2025-01-27 10:10:40'),
+(92, 29, 3, 20, 13, 2, '2025-01-28 11:37:55'),
+(93, 47, 1, 34, 1, 15, '2025-01-28 20:04:42'),
+(94, 49, 1, 26, 12, 33, '2025-01-28 20:05:06'),
+(95, 48, 1, 25, 13, 12, '2025-01-28 20:05:48'),
+(96, 56, 1, 34, 11, 4, '2025-01-28 21:53:34'),
+(97, 51, 1, 26, 12, 2, '2025-01-28 21:53:50'),
+(98, 54, 1, 22, 2, 14, '2025-01-28 21:54:15'),
+(99, 50, 1, 26, 1, 5, '2025-01-28 21:54:38'),
+(100, 53, 1, 13, 13, 14, '2025-01-28 21:54:57');
 
 -- --------------------------------------------------------
 
@@ -455,7 +480,17 @@ INSERT INTO `talla` (`talId`, `talNombre`, `talFechaRegis`) VALUES
 (12, 'X', '2025-01-13 14:21:37'),
 (13, 'L', '2025-01-13 14:22:03'),
 (14, 'XS', '2025-01-13 14:22:19'),
-(15, '40', '2025-01-26 11:09:40');
+(15, '40', '2025-01-26 11:09:40'),
+(16, '41', '2025-01-27 09:59:35'),
+(17, '42', '2025-01-27 09:59:38'),
+(18, '43', '2025-01-27 09:59:40'),
+(19, '44', '2025-01-27 09:59:42'),
+(20, '45', '2025-01-27 09:59:44'),
+(21, '35', '2025-01-27 09:59:47'),
+(22, '36', '2025-01-27 09:59:50'),
+(23, '37', '2025-01-27 09:59:52'),
+(24, '38', '2025-01-27 09:59:53'),
+(25, '39', '2025-01-27 09:59:55');
 
 -- --------------------------------------------------------
 
@@ -498,7 +533,10 @@ CREATE TABLE `ventas` (
 INSERT INTO `ventas` (`venId`, `cliId`, `venFechaRegis`) VALUES
 (3, 4, '2025-01-11 16:34:08'),
 (4, 7, '2025-01-13 14:49:36'),
-(5, 6, '2025-01-13 14:49:46');
+(5, 6, '2025-01-13 14:49:46'),
+(6, 4, '2025-01-27 15:35:00'),
+(7, 7, '2025-01-27 15:35:07'),
+(8, 6, '2025-01-27 15:35:14');
 
 --
 -- Índices para tablas volcadas
@@ -656,7 +694,7 @@ ALTER TABLE `detalleventa`
 -- AUTO_INCREMENT de la tabla `estado`
 --
 ALTER TABLE `estado`
-  MODIFY `estId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `estId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `marca`
@@ -668,7 +706,7 @@ ALTER TABLE `marca`
 -- AUTO_INCREMENT de la tabla `oferta`
 --
 ALTER TABLE `oferta`
-  MODIFY `ofeId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `ofeId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT de la tabla `portada`
@@ -680,7 +718,7 @@ ALTER TABLE `portada`
 -- AUTO_INCREMENT de la tabla `producto`
 --
 ALTER TABLE `producto`
-  MODIFY `proId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
+  MODIFY `proId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
 
 --
 -- AUTO_INCREMENT de la tabla `resenhas`
@@ -692,13 +730,13 @@ ALTER TABLE `resenhas`
 -- AUTO_INCREMENT de la tabla `stock`
 --
 ALTER TABLE `stock`
-  MODIFY `stoId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=76;
+  MODIFY `stoId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=101;
 
 --
 -- AUTO_INCREMENT de la tabla `talla`
 --
 ALTER TABLE `talla`
-  MODIFY `talId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `talId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT de la tabla `usuario`
@@ -710,7 +748,7 @@ ALTER TABLE `usuario`
 -- AUTO_INCREMENT de la tabla `ventas`
 --
 ALTER TABLE `ventas`
-  MODIFY `venId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `venId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- Restricciones para tablas volcadas
