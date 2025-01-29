@@ -14955,7 +14955,7 @@ span.flatpickr-weekday {
 .horizontal-timeline .swiper-button-next::after,
 .horizontal-timeline .swiper-button-prev::after {
     font-size: 24px;
-    color: #fff
+    color: white
 }
 
 .horizontal-timeline .swiper-button-next.swiper-button-disabled,

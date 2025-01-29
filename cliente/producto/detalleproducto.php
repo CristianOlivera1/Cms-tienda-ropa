@@ -117,60 +117,65 @@ $stock_quantity = $stock_data['totalCantidad'];
 
 <!-- ***** Productos relacionados(sugerencias) inicio ***** -->
 <section class="section related-products ptb_50">
-    <div class="container">
-        <div class="row" style="height: 90px;">
+    <div class="container mt-5">
+         <div class="row" style="height: 90px;">
             <div class="col-12">
             <div class="section-heading">
-                <h3 class="text-muted">Más opciones similares</h3>
+                <h3 class="text-black">Más opciones similares</h3>
                 <hr>
             </div>
             </div>
-        </div>
-      
-        <div class="row">
-            <?php
-            $related_products = mysqli_query($con, "SELECT DISTINCT p.proId, p.proNombre, p.proPrecio, p.proImg,m.marNombre FROM Producto p
-                                                    INNER JOIN stock s ON p.proId = s.proId
-                                                    INNER JOIN marca m on m.marId=p.marId
-                                                    WHERE p.catId = '$product_category_id' AND p.proId != '$todo' AND s.stoCantidad > 0
-                                                    ORDER BY p.proId DESC LIMIT 4");
-            while ($related = mysqli_fetch_assoc($related_products)): ?>
-                <div class="col-12 col-md-6 col-lg-3 mb-4">
-                <a href="detalleproducto.php?id=<?php echo $related['proId']; ?>" class='hover-products'>  <div class='single-service color-1 bg-hover bg-white hover-bottom text-center p-3'>
-                        <img src="../../paneladministrador/recursos/uploads/producto/<?php echo $related['proImg']; ?>" alt="img" class="img-fluid">
-                        <p class='text-muted font-italic mt-2'><?php echo $related['marNombre']; ?></p>
-                        <h5 class="mb-2"><?php echo $related['proNombre']; ?></h5>
-                        <p>S/. <?php echo $related['proPrecio']; ?></p>
-                    </div>
-                    </a>
-                </div>
-            <?php endwhile; ?>
+        </div>        
+        <div class="swiper-container">
+            <div class="swiper-wrapper">
+                <?php
+                $related_products = mysqli_query($con, "SELECT DISTINCT p.proId, p.proNombre, p.proPrecio, p.proImg, m.marNombre FROM Producto p
+                                                        INNER JOIN stock s ON p.proId = s.proId
+                                                        INNER JOIN marca m on m.marId=p.marId
+                                                        WHERE p.catId = '$product_category_id' AND p.proId != '$todo' AND s.stoCantidad > 0
+                                                        ORDER BY p.proId DESC");
+
+                $productos = [];
+                while ($related = mysqli_fetch_assoc($related_products)) {
+                    $productos[] = $related;
+                }
+
+                // Dividir en grupos de 4 (2 filas de 2 productos)
+                $chunks = array_chunk($productos, 4);
+
+                foreach ($chunks as $grupo) {
+                    echo '<div class="swiper-slide">';
+                    echo '<div class="row">';
+                    foreach ($grupo as $related) {
+                        echo "<div class='col-md-6'>
+                                <a href='detalleproducto.php?id={$related['proId']}' class='hover-products'>
+                                    <div class='single-service color-1 bg-hover bg-white hover-bottom text-center p-3'>
+                                        <img src='../../paneladministrador/recursos/uploads/producto/{$related['proImg']}' alt='img' class='img-fluid'>
+                                        <p class='text-muted font-italic mt-2'>{$related['marNombre']}</p>
+                                        <h5 class='mb-2'>{$related['proNombre']}</h5>
+                                        <p>S/ {$related['proPrecio']}</p>
+                                    </div>
+                                </a>
+                              </div>";
+                    }
+                    echo '</div>';
+                    echo '</div>';
+                }
+                ?>
+            </div>
+            <!-- Controles de navegación -->
+             <div class="back">
+            <div class="swiper-button-prev"></div>
+            </div>
+            <div class="next">
+            <div class="swiper-button-next"></div>
+            </div>
+            <div class="swiper-pagination"></div>
         </div>
     </div>
 </section>
-</section>
+
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
 <?php include "../footer.php"; ?>
 
-<script>
-    function addToCart(productId, productName, productPrice, quantity) {
-        let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
-        let index = carrito.findIndex(item => item.id === productId);
-
-        if (index === -1) {
-            // Si el producto no está en el carrito, lo agregamos
-            carrito.push({
-                id: productId,
-                nombre: productName,
-                precio: productPrice,
-                cantidad: parseInt(quantity),
-                img: '<?php echo $product_image; ?>' // Asegúrate de que la imagen esté disponible
-            });
-        } else {
-            // Si el producto ya está en el carrito, actualizamos la cantidad
-            carrito[index].cantidad += parseInt(quantity);
-        }
-
-        localStorage.setItem('carrito', JSON.stringify(carrito));
-        alert('Producto añadido al carrito');
-    }
-</script>

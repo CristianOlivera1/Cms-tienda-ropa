@@ -12,12 +12,7 @@ $result = mysqli_query($con, "SELECT COUNT(DISTINCT p.proId) FROM producto p
 $row = mysqli_fetch_row($result);
 $numrows = $row[0];
 
-$sale_products_query = "
-    SELECT DISTINCT p.proId 
-    FROM oferta o
-    INNER JOIN stock s ON o.stoId = s.stoId
-    INNER JOIN producto p ON s.proId = p.proId
-    WHERE o.ofeTiempo > NOW() AND s.stoCantidad > 0
+$sale_products_query = "SELECT DISTINCT p.proId FROM oferta o INNER JOIN stock s ON o.stoId = s.stoId INNER JOIN producto p ON s.proId = p.proId WHERE o.ofeTiempo > NOW() AND s.stoCantidad > 0
 ";
 $sale_products_result = mysqli_query($con, $sale_products_query);
 $sale_product_ids = [];
@@ -163,12 +158,8 @@ $sale_product_ids_str = implode(',', $sale_product_ids);
     </div>
 </section>
 
-<!-- ***** Área de Servicios Fin ***** -->
-
-<!-- ***** Área de Portafolio Inicio ***** -->
 <section id="portfolio" class="portfolio-area overflow-hidden ptb_100">
     <div class="container">
-        <!-- ***** Área de Reseñas Inicio ***** -->
         <section id="review" class="section review-area bg-overlay ptb_100" style="background-color: red;">
             <div class="container">
                 <div class="row justify-content-center">
@@ -179,35 +170,22 @@ $sale_product_ids_str = implode(',', $sale_product_ids);
                         </div>
                     </div>
                 </div>
-
                 <div class="row">
                     <?php
                     // Consulta para obtener productos en oferta y disponibles en stock
                     $ofertas_query = mysqli_query($con, "
-                        SELECT 
-                            p.proId, 
-                            p.proNombre, 
-                            p.proPrecio, 
-                            p.proImg, 
-                            o.ofePorcentaje,
-                            s.stoCantidad
-                        FROM 
-                            oferta o
-                        INNER JOIN 
-                            stock s ON o.stoId = s.stoId
-                        INNER JOIN
-                            producto p ON s.proId = p.proId
-                        WHERE 
-                            o.ofeTiempo > NOW() AND s.stoCantidad > 0
+                        SELECT p.proId, p.proNombre, p.proPrecio, p.proImg, o.ofePorcentaje, s.stoCantidad
+                        FROM oferta o
+                        INNER JOIN stock s ON o.stoId = s.stoId
+                        INNER JOIN producto p ON s.proId = p.proId
+                        WHERE o.ofeTiempo > NOW() AND s.stoCantidad > 0
                     ");
-
                     while ($oferta = mysqli_fetch_assoc($ofertas_query)) {
                         $id = $oferta['proId'];
                         $name = $oferta['proNombre'];
                         $price = $oferta['proPrecio'];
                         $img = $oferta['proImg'];
                         $discount = $oferta['ofePorcentaje'];
-
                         // Calcular el precio con descuento
                         $discountedPrice = $price - ($price * ($discount / 100));
 
@@ -226,9 +204,8 @@ $sale_product_ids_str = implode(',', $sale_product_ids);
                     }
                     ?>
                 </div>
-
             </div>
         </section>
-        <!-- ***** Área de Reseñas Fin ***** -->
-
+        </div>
+</section>
         <?php include "footer.php"; ?>

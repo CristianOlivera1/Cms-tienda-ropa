@@ -90,5 +90,7 @@
 <!-- Activo js -->
 <script src="/cliente/recursos/js/active.js"></script>
 <script src="/cliente/recursos/js/script.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 </body>
 </html>

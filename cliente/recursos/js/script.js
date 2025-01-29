@@ -72,5 +72,54 @@ document.addEventListener('DOMContentLoaded', function() {
           mainImage.classList.remove('zoom');
       });
     }
+//avanzar y retroceder en la sugerencia de productos
+
+    if (document.querySelector('.swiper-container')) {
+        var swiper = new Swiper('.swiper-container', {
+            slidesPerView: 1, // 1 slide con 2 filas
+            spaceBetween: 20,
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+            },
+            breakpoints: {
+                640: {
+                    slidesPerView: 1,
+                },
+                768: {
+                    slidesPerView: 2,
+                },
+                1024: {
+                    slidesPerView: 2,
+                },
+            },
+        });
+    }
 });
-//DETALLES DEL PRODUCTO
+
+//CARRITO
+function addToCart(productId, productName, productPrice, quantity) {
+    let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+    let index = carrito.findIndex(item => item.id === productId);
+
+    if (index === -1) {
+        // Si el producto no está en el carrito, lo agregamos
+        carrito.push({
+            id: productId,
+            nombre: productName,
+            precio: productPrice,
+            cantidad: parseInt(quantity),
+            img: '<?php echo $product_image; ?>' // Asegúrate de que la imagen esté disponible
+        });
+    } else {
+        // Si el producto ya está en el carrito, actualizamos la cantidad
+        carrito[index].cantidad += parseInt(quantity);
+    }
+
+    localStorage.setItem('carrito', JSON.stringify(carrito));
+    alert('Producto añadido al carrito');
+}

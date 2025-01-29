@@ -18,7 +18,8 @@ $conEmail = "$tr[conEmail]";
     <link rel="icon" href="/cliente/recursos/img/favicon/favicon.ico">
     <link rel="stylesheet" href="/cliente/recursos/css/style.css">
     <link rel="stylesheet" href="/cliente/recursos/css/responsive.css">
-    
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+
 </head>
 
 <body>
