@@ -64,14 +64,14 @@ $conEmail = "$tr[conEmail]";
             <!-- Barra de Navegación -->
             <nav data-aos="zoom-out" data-aos-delay="800" class="navbar navbar-expand">
                 <div class="container header ">
-                    <a class="navbar-brand" href="/cliente/home">
+                    <a class="navbar-brand" href="/cliente/index.php">
                         <img class="navbar-brand-regular" src="/cliente/recursos/img/logo-header/mens-store-white.png" alt="logo-marca-blanco">
                         <img class="navbar-brand-sticky" src="/cliente/recursos/img/logo-header/mens-store-dark.png" alt="logo-marca-oscuro">
                     </a>
                     <div class="ml-auto"></div>
                     <ul class="navbar-nav items">
                         <li class="nav-item">
-                            <a class="nav-link" href="/cliente/home">Inicio </a>
+                            <a class="nav-link" href="/cliente/index.php">Inicio </a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown">

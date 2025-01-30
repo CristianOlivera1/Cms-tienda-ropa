@@ -1832,6 +1832,7 @@ body.dark,
     overflow: hidden;
     width: 100%; /* Reduce width */
     background: white;
+    margin-bottom: 10px;
 }
 
 .single-service:hover {

@@ -55,7 +55,7 @@ $selectedCategory = isset($_GET['category']) ? $_GET['category'] : '';
                 Todos <small class='text-black-50 ml-2'>( <?= $numrows ?>)</small>
             </a>
             <?php
-            $categories = mysqli_query($con, "SELECT catId, catNombre FROM categoria");
+            $categories = mysqli_query($con, "SELECT catId, catNombre FROM categoria order by catNombre asc");
             while ($category = mysqli_fetch_assoc($categories)) {
                 $category_id = $category['catId'];
                 $product_count_query = mysqli_query($con, "SELECT COUNT(DISTINCT p.proId) FROM producto p

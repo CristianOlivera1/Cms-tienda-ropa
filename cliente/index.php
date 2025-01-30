@@ -54,26 +54,100 @@ $sale_product_ids_str = implode(',', $sale_product_ids);
             <div class="col-2">
                 <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
                     <h5 class="mb-3">CATEGORIAS</h5>
-                    <a class="nav-link active d-flex justify-content-between align-items-center" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home" aria-selected="true" onclick="loadProducts('home')">
+                    <a class="nav-link active d-flex justify-content-between align-items-center" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home" aria-selected="true" onclick="loadProducts('home', getSelectedBrand())">
                         Todos <small class="text-black-50 ml-2"> (<?= $numrows ?>)</small>
                     </a>
                     <?php
-                    $categories = mysqli_query($con, "SELECT catId, catNombre FROM categoria");
+                    $categories = mysqli_query($con, "SELECT catId, catNombre FROM categoria order by catNombre asc");
                     while ($category = mysqli_fetch_assoc($categories)) {
                         $category_id = $category['catId'];
-                        $product_count_query = "SELECT COUNT(DISTINCT p.proId) FROM producto p INNER JOIN stock s ON p.proId = s.proId
-                                                WHERE s.stoCantidad > 0 AND p.catId = $category_id";
+                        $product_count_query = "SELECT COUNT(DISTINCT p.proId) FROM producto p INNER JOIN stock s ON p.proId = s.proId WHERE s.stoCantidad > 0 AND p.catId = $category_id";
                         if (!empty($sale_product_ids_str)) {
                             $product_count_query .= " AND p.proId NOT IN ($sale_product_ids_str)";
                         }
                         $product_count_result = mysqli_query($con, $product_count_query);
                         $product_count = mysqli_fetch_row($product_count_result)[0];
                         if ($product_count > 0) {
-                            echo "<a class='nav-link d-flex justify-content-between align-items-center' id='v-pills-{$category['catId']}-tab' data-toggle='pill' href='#v-pills-{$category['catId']}' role='tab' aria-controls='v-pills-{$category['catId']}' aria-selected='false' onclick=\"loadProducts('{$category['catId']}')\">{$category['catNombre']}  <small class='text-black-50 ml-2'>($product_count)</small></a>";
+                            echo "<a class='nav-link d-flex justify-content-between align-items-center' id='v-pills-{$category['catId']}-tab' data-toggle='pill' href='#v-pills-{$category['catId']}' role='tab' aria-controls='v-pills-{$category['catId']}' aria-selected='false' onclick=\"loadProducts('{$category['catId']}', getSelectedBrand())\">{$category['catNombre']}  <small class='text-black-50 ml-2'>($product_count)</small></a>";
                         }
                     }
                     ?>
                 </div>
+                <!-- select aqui para filtrar por marca -->
+            <h5 class="mt-4">MARCAS</h5>
+            <select class="form-control" id="brand-filter" onchange="filterByBrand(this.value)">
+                <option value="">Todas las marcas</option>
+                <?php
+                $brands = mysqli_query($con, "SELECT DISTINCT marNombre FROM marca ORDER BY marNombre ASC");
+                while ($brand = mysqli_fetch_assoc($brands)) {
+                    echo "<option value='{$brand['marNombre']}'>{$brand['marNombre']}</option>";
+                }
+                ?>
+            </select>
+
+            <script>
+            function getSelectedBrand() {
+                return document.getElementById('brand-filter').value;
+            }
+
+            function filterByBrand(brand) {
+                const category = document.querySelector('.nav-link.active').getAttribute('id').replace('v-pills-', '').replace('-tab', '');
+                loadProducts(category, brand);
+            }
+
+            function loadProducts(category, brand = '') {
+                const xhr = new XMLHttpRequest();
+                xhr.open('GET', `cargar-productos.php?category=${category}&brand=${brand}`, true);
+                xhr.onload = function() {
+                    if (this.status === 200) {
+                        const response = JSON.parse(this.responseText);
+                        document.getElementById(`product-list-${category}`).innerHTML = response.products;
+                        // Initialize Swiper
+                        new Swiper(`#swiper-${category}`, {
+                            slidesPerView: 4,
+                            spaceBetween: 10,
+                            grid: {
+                                rows: 2,
+                                fill: 'row',
+                            },
+                            navigation: {
+                                nextEl: '.swiper-button-next',
+                                prevEl: '.swiper-button-prev',
+                            },
+                            breakpoints: {
+                                640: {
+                                    slidesPerView: 1,
+                                    spaceBetween: 6,
+                                    grid: {
+                                        rows: 2,
+                                    },
+                                },
+                                768: {
+                                    slidesPerView: 2,
+                                    spaceBetween: 12,
+                                    grid: {
+                                        rows: 2,
+                                    },
+                                },
+                                1024: {
+                                    slidesPerView: 4,
+                                    spaceBetween: 18,
+                                    grid: {
+                                        rows: 2,
+                                    },
+                                },
+                            }
+                        });
+                    }
+                };
+                xhr.send();
+            }
+
+            // Cargar productos iniciales para la categoría "Todos"
+            document.addEventListener('DOMContentLoaded', function() {
+                loadProducts('home');
+            });
+            </script>
             </div>
             <div class="col-10">
                 <div class="tab-content" id="v-pills-tabContent">
@@ -106,60 +180,5 @@ $sale_product_ids_str = implode(',', $sale_product_ids);
         </div>
     </div>
 </section>
-
-<script>
-function loadProducts(category) {
-    const xhr = new XMLHttpRequest();
-    xhr.open('GET', `cargar-productos.php?category=${category}`, true);
-    xhr.onload = function() {
-        if (this.status === 200) {
-            const response = JSON.parse(this.responseText);
-            document.getElementById(`product-list-${category}`).innerHTML = response.products;
-            // Initialize Swiper
-            new Swiper(`#swiper-${category}`, {
-                slidesPerView: 4,
-                spaceBetween: 10,
-                grid: {
-                    rows: 2, // Mostrar 2 filas
-                    fill: 'row',
-                },
-                navigation: {
-                    nextEl: '.swiper-button-next',
-                    prevEl: '.swiper-button-prev',
-                },
-                breakpoints: {
-                    640: {
-                        slidesPerView: 1,
-                        grid: {
-                            rows: 2,
-                        },
-                        spaceBetween: 6,
-                    },
-                    768: {
-                        slidesPerView: 2,
-                        grid: {
-                            rows: 2,
-                        },
-                        spaceBetween: 12,
-                    },
-                    1024: {
-                        slidesPerView: 4,
-                        grid: {
-                            rows: 2,
-                        },
-                        spaceBetween: 18,
-                    },
-                }
-            });
-        }
-    };
-    xhr.send();
-}
-
-// Cargar productos iniciales para la categoría "Todos"
-document.addEventListener('DOMContentLoaded', function() {
-    loadProducts('home');
-});
-</script>
 
 <?php include "footer.php"; ?>
