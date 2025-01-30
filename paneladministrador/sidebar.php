@@ -160,3 +160,4 @@ if($_SESSION['cargo_gerente']=='Gerente'){
   <div class="sidebar-background"></div>
 </div>
 <div class="vertical-overlay"></div>
+<script src="https://unpkg.com/simplebar@latest/dist/simplebar.min.js"></script>

@@ -1440,7 +1440,7 @@ body.dark,
     display: grid;
     grid-template-rows: repeat(2, 1fr); /* Dos filas */
     grid-auto-flow: column; /* Las columnas deben avanzar */
-    gap: 10px;
+    gap: 0;
 }
 
 /* Contenedor de los botones */
@@ -1488,26 +1488,6 @@ body.dark,
     z-index: 1;
 }
 
-/* Íconos de navegación */
-.swiper-button-prev, .swiper-button-next {
-    color: #fff; /* Color blanco para los íconos */
-    font-size: 15px; /* Tamaño del icono */
-}
-
-/* Para hacerlos compatibles con Swiper */
-.swiper-button-prev::after,
-.swiper-button-next::after {
-    font-size: 20px;
-    font-weight: bold;
-}
-
-
-.swiper-slide {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
 
 .bg-hover::after {
     position: absolute;
@@ -1852,7 +1832,6 @@ body.dark,
     overflow: hidden;
     width: 100%; /* Reduce width */
     background: white;
-    margin-bottom: 28px;
 }
 
 .single-service:hover {
