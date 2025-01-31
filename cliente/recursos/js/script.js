@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (document.querySelector('.swiper-container')) {
         var swiper = new Swiper('.swiper-container', {
             slidesPerView: 1, // 1 slide con 2 filas
-            spaceBetween: 20,
+            spaceBetween: 0,
             navigation: {
                 nextEl: '.swiper-button-next',
                 prevEl: '.swiper-button-prev',
@@ -89,12 +89,18 @@ document.addEventListener('DOMContentLoaded', function() {
             breakpoints: {
                 640: {
                     slidesPerView: 1,
+                     spaceBetween: 0,
+
                 },
                 768: {
                     slidesPerView: 2,
+                    spaceBetween: 0,
+
                 },
                 1024: {
                     slidesPerView: 2,
+                    spaceBetween: 0,
+
                 },
             },
         });

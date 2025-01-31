@@ -14921,11 +14921,7 @@ span.flatpickr-weekday {
     margin: 0 auto
 }
 
-.horizontal-timeline .swiper-slide:nth-child(even) {
-    margin-top: 5px;
-    -webkit-transform: rotate(-180deg);
-    transform: rotate(-180deg)
-}
+
 
 .horizontal-timeline .swiper-slide:nth-child(even) .timeline-content {
     -webkit-transform: rotate(180deg);
@@ -16401,11 +16397,6 @@ span.flatpickr-weekday {
         -webkit-transform: scale(1);
         transform: scale(1)
     }
-}
-
-.images-menu .swiper-slide {
-    width: auto;
-    display: inline-block
 }
 
 #selection-element {

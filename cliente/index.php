@@ -74,13 +74,13 @@ $sale_product_ids_str = implode(',', $sale_product_ids);
                     ?>
                 </div>
                 <!-- select aqui para filtrar por marca -->
-            <h5 class="mt-4">MARCAS</h5>
-            <select class="form-control" id="brand-filter" onchange="filterByBrand(this.value)">
-                <option value="">Todas las marcas</option>
+            <h5 class="mt-4 bg-white p-2">MARCAS</h5>
+            <select class="form-select w-100 select-marca" id="brand-filter" onchange="filterByBrand(this.value)">
+                <option value="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Todas</option>
                 <?php
                 $brands = mysqli_query($con, "SELECT DISTINCT marNombre FROM marca ORDER BY marNombre ASC");
                 while ($brand = mysqli_fetch_assoc($brands)) {
-                    echo "<option value='{$brand['marNombre']}'>{$brand['marNombre']}</option>";
+                    echo "<option value='{$brand['marNombre']}' class='ml-2' >{$brand['marNombre']}</option>";
                 }
                 ?>
             </select>
@@ -105,7 +105,7 @@ $sale_product_ids_str = implode(',', $sale_product_ids);
                         // Initialize Swiper
                         new Swiper(`#swiper-${category}`, {
                             slidesPerView: 4,
-                            spaceBetween: 10,
+                            spaceBetween: 0,
                             grid: {
                                 rows: 2,
                                 fill: 'row',
@@ -117,21 +117,21 @@ $sale_product_ids_str = implode(',', $sale_product_ids);
                             breakpoints: {
                                 640: {
                                     slidesPerView: 1,
-                                    spaceBetween: 6,
+                                    spaceBetween: 0,
                                     grid: {
                                         rows: 2,
                                     },
                                 },
                                 768: {
                                     slidesPerView: 2,
-                                    spaceBetween: 12,
+                                    spaceBetween: 0,
                                     grid: {
                                         rows: 2,
                                     },
                                 },
                                 1024: {
                                     slidesPerView: 4,
-                                    spaceBetween: 18,
+                                    spaceBetween: 0,
                                     grid: {
                                         rows: 2,
                                     },

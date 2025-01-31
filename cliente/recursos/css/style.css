@@ -1440,7 +1440,7 @@ body.dark,
     display: grid;
     grid-template-rows: repeat(2, 1fr); /* Dos filas */
     grid-auto-flow: column; /* Las columnas deben avanzar */
-    gap: 0;
+    gap: 10px;
 }
 
 /* Contenedor de los botones */
@@ -1823,6 +1823,13 @@ body.dark,
     z-index: 1;
 }
 
+.select-marca{
+    height: 40px;
+    font-size: 14px;
+    border: none;
+    border-bottom: 2px solid #ddd;
+}
+
 .single-service {
     position: relative;
     border: 1px solid #ececec;
@@ -1832,7 +1839,6 @@ body.dark,
     overflow: hidden;
     width: 100%; /* Reduce width */
     background: white;
-    margin-bottom: 10px;
 }
 
 .single-service:hover {

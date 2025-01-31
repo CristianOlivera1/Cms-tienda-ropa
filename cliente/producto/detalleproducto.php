@@ -100,7 +100,8 @@ $stock_quantity = $stock_data['totalCantidad'];
                     <div class="button-group mt-5">
                         <div class="row">
                             <div class="col-12 mb-2">
-                            <button class="btn btn-block btn-bordered-black p-3 mb-1" onclick="addToCart(<?php echo $todo; ?>, '<?php echo $product_name; ?>', <?php echo $product_price; ?>, document.getElementById('cantidad').value)">Añadir a la cesta</button>                            </div>
+                            <button class="btn btn-block btn-bordered-black p-3 mb-1" onclick="addToCart(<?php echo $todo; ?>, '<?php echo $product_name; ?>', <?php echo $product_price; ?>, document.getElementById('cantidad').value)">Añadir a la cesta</button>
+                        </div>
                             <div class="col-12">
                                 <a href="checkout.php?id=<?php echo $todo; ?>" class="btn btn-block p-3 ">Comprar</a>
                             </div>
@@ -128,40 +129,40 @@ $stock_quantity = $stock_data['totalCantidad'];
         </div>        
         <div class="swiper-container">
             <div class="swiper-wrapper">
-                <?php
-                $related_products = mysqli_query($con, "SELECT DISTINCT p.proId, p.proNombre, p.proPrecio, p.proImg, m.marNombre FROM Producto p
-                                                        INNER JOIN stock s ON p.proId = s.proId
-                                                        INNER JOIN marca m on m.marId=p.marId
-                                                        WHERE p.catId = '$product_category_id' AND p.proId != '$todo' AND s.stoCantidad > 0
-                                                        ORDER BY p.proId DESC");
+            <?php
+            $related_products = mysqli_query($con, "SELECT DISTINCT p.proId, p.proNombre, p.proPrecio, p.proImg, m.marNombre FROM Producto p
+                                INNER JOIN stock s ON p.proId = s.proId
+                                INNER JOIN marca m on m.marId=p.marId
+                                WHERE p.catId = '$product_category_id' AND p.proId != '$todo' AND s.stoCantidad > 0
+                                ORDER BY p.proId DESC");
 
-                $productos = [];
-                while ($related = mysqli_fetch_assoc($related_products)) {
-                    $productos[] = $related;
+            $productos = [];
+            while ($related = mysqli_fetch_assoc($related_products)) {
+                $productos[] = $related;
+            }
+
+            // Dividir en grupos de 4 (2 filas de 2 productos)
+            $chunks = array_chunk($productos, 4);
+
+            foreach ($chunks as $grupo) {
+                echo '<div class="swiper-slide">';
+                echo '<div class="row mr-0">';
+                foreach ($grupo as $related) {
+                echo "<div class='col-md-6 mr-0'>
+                    <a href='detalleproducto.php?id={$related['proId']}' class='hover-products'>
+                        <div class='single-service mb-4 color-1 bg-hover bg-white hover-bottom text-center p-3'>
+                        <img src='../../paneladministrador/recursos/uploads/producto/{$related['proImg']}' alt='img' class='img-fluid'>
+                        <p class='text-muted font-italic mt-2'>{$related['marNombre']}</p>
+                        <h5 class='mb-2'>{$related['proNombre']}</h5>
+                        <p>S/ {$related['proPrecio']}</p>
+                        </div>
+                    </a>
+                      </div>";
                 }
-
-                // Dividir en grupos de 4 (2 filas de 2 productos)
-                $chunks = array_chunk($productos, 4);
-
-                foreach ($chunks as $grupo) {
-                    echo '<div class="swiper-slide">';
-                    echo '<div class="row">';
-                    foreach ($grupo as $related) {
-                        echo "<div class='col-md-6'>
-                                <a href='detalleproducto.php?id={$related['proId']}' class='hover-products'>
-                                    <div class='single-service color-1 bg-hover bg-white hover-bottom text-center p-3'>
-                                        <img src='../../paneladministrador/recursos/uploads/producto/{$related['proImg']}' alt='img' class='img-fluid'>
-                                        <p class='text-muted font-italic mt-2'>{$related['marNombre']}</p>
-                                        <h5 class='mb-2'>{$related['proNombre']}</h5>
-                                        <p>S/ {$related['proPrecio']}</p>
-                                    </div>
-                                </a>
-                              </div>";
-                    }
-                    echo '</div>';
-                    echo '</div>';
-                }
-                ?>
+                echo '</div>';
+                echo '</div>';
+            }
+            ?>
             </div>
             <!-- Controles de navegación -->
              <div class="back">
@@ -169,7 +170,7 @@ $stock_quantity = $stock_data['totalCantidad'];
             </div>
             <div class="next">
             <div class="swiper-button-next"></div>
-            </div>
+            </div> <br>
             <div class="swiper-pagination"></div>
         </div>
     </div>
