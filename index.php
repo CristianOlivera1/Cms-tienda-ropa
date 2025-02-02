@@ -26,7 +26,7 @@ $sale_product_ids_str = implode(',', $sale_product_ids);
             <div class="col-12 col-md-7">
                 <div class="welcome-intro">
                     <h1 class="text-white"><?php echo $porTitulo ?></h1>
-                    <p class="white-70 my-4"><?php echo $porDescripcion ?></p>
+                    <p class="white-70 my-4 lead mt-4" style="font-size: 1.2em;"><?php echo $porDescripcion ?></p>
                     <div class="button-group">
                         <a href="cliente/producto/producto.php" class="btn btn-bordered-white">Ver productos</a>
                         <a href="/cliente/categoria/todascategorias.php" class="btn btn-bordered-white d-none d-sm-inline-block">Ver categorías</a>
@@ -46,7 +46,7 @@ $sale_product_ids_str = implode(',', $sale_product_ids);
             <div class="col-12 col-md-10 col-lg-7">
                 <div class="section-heading text-center">
                     <h1>Prendas de vestir</h1>
-                    <p class="d-none d-sm-block mt-4">Explora y descubre una amplia variedad de estilos y tendencias. Desde ropa casual hasta atuendos formales, tenemos algo para cada ocasión. ¡Encuentra tu estilo perfecto con nosotros!</p>
+                    <p class="lead mt-4 text-secondary">Explora y descubre una amplia variedad de estilos y tendencias. Desde ropa casual hasta atuendos formales, tenemos algo para cada ocasión. ¡Encuentra tu estilo perfecto con nosotros!</p>
                 </div>
             </div>
         </div>

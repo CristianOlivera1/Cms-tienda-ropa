@@ -1441,7 +1441,9 @@ body.dark,
     grid-template-rows: repeat(2, 1fr); /* Dos filas */
     grid-auto-flow: column; /* Las columnas deben avanzar */
     gap: 10px;
+
 }
+
 
 /* Contenedor de los botones */
 .back, .next {
@@ -1839,6 +1841,18 @@ body.dark,
     overflow: hidden;
     width: 100%; /* Reduce width */
     background: white;
+}
+
+.unamba img {
+    width: clamp(30px, 5vw, 40px);
+    height: auto;
+    margin-right: 10px;
+}
+
+.sistemas img {
+    width: clamp(45px, 7vw, 55px);
+    height: auto;
+    margin-right: 10px;
 }
 
 .single-service:hover {

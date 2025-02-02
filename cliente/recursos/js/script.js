@@ -1,22 +1,7 @@
 //DETALLES DEL PRODUCTO
 
 // Intercambiar entre colores y dar stilos
-function selectColor(colorName, element) {
-    document.getElementById('selected-color-name').innerText = colorName;
-    var circles = document.getElementsByClassName('color-circle');
-    for (var i = 0; i < circles.length; i++) {
-        circles[i].style.boxShadow = 'none';
-    }
-    element.style.boxShadow = '0 0 0 2px black';
-}
 
-    // Selecciona el primer color por defecto
-document.addEventListener('DOMContentLoaded', function() {
-    var firstCircle = document.querySelector('.color-circle');
-    if (firstCircle) {
-        selectColor(firstCircle.title, firstCircle);
-    }
-});
 
 // Incremnetar y decrementar la cantidad
 document.addEventListener('DOMContentLoaded', function() {
@@ -108,7 +93,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 //CARRITO
-function addToCart(productId, productName, productPrice, quantity) {
+function addToCart(productId, productName, productPrice, quantity, productImage) {
     let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
     let index = carrito.findIndex(item => item.id === productId);
 
@@ -119,7 +104,7 @@ function addToCart(productId, productName, productPrice, quantity) {
             nombre: productName,
             precio: productPrice,
             cantidad: parseInt(quantity),
-            img: '<?php echo $product_image; ?>' // Asegúrate de que la imagen esté disponible
+            img: productImage // Asegúrate de que la imagen esté disponible
         });
     } else {
         // Si el producto ya está en el carrito, actualizamos la cantidad

@@ -7,12 +7,12 @@
                                 <div class="col-12 col-sm-6 col-lg-4">
                                         <div class="footer-items">
                                                 <h3 class="footer-title text-uppercase mb-2">Sobre Nosotros</h3>
-                                                <p class="mb-2">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Excepturi ipsam atque architecto nulla minima a optio iusto rerum nesciunt odit assumenda, libero sint sit id odio! Ipsam quos repellat reprehenderit!</p>
+                                                <p class="mb-2">Somos una tienda de ropa dedicada a ofrecerte las últimas tendencias en moda. Nuestro objetivo es brindarte prendas de alta calidad que te hagan sentir cómodo y a la moda.</p>
                                         </div>
                                 </div>
                                 <div class="col-12 col-sm-6 col-lg-4">
                                         <div class="footer-items">
-                                                <h3 class="footer-title text-uppercase mb-2">Productos</h3>
+                                                <h3 class="footer-title text-uppercase mb-2">Categorías</h3>
                                                 <ul>
                                                         <?php
                                                         $q = "SELECT * FROM  categoria ORDER BY catId DESC LIMIT 5";
@@ -35,7 +35,7 @@
                                 <div class="col-12 col-sm-6 col-lg-4">
                                         <div class="footer-items">
                                                 <h3 class="footer-title text-uppercase mb-2">Síguenos</h3>
-                                                <p class="mb-2">Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusantium eius non corporis recusandae ratione, ullam quidem ex hic nobis laudantium, quisquam quas! Unde, quia sint. Fuga corporis fugiat nihil quasi.</p>
+                                                <p class="mb-2"> Síguenos en nuestras redes sociales para estar al tanto de nuestras novedades y promociones.</p>
                                                 <!-- Iconos Sociales -->
                                                 <ul class="social-icons list-inline pt-2">
                                                         <li class="list-inline-item px-1"><a href="https://www.facebook.com/usuario"><i class="fab fa-facebook-f"></i></a></li>
@@ -46,14 +46,13 @@
                         </div>
                 </div>
         </div>
-        <!-- Parte Inferior del Pie de Página -->
         <div class="footer-bottom bg-grey">
                 <div class="container">
                         <div class="row">
                                 <div class="col-12">
                                         <div class="copyright-area d-flex flex-wrap justify-content-center justify-content-sm-between text-center py-4">
-                                                <div class="copyright-left">Unamba</div>
-                                                <div class="copyright-right">Ing. Informática y sistemas</div>
+                                                <div class="unamba"> <img src="/cliente/recursos/img/footer/unamba-color.png" alt="Unamba"> Unamba</div>
+                                                <div class="sistemas"> <img src="/cliente/recursos/img/footer/log-sistemas-color.png" alt="sistemas"> Ing. Informática y sistemas</div>
                                         </div>
                                 </div>
                         </div>

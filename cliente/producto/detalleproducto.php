@@ -28,9 +28,14 @@ $tallas = mysqli_query($con, "SELECT DISTINCT t.talNombre FROM stock s
                               WHERE s.proId='$todo'");
 
 // Obtener cantidad de stock disponible
-$stock = mysqli_query($con, "SELECT SUM(stoCantidad) as totalCantidad FROM stock WHERE proId='$todo'");
-$stock_data = mysqli_fetch_array($stock);
-$stock_quantity = $stock_data['totalCantidad'];
+$stock = mysqli_query($con, "SELECT s.colId, s.talId, s.stoCantidad, c.colNombre, t.talNombre FROM stock s 
+                             INNER JOIN color c ON s.colId = c.colId 
+                             INNER JOIN talla t ON s.talId = t.talId 
+                             WHERE s.proId='$todo'");
+$stock_data = [];
+while ($row = mysqli_fetch_assoc($stock)) {
+    $stock_data[$row['colNombre']][$row['talNombre']] = $row['stoCantidad'];
+}
 ?>
 
 <section class="section breadcrumb-area overlay-dark d-flex align-items-center">
@@ -81,7 +86,7 @@ $stock_quantity = $stock_data['totalCantidad'];
                     <!-- Tallas disponibles -->
                     <div class="mb-4">
                         <label for="talla" class="form-label">Talla:</label> <br>
-                        <select id="talla" class="form-select w-100" style="height: 45px;">
+                        <select id="talla" class="form-select w-100" style="height: 45px;" onchange="updateStock()">
                             <?php while ($talla = mysqli_fetch_assoc($tallas)): ?>
                                 <option value="<?php echo $talla['talNombre']; ?>">&nbsp;&nbsp;<?php echo $talla['talNombre']; ?></option>
                             <?php endwhile; ?>
@@ -95,12 +100,12 @@ $stock_quantity = $stock_data['totalCantidad'];
                             <input type="number" id="cantidad" class="form-control text-center mx-2" value="1" min="1" max="<?php echo $stock_quantity; ?>" style="max-width: 60px;">
                             <button class="btn-mutted" type="button" id="increment">+</button>
                         </div>
-                        <small class="form-text text-muted">Stock disponible: <?php echo $stock_quantity; ?></small>
+                        <small class="form-text text-muted">Stock disponible: <span id="stock-quantity"><?php echo $stock_quantity; ?></span></small>
                     </div>
                     <div class="button-group mt-5">
                         <div class="row">
                             <div class="col-12 mb-2">
-                            <button class="btn btn-block btn-bordered-black p-3 mb-1" onclick="addToCart(<?php echo $todo; ?>, '<?php echo $product_name; ?>', <?php echo $product_price; ?>, document.getElementById('cantidad').value)">Añadir a la cesta</button>
+                            <button class="btn btn-block btn-bordered-black p-3 mb-1" onclick="addToCart(<?php echo $todo; ?>, '<?php echo $product_name; ?>', <?php echo $product_price; ?>, document.getElementById('cantidad').value, '<?php echo $product_image; ?>')">Añadir a la cesta</button>
                         </div>
                             <div class="col-12">
                                 <a href="checkout.php?id=<?php echo $todo; ?>" class="btn btn-block p-3 ">Comprar</a>
@@ -115,6 +120,7 @@ $stock_quantity = $stock_data['totalCantidad'];
         </div>
     </div>
 </section>
+
 
 <!-- ***** Productos relacionados(sugerencias) inicio ***** -->
 <section class="section related-products ptb_50">
@@ -176,7 +182,32 @@ $stock_quantity = $stock_data['totalCantidad'];
     </div>
 </section>
 
-<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+<script>
+    var stockData = <?php echo json_encode($stock_data); ?>;
+
+    function selectColor(colorName, element) {
+        document.getElementById('selected-color-name').innerText = colorName;
+        var circles = document.getElementsByClassName('color-circle');
+        for (var i = 0; i < circles.length; i++) {
+            circles[i].style.boxShadow = 'none';
+        }
+        element.style.boxShadow = '0 0 0 2px black';
+        updateStock();
+    }
+
+    function updateStock() {
+        var selectedColor = document.getElementById('selected-color-name').innerText;
+        var selectedTalla = document.getElementById('talla').value;
+        var stockQuantity = stockData[selectedColor][selectedTalla] || 0;
+        document.getElementById('cantidad').max = stockQuantity;
+        document.getElementById('stock-quantity').innerText = stockQuantity;
+    }
+
+        var firstCircle = document.querySelector('.color-circle');
+        if (firstCircle) {
+            selectColor(firstCircle.title, firstCircle);
+        }
+        updateStock();
+</script>
 
 <?php include "../footer.php"; ?>
-
