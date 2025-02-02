@@ -3,146 +3,106 @@
 
 <head>
     <meta charset="utf-8">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-    <link rel="stylesheet" type="text/css" href="assets/styles/bootstrap4/bootstrap.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Resumen de Pedido</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
 </head>
 
-<body>
-        <div class="super_container mt-5 pt-5">
-        <?php
-        include('modalEliminarProduct.php');
-        //include('funciones_tienda.php');
-        include('../header.php');
-        ?>
+<body class="bg-light">
 
-        <div class="container mt-5 pt-5">
-            <div class="row">
-                <div class="col-12">
-                    <h3 class="text-center mb-5" style="border-bottom: solid 1px #ebebeb;">
-                        Resumen de mi Pedido
-                    </h3>
-                    <div class="table-responsive">
-                        <table class="table table-striped" id="tablaCarrito">
-                            <thead id="theadTableSpecial">
-                                <tr>
-                                    <th scope="col">Detalle</th>
-                                    <th scope="col">Producto</th>
-                                    <th scope="col" class="text-center">Cantidad</th>
-                                    <th scope="col" class="text-right">Precio</th>
-                                    <th class="text-right">Acción </th>
-                                </tr>
-                            </thead>
-                            <tbody id="cuerpoCarrito">
-                                <!-- Los productos se agregarán aquí mediante JavaScript -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+    <div class="container mt-5 pt-4">
+        <h3 class="text-center mb-4 pb-2 border-bottom">Resumen de mi Pedido</h3>
 
-                <div class="col mb-2 mt-5">
-                    <div class="row justify-content-md-center">
-                        <div class="col-md-6 mb-4">
-                            <a href="../producto/producto.php" class="btn btn-block btn_raza">
-                                <i class="bi bi-cart-plus"></i>
-                                Continuar Comprando
-                            </a>
-                        </div>
-                        <div class="col-md-6">
-                            <a href="registro_cliente.php" class="btn btn-block btn-success">
-                                Solicitar Pedido
-                                <i class="bi bi-arrow-right-circle"></i>
-                            </a>
-                        </div>
+        <div class="table-responsive bg-white shadow p-3 rounded">
+            <table class="table table-hover align-middle">
+                <thead class="table-dark text-center">
+                    <tr>
+                        <th scope="col">Detalle</th>
+                        <th scope="col">Producto</th>
+                        <th scope="col">Cantidad</th>
+                        <th scope="col">Precio</th>
+                        <th scope="col">Acción</th>
+                    </tr>
+                </thead>
+                <tbody id="cuerpoCarrito">
+                    <!-- Productos generados por JavaScript -->
+                </tbody>
+            </table>
+        </div>
 
-                    </div>
-                </div>
-            </div>
+        <div id="mensajeCarrito" class="alert alert-warning text-center mt-3" style="display: none;">
+            Tu carrito está vacío.
+        </div>
 
-            <div class="row">
-                <div class="col-12">
-                    <div id="mensajeCarrito" class="alert alert-warning" style="display: none;">
-                        Tu carrito está vacío.
-                    </div>
-                </div>
-            </div>
+        <div class="d-flex justify-content-between mt-4">
+            <a href="../producto/producto.php" class="btn btn-outline-dark">
+                <i class="bi bi-cart-plus"></i> Seguir Comprando
+            </a>
+            <a href="registro_cliente.php" class="btn btn-success">
+                Solicitar Pedido <i class="bi bi-arrow-right-circle"></i>
+            </a>
         </div>
     </div>
 
-    <?php include('../footer.php'); ?>
-    
-
     <script>
-        // Función para cargar el carrito desde localStorage
         function cargarCarrito() {
             let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
             let cuerpoCarrito = document.getElementById('cuerpoCarrito');
             let mensajeCarrito = document.getElementById('mensajeCarrito');
-            cuerpoCarrito.innerHTML = ''; // Limpiar el cuerpo de la tabla
+            cuerpoCarrito.innerHTML = '';
 
             if (carrito.length === 0) {
-                mensajeCarrito.style.display = 'block'; // Mostrar mensaje de carrito vacío
+                mensajeCarrito.style.display = 'block';
             } else {
-                mensajeCarrito.style.display = 'none'; // Ocultar mensaje de carrito vacío
+                mensajeCarrito.style.display = 'none';
                 let total = 0;
 
                 carrito.forEach((producto, index) => {
-                    total += producto.precio * producto.cantidad; // Calcular total
+                    total += producto.precio * producto.cantidad;
                     cuerpoCarrito.innerHTML += `
-                        <tr id="resp${producto.id}">
-                            <td>
-                                <img src="../../paneladministrador/recursos/uploads/producto/${producto.img}" alt="Foto_Producto" style="width: 100px;">
-                            </td>
+                        <tr>
+                            <td class="text-center"><img src="../../paneladministrador/recursos/uploads/producto/${producto.img}" class="rounded" style="width: 80px;"></td>
                             <td>${producto.nombre}</td>
-                            <td>
-                                <div class="quantity_selector">
-                                    <span class="minus restarCant" onclick="cambiarCantidad(${index}, -1)">
-                                        <i class="bi bi-dash"></i>
-                                    </span>
-                                    <span id="display${producto.id}">
-                                        ${producto.cantidad}
-                                    </span>
-                                    <span class="plus aumentarCant" onclick="cambiarCantidad(${index}, 1)">
-                                        <i class="bi bi-plus"></i>
-                                    </span>
-                                </div>
+                            <td class="text-center">
+                                <button class="btn btn-outline-secondary btn-sm" onclick="cambiarCantidad(${index}, -1)">
+                                    <i class="bi bi-dash"></i>
+                                </button>
+                                <span class="mx-2">${producto.cantidad}</span>
+                                <button class="btn btn-outline-secondary btn-sm" onclick="cambiarCantidad(${index}, 1)">
+                                    <i class="bi bi-plus"></i>
+                                </button>
                             </td>
-                            <td class="text-right"><strong>$</strong>${producto.precio.toFixed(2)}</td>
-                            <td class="text-right">
-                                <a href="#" class="btn btn-sm btn-danger" onclick="eliminarDelCarrito(${index})">
+                            <td class="text-end"><strong>$</strong>${producto.precio.toFixed(2)}</td>
+                            <td class="text-center">
+                                <button class="btn btn-sm btn-danger" onclick="eliminarDelCarrito(${index})">
                                     <i class="bi bi-trash3"></i>
-                                </a>
+                                </button>
                             </td>
                         </tr>
                     `;
                 });
 
-                // Mostrar total a pagar
                 cuerpoCarrito.innerHTML += `
-                    <tr style="background-color: #fff !important;">
-                        <td colspan="4"></td>
-                        <td style="color:#fff; background-color: #ff4545 !important;">
-                            Total a Pagar:
-                            <span id="totalPuntos">$ ${total.toFixed(2)}</span>
-                        </td>
+                    <tr class="table-secondary">
+                        <td colspan="3" class="text-end"><strong>Total a Pagar:</strong></td>
+                        <td class="text-end"><strong>$${total.toFixed(2)}</strong></td>
+                        <td></td>
                     </tr>
                 `;
             }
         }
 
-        // Función para cambiar la cantidad de un producto
         function cambiarCantidad(index, cambio) {
             let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
             carrito[index].cantidad += cambio;
-
-            if (carrito[index].cantidad <= 0) {
-                eliminarDelCarrito(index);
-            } else {
+            if (carrito[index].cantidad <= 0) eliminarDelCarrito(index);
+            else {
                 localStorage.setItem('carrito', JSON.stringify(carrito));
                 cargarCarrito();
             }
         }
 
-        // Función para eliminar un producto del carrito
         function eliminarDelCarrito(index) {
             let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
             carrito.splice(index, 1);
@@ -150,19 +110,9 @@
             cargarCarrito();
         }
 
-        // Función para solicitar el pedido (puedes implementar la lógica que necesites)
-        function solicitarPedido() {
-            let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
-            if (carrito.length === 0) {
-                alert('Tu carrito está vacío. Agrega productos antes de solicitar.');
-                return;
-            }
-            // Aquí puedes agregar la lógica para procesar el pedido
-            alert('Pedido solicitado con éxito.');
-        }
-
-        // Cargar el carrito al cargar la página
         document.addEventListener('DOMContentLoaded', cargarCarrito);
     </script>
+
 </body>
+
 </html>
