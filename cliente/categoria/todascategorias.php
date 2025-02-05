@@ -38,7 +38,7 @@
          </div>
          <div class="row">
              <?php
-                $qs = "SELECT * FROM  categoria ORDER BY catId DESC LIMIT 6";
+                $qs = "SELECT * FROM categoria ORDER BY catId DESC LIMIT 6";
                 $r1 = mysqli_query($con, $qs);
 
                 while ($rod = mysqli_fetch_array($r1)) {

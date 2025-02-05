@@ -2,6 +2,7 @@
 // Incluir la conexión a la base de datos al principio del archivo
 include '../coneccionbd.php';
 
+
 // Procesar el registro de cliente y la compra
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Buscar cliente por DNI
@@ -35,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $apeMaterno = $_POST['cliApellidoMaterno'];
         $dni = $_POST['cliDni'];
         $correo = $_POST['cliCorreo'];
-        $fechaNacimiento = $_POST['cliFechaNacimiento'];
+        $fechaNacimiento = $_POST['cliFechNacimiento'];
 
         // Validación de edad
         $fecha_actual = new DateTime();
@@ -66,14 +67,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     // Iniciar transacción
                     $con->begin_transaction();
                     try {
-                        $sql_cliente = "INSERT INTO cliente (cliNombre, cliApellidoPaterno, cliApellidoMaterno, cliDni, cliCorreo, cliFechaNacimiento) VALUES (?, ?, ?, ?, ?, ?)";
+                        $sql_cliente = "INSERT INTO cliente (cliNombre, cliApellidoPaterno, cliApellidoMaterno, cliDni, cliCorreo, cliFechNacimiento) VALUES (?, ?, ?, ?, ?, ?)";
                         $stmt = $con->prepare($sql_cliente);
                         $stmt->bind_param("ssssss", $nombre, $apePaterno, $apeMaterno, $dni, $correo, $fechaNacimiento);
                         
                         if ($stmt->execute()) {
                             $cliId = $stmt->insert_id; // Obtener el ID generado
                             $con->commit();
-                            $mensaje_exito = 'Cliente creado satisfactoriamente. Su ID es: ' . $cliId . '.';
+                            $mensaje_exito = 'Cliente: ' . $nombre . ' '.$apePaterno.' '.$apeMaterno.'. con DNI '.$dni.' fue creado exitosamente';
                             $cerrar_modal = true; // Variable para cerrar el modal
                         } else {
                             throw new Exception("Error al ejecutar la inserción: " . $stmt->error);
@@ -96,9 +97,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registrar Cliente</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <style>
         body {
+            background: url('../recursos/img/welcome/fondo-portada.svg') no-repeat center center fixed;
+            background-size: cover;
+            position: relative;
             background-color: #f8f9fa;
         }
         .container {
@@ -109,81 +114,112 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             border-radius: 10px;
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
         }
+        .form-label {
+            font-weight: bold;
+        }
     </style>
+   
 </head>
+
 <body>
     <div class="container">
-        <h2 class="text-center">¿Realizaste compras antes?</h2>
-        <form method="POST" action="">
-            <div class="mb-3">
-                <label for="buscarDni" class="form-label">Ingrese su DNI para buscar</label>
-                <input type="text" class="form-control" id="buscarDni" name="buscarDni" pattern="^\d{8}$" title="Debe tener exactamente 8 dígitos" required>
+        
+        <div class="card p-4">
+            <h2 class="text-center"><i class="bi bi-person-plus-fill"></i> ¿Realizaste compras antes?</h2>
+            <form method="POST" action="">
+                <div class="mb-3">
+                    <label for="buscarDni" class="form-label">Ingrese su DNI para buscar</label>
+                    <input type="text" class="form-control" id="buscarDni" name="buscarDni" pattern="^\d{8}$" title="Debe tener exactamente 8 dígitos" required>
+                </div>
+                <button type="submit" class="btn btn-info w-100" name="buscar"><i class="bi bi-search"></i> Buscar Cliente</button>
+            </form>
+
+            <div class="mt-3">
+                <?php
+                if (isset($mensaje_exito)) {
+                    echo '<div class="alert alert-success">' . $mensaje_exito . '</div>';
+                    echo '<form method="POST" action="">
+                            <input type="hidden" name="cliId" value="' . $cliId . '">
+                            <button type="submit" class="btn btn-primary w-100" name="comprar"><i class="bi bi-cart-check"></i> Comprar con este usuario</button>
+                          </form>';
+                } elseif (isset($mensaje_error)) {
+                    echo '<div class="alert alert-danger">' . $mensaje_error . '</div>';
+                }
+                ?>
             </div>
-            <button type="submit" class="btn btn-info w-100" name="buscar">Buscar Cliente</button>
-        </form>
-
-        <div class="mt-3">
-            <?php
-            if (isset($mensaje_exito)) {
-                echo '<div class="alert alert-success">' . $mensaje_exito . '</div>';
-                echo '<form method="POST" action="">
-                        <input type="hidden" name="cliId" value="' . $cliId . '">
-                        <button type="submit" class="btn btn-primary w-100" name="comprar">Comprar con este usuario</button>
-                      </form>';
-            } elseif (isset($mensaje_error)) {
-                echo '<div class="alert alert-danger">' . $mensaje_error . '</div>';
-            }
-            ?>
+    <div class="row mt-3">
+        <div class="col-md-6">
+            <button type="button" class="btn btn-volver w-100" onclick="window.location.href='carrito_compras.php'">
+                <i class="bi bi-arrow-left"></i> Regresar
+            </button>
         </div>
+        <div class="col-md-6">
+            <button type="button" class="btn btn-secondary w-100" data-bs-toggle="modal" data-bs-target="#registroModal">
+                <i class="bi bi-person-add"></i> Registrarse
+            </button>
+        </div>
+    </div>
 
-        <button type="button" class="btn btn-secondary mt-5 w-100" data-bs-toggle="modal" data-bs-target="#registroModal">Registrarse</button>
-
-        <!-- Modal para Registro de Cliente -->
-        <div class="modal fade" id="registroModal" tabindex="-1" aria-labelledby="registroModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="registroModalLabel">Registro de Cliente</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form method="POST" action="">
-                            <div class="mb-3">
-                                <label for="cliNombre" class="form-label">Nombre</label>
-                                <input type="text" class="form-control" id="cliNombre" name="cliNombre" pattern="^[A-Za-záéíóúÁÉÍÓÚñÑ ]+$" title="Solo letras y espacios" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="cliApellidoPaterno" class="form-label">Apellido Paterno</label>
-                                <input type="text" class="form-control" id="cliApellidoPaterno" name="cliApellidoPaterno" pattern="^[A-Za-záéíóúÁÉÍÓÚñÑ ]+$" title="Solo letras y espacios" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="cliApellidoMaterno" class="form-label">Apellido Materno</label>
-                                <input type="text" class="form-control" id="cliApellidoMaterno" name="cliApellidoMaterno" pattern="^[A-Za-záéíóúÁÉÍÓÚñÑ ]+$" title="Solo letras y espacios" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="cliDni" class="form-label">DNI</label>
-                                <input type="text" class="form-control" id="cliDni" name="cliDni" pattern="^\d{8}$" title="Debe tener exactamente 8 dígitos" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="cliCorreo" class="form-label">Correo Electrónico</label>
-                                <input type="email" class="form-control" id="cliCorreo" name="cliCorreo" pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$" title="Ingrese un correo válido" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="cliFechaNacimiento" class="form-label">Fecha de Nacimiento</label>
-                                <input type="date" class="form-control" id="cliFechaNacimiento" name="cliFechaNacimiento" required>
-                            </div>
-                            <button type="submit" class="btn btn-success w-100" name="registrar">Registrar Cliente</button>
-                        </form>
+            <!-- Modal para Registro de Cliente -->
+            <div class="modal fade" id="registroModal" tabindex="-1" aria-labelledby="registroModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h5 class="modal-title text-center" id="registroModalLabel"><i class="bi bi-person-plus-fill"></i> Registro de Cliente</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form method="POST" action="">
+                                <div class="mt-3">
+                                    <?php
+                                    if (isset($mensaje_exito)) {
+                                        echo '<div class="alert alert-success">' . $mensaje_exito . '</div>';
+                                    } elseif (isset($mensaje_error)) {
+                                        echo '<div class="alert alert-danger">' . $mensaje_error . '</div>';
+                                    }
+                                    ?>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="cliNombre" class="form-label">Nombre</label>
+                                    <input type="text" class="form-control" id="cliNombre" name="cliNombre" pattern="^[A-Za-záéíóúÁÉÍÓÚñÑ ]+$" title="Solo letras y espacios" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="cliApellidoPaterno" class="form-label">Apellido Paterno</label>
+                                    <input type="text" class="form-control" id="cliApellidoPaterno" name="cliApellidoPaterno" pattern="^[A-Za-záéíóúÁÉÍÓÚñÑ ]+$" title="Solo letras y espacios" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="cliApellidoMaterno" class="form-label">Apellido Materno</label>
+                                    <input type="text" class="form-control" id="cliApellidoMaterno" name="cliApellidoMaterno" pattern="^[A-Za-záéíóúÁÉÍÓÚñÑ ]+$" title="Solo letras y espacios" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="cliDni" class="form-label">DNI</label>
+                                    <input type="text" class="form-control" id="cliDni" name="cliDni" pattern="^\d{8}$" title="Debe tener exactamente 8 dígitos" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="cliCorreo" class="form-label">Correo Electrónico</label>
+                                    <input type="email" class="form-control" id="cliCorreo" name="cliCorreo" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="cliFechNacimiento" class="form-label">Fecha de Nacimiento</label>
+                                    <input type="date" class="form-control" id="cliFechNacimiento" name="cliFechNacimiento" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary w-100" name="registrar"><i class="bi bi-person-add"></i> Registrarse</button>
+                                
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-
-        <?php
-        if (isset($cerrar_modal) && $cerrar_modal) {
-            echo "<script>var modal = bootstrap.Modal.getInstance(document.getElementById('registroModal')); modal.hide();</script>";
-        }
-        ?>
     </div>
+
+    <?php if (isset($cerrar_modal) && $cerrar_modal): ?>
+        <script>
+            var registroModal = document.getElementById('registroModal');
+            registroModal.addEventListener('hidden.bs.modal', function () {
+                location.reload(); // Recargar la página después de cerrar el modal
+            });
+        </script>
+    <?php endif; ?>
 </body>
 </html>

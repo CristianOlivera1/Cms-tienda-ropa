@@ -144,7 +144,7 @@ $discounted_price = $product_price - ($product_price * ($discount_percentage / 1
             <?php
             $related_products = mysqli_query($con, "
                 SELECT DISTINCT p.proId, p.proNombre, p.proPrecio, p.proImg, m.marNombre 
-                FROM Producto p
+                FROM producto p
                 INNER JOIN stock s ON p.proId = s.proId
                 INNER JOIN marca m ON m.marId = p.marId
                 WHERE p.catId = '$product_category_id' AND p.proId != '$todo' AND s.stoCantidad > 0

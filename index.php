@@ -162,7 +162,7 @@ $sale_product_ids_str = implode(',', $sale_product_ids);
                         </div>
                     </div>
                     <?php
-                    $categories = mysqli_query($con, "SELECT catId, catNombre FROM Categoria");
+                    $categories = mysqli_query($con, "SELECT catId, catNombre FROM categoria");
                     while ($category = mysqli_fetch_assoc($categories)) {
                         echo "<div class='tab-pane fade' id='v-pills-{$category['catId']}' role='tabpanel' aria-labelledby='v-pills-{$category['catId']}-tab'>";
                         echo "<div class='swiper-container' id='swiper-{$category['catId']}'>";

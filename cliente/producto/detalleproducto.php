@@ -3,9 +3,9 @@ include "../header.php";
 $todo = mysqli_real_escape_string($con, $_GET["id"]);
 
 // Obtener detalles del producto
-$rt = mysqli_query($con, "SELECT p.*, c.catNombre, m.marNombre, m.marImg FROM Producto p 
+$rt = mysqli_query($con, "SELECT p.*, c.catNombre, m.marNombre, m.marImg FROM producto p 
                           INNER JOIN categoria c ON p.catId = c.catId 
-                          INNER JOIN Marca m ON p.marId = m.marId 
+                          INNER JOIN marca m ON p.marId = m.marId 
                           WHERE p.proId='$todo'");
 $tr = mysqli_fetch_array($rt);
 $product_name = $tr['proNombre'];
@@ -136,7 +136,7 @@ while ($row = mysqli_fetch_assoc($stock)) {
         <div class="swiper-container">
             <div class="swiper-wrapper">
             <?php
-            $related_products = mysqli_query($con, "SELECT DISTINCT p.proId, p.proNombre, p.proPrecio, p.proImg, m.marNombre FROM Producto p
+            $related_products = mysqli_query($con, "SELECT DISTINCT p.proId, p.proNombre, p.proPrecio, p.proImg, m.marNombre FROM producto p
                                 INNER JOIN stock s ON p.proId = s.proId
                                 INNER JOIN marca m on m.marId=p.marId
                                 WHERE p.catId = '$product_category_id' AND p.proId != '$todo' AND s.stoCantidad > 0
