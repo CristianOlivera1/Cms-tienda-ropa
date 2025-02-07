@@ -33,6 +33,41 @@ $sale_product_ids_str = implode(',', $sale_product_ids);
                     </div>
                 </div>
             </div>
+            <!-- slider-->
+            <div class="col-12 col-md-5">
+                <div class="swiper-container" id="product-carousel">
+                    <div class="swiper-wrapper">
+                        <?php
+                        $product_query = "SELECT p.proId, p.proNombre, p.proImg, m.marNombre, p.proPrecio FROM producto p 
+                                          INNER JOIN stock s ON p.proId = s.proId 
+                                          INNER JOIN marca m ON m.marId = p.marId 
+                                          INNER JOIN estado e ON e.estId = s.estId 
+                                          WHERE s.stoCantidad > 0 AND e.estDisponible = 'Disponible' 
+                                          GROUP BY p.proId 
+                                          ORDER BY RAND()";
+                        $product_result = mysqli_query($con, $product_query);
+                        while ($product = mysqli_fetch_assoc($product_result)) {
+                            echo "
+                <div class='swiper-slide w-75'>
+                    <a href='cliente/producto/detalleproducto.php?id={$product['proId']}' class='product-link'>
+                        <div class='product-card'>
+                            <div class='image-container'>
+                                <img class='product-image' src='paneladministrador/recursos/uploads/producto/{$product['proImg']}' alt='{$product['proNombre']}'>
+                            </div>
+                            <div class='product-info'>
+                                <h5>{$product['marNombre']}</h5>
+                                <h4>{$product['proNombre']}</h4>
+                                <p class='price'>S/ {$product['proPrecio']}</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>";
+            }
+                        ?>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
     <div class="shape shape-bottom">
@@ -117,5 +152,6 @@ $sale_product_ids_str = implode(',', $sale_product_ids);
         </div>
     </div>
 </section>
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 
 <?php include "cliente/footer.php"; ?>

@@ -217,3 +217,29 @@ document.addEventListener('click', function(event) {
     }
 });
 //buscador
+
+//carrusel portada
+var swiper = new Swiper('#product-carousel', {
+    loop: true,
+    autoplay: {
+        delay: 4000,
+        disableOnInteraction: false,
+    },
+    slidesPerView: 1,
+    spaceBetween: 10,
+    breakpoints: {
+        640: {
+            slidesPerView: 1,
+            spaceBetween: 10,
+        },
+        768: {
+            slidesPerView: 2,
+            spaceBetween: 20,
+        },
+        1024: {
+            slidesPerView: 3,
+            spaceBetween: 30,
+        },
+    }
+});
+//carrusel portada
