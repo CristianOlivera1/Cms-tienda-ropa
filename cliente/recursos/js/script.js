@@ -1,8 +1,5 @@
 //DETALLES DEL PRODUCTO
 
-// Intercambiar entre colores y dar stilos
-
-
 // Incremnetar y decrementar la cantidad
 document.addEventListener('DOMContentLoaded', function() {
     const decrementButton = document.getElementById('decrement');
@@ -114,3 +111,109 @@ function addToCart(productId, productName, productPrice, quantity, productImage)
     localStorage.setItem('carrito', JSON.stringify(carrito));
     alert('Producto añadido al carrito');
 }
+
+//INDEX
+function getSelectedBrand() {
+    return document.getElementById('brand-filter').value;
+}
+
+function filterByBrand(brand) {
+    const category = document.querySelector('.nav-link.active').getAttribute('id').replace('v-pills-', '').replace('-tab', '');
+    loadProducts(category, brand);
+}
+
+function loadProducts(category, brand = '') {
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', `cargar-productos.php?category=${category}&brand=${brand}`, true);
+    xhr.onload = function() {
+        if (this.status === 200) {
+            const response = JSON.parse(this.responseText);
+            const productList = document.getElementById(`product-list-${category}`);
+            if (productList) {
+                productList.innerHTML = response.products;
+            // Initialize Swiper
+            new Swiper(`#swiper-${category}`, {
+                slidesPerView: 4,
+                spaceBetween: 0,
+                grid: {
+                    rows: 2,
+                    fill: 'row',
+                },
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+                breakpoints: {
+                    640: {
+                        slidesPerView: 1,
+                        spaceBetween: 0,
+                        grid: {
+                            rows: 2,
+                        },
+                    },
+                    768: {
+                        slidesPerView: 2,
+                        spaceBetween: 0,
+                        grid: {
+                            rows: 2,
+                        },
+                    },
+                    1024: {
+                        slidesPerView: 4,
+                        spaceBetween: 0,
+                        grid: {
+                            rows: 2,
+                        },
+                    },
+                }
+            });
+            }
+        }
+    };
+    xhr.send();
+}
+
+// Cargar productos iniciales para la categoría "Todos"
+document.addEventListener('DOMContentLoaded', function() {
+    loadProducts('home');
+});
+
+//buscador
+function showSuggestions(term) {
+    if (term.length == 0) {
+        document.getElementById("suggestions-box").style.display = "none";
+        return;
+    }
+
+    const xhr = new XMLHttpRequest();
+    xhr.open("GET", "/cliente/buscar_productos.php?term=" + term, true);
+    xhr.onload = function() {
+        if (this.status == 200) {
+            const suggestions = JSON.parse(this.responseText);
+            let suggestionsHtml = "";
+            suggestions.forEach(function(suggestion) {
+                suggestionsHtml += `
+                    <div class="suggestion-item" onclick="selectSuggestion(${suggestion.proId})">
+                        <img src="/paneladministrador/recursos/uploads/producto/${suggestion.proImg}" alt="${suggestion.proNombre}" style="width: 50px; height: 50px; margin-right: 10px; border-radius:50px">
+                        <span>${suggestion.proNombre}</span>
+                    </div>
+                `;
+            });
+            document.getElementById("suggestions-box").innerHTML = suggestionsHtml;
+            document.getElementById("suggestions-box").style.display = "block";
+        }
+    };
+    xhr.send();
+}
+
+function selectSuggestion(productId) {
+    window.location.href = "/cliente/producto/detalleproducto.php?id=" + productId;
+}
+
+document.addEventListener('click', function(event) {
+    var isClickInside = document.getElementById('search-input').contains(event.target);
+    if (!isClickInside) {
+        document.getElementById('suggestions-box').style.display = 'none';
+    }
+});
+//buscador

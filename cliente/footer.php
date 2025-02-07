@@ -15,17 +15,16 @@
                                                 <h3 class="footer-title text-uppercase mb-2">Categorías</h3>
                                                 <ul>
                                                         <?php
-                                                        $q = "SELECT * FROM  categoria ORDER BY catId DESC LIMIT 5";
+                                                        $q = "SELECT c.catId, c.catNombre FROM categoria c JOIN producto p ON c.catId = p.catId inner join stock s on p.proId=s.proId WHERE s.stoCantidad > 0 GROUP BY c.catId ORDER BY c.catId DESC LIMIT 5";
                                                         $r123 = mysqli_query($con, $q);
 
                                                         while ($ro = mysqli_fetch_array($r123)) {
 
-                                                                $catId = "$ro[catId]";
-                                                                $catNombre = "$ro[catNombre]";
-
-                                                                print "
-                                                                <li class='py-2'><a class='text-black-50' href='producto/producto.php?id=$catId'>$catNombre</a></li>
-                                                                ";
+                                                                        $catId = "$ro[catId]";
+                                                                        $catNombre = "$ro[catNombre]";
+                                                                        print "
+                                                                        <li class='py-2'><a class='text-black-50' href='/cliente/producto/producto.php?id=$catId'>$catNombre</a></li>
+                                                                        ";
                                                         }
                                                         ?>
                                                 </ul>
@@ -38,8 +37,8 @@
                                                 <p class="mb-2"> Síguenos en nuestras redes sociales para estar al tanto de nuestras novedades y promociones.</p>
                                                 <!-- Iconos Sociales -->
                                                 <ul class="social-icons list-inline pt-2">
-                                                        <li class="list-inline-item px-1"><a href="https://www.facebook.com/usuario"><i class="fab fa-facebook-f"></i></a></li>
-                                                        <li class="list-inline-item px-1"><a href="https://www.instagram.com/usuario"><i class="fab fa-instagram"></i></a></li>
+                                                        <li class="list-inline-item px-1"><a href="#"><i class="fab fa-facebook-f"></i></a></li>
+                                                        <li class="list-inline-item px-1"><a href="#"><i class="fab fa-instagram"></i></a></li>
                                                 </ul>
                                         </div>
                                 </div>

@@ -85,69 +85,6 @@ $sale_product_ids_str = implode(',', $sale_product_ids);
                 ?>
             </select>
 
-            <script>
-            function getSelectedBrand() {
-                return document.getElementById('brand-filter').value;
-            }
-
-            function filterByBrand(brand) {
-                const category = document.querySelector('.nav-link.active').getAttribute('id').replace('v-pills-', '').replace('-tab', '');
-                loadProducts(category, brand);
-            }
-
-            function loadProducts(category, brand = '') {
-                const xhr = new XMLHttpRequest();
-                xhr.open('GET', `cargar-productos.php?category=${category}&brand=${brand}`, true);
-                xhr.onload = function() {
-                    if (this.status === 200) {
-                        const response = JSON.parse(this.responseText);
-                        document.getElementById(`product-list-${category}`).innerHTML = response.products;
-                        // Initialize Swiper
-                        new Swiper(`#swiper-${category}`, {
-                            slidesPerView: 4,
-                            spaceBetween: 0,
-                            grid: {
-                                rows: 2,
-                                fill: 'row',
-                            },
-                            navigation: {
-                                nextEl: '.swiper-button-next',
-                                prevEl: '.swiper-button-prev',
-                            },
-                            breakpoints: {
-                                640: {
-                                    slidesPerView: 1,
-                                    spaceBetween: 0,
-                                    grid: {
-                                        rows: 2,
-                                    },
-                                },
-                                768: {
-                                    slidesPerView: 2,
-                                    spaceBetween: 0,
-                                    grid: {
-                                        rows: 2,
-                                    },
-                                },
-                                1024: {
-                                    slidesPerView: 4,
-                                    spaceBetween: 0,
-                                    grid: {
-                                        rows: 2,
-                                    },
-                                },
-                            }
-                        });
-                    }
-                };
-                xhr.send();
-            }
-
-            // Cargar productos iniciales para la categoría "Todos"
-            document.addEventListener('DOMContentLoaded', function() {
-                loadProducts('home');
-            });
-            </script>
             </div>
             <div class="col-10">
                 <div class="tab-content" id="v-pills-tabContent">

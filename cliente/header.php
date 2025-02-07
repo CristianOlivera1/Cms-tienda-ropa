@@ -91,8 +91,19 @@ $conEmail = "$tr[conEmail]";
                                 ?>
                             </div>
                         </li>
+                        <!-- buscador con sugerencias aqui -->
+                        <li class="nav-item">
+                            <form class="form-inline my-2 my-lg-0 position-relative">
+                                <input class="form-control mr-sm-2" type="search" placeholder="Buscar productos..." aria-label="Buscar" id="search-input" onkeyup="showSuggestions(this.value)" style="border-radius: 50px; padding-right: 50px;">
+                                <button class="btn position-absolute buscador" type="submit">
+                                    <i><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#000" d="m18.031 16.617l4.283 4.282l-1.415 1.415l-4.282-4.283A8.96 8.96 0 0 1 11 20c-4.968 0-9-4.032-9-9s4.032-9 9-9s9 4.032 9 9a8.96 8.96 0 0 1-1.969 5.617m-2.006-.742A6.98 6.98 0 0 0 18 11c0-3.867-3.133-7-7-7s-7 3.133-7 7s3.133 7 7 7a6.98 6.98 0 0 0 4.875-1.975z"/></svg></i>
+                                </button>
+                                <div id="suggestions-box" class="suggestions-box mt-1"></div>
+                            </form>
+                        </li>
+               
+                        <!-- cesta -->
                        <li class="nav-item">
-                            
                             <a class="navbar-brand-sticky" href="/cliente/carrito_compras/carrito_compras.php"> <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M16.148 11.479c-.101-1.428-.125-2.985-.296-4.57C15.577 4.37 14.372 2.64 12 2.64S8.423 4.37 8.148 6.908c-.171 1.586-.195 3.142-.296 4.57" stroke="black" stroke-width="1.2" stroke-miterlimit="10" stroke-linejoin="bevel"></path>
                                     <path d="M20.701 20.438V8.816H3.3v11.622H20.7z" stroke="black" stroke-width="1.5" stroke-miterlimit="10"></path>

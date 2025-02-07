@@ -29,7 +29,7 @@ $selectedCategory = isset($_GET['category']) ? $_GET['category'] : '';
             </div>
         </div>
         <div class="fond-section-categories">
-            <img src="../recursos/img/welcome/section-categorias.svg" alt="section-categorias">
+            <img src="../recursos/img/welcome/section-categories.png" alt="section-categorias">
         </div>
     </div>
 </section>

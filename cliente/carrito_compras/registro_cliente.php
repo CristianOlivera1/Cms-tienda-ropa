@@ -67,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     // Iniciar transacción
                     $con->begin_transaction();
                     try {
-                        $sql_cliente = "INSERT INTO cliente (cliNombre, cliApellidoPaterno, cliApellidoMaterno, cliDni, cliCorreo, cliFechNacimiento) VALUES (?, ?, ?, ?, ?, ?)";
+                        $sql_cliente = "INSERT INTO cliente (cliNombre, cliApellidoPaterno, cliApellidoMaterno, cliDni, cliCorreo, cliFechaNacimiento) VALUES (?, ?, ?, ?, ?, ?)";
                         $stmt = $con->prepare($sql_cliente);
                         $stmt->bind_param("ssssss", $nombre, $apePaterno, $apeMaterno, $dni, $correo, $fechaNacimiento);
                         

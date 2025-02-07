@@ -8,12 +8,12 @@ $brand = isset($_GET['brand']) ? $_GET['brand'] : '';
 
 if ($category == 'home') {
     $product_query = "SELECT DISTINCT p.proId, p.proNombre, p.proPrecio, p.proImg, m.marNombre FROM producto p
-                      INNER JOIN stock s ON p.proId = s.proId INNER JOIN marca m on m.marId=p.marId
-                      WHERE s.stoCantidad > 0";
+                      INNER JOIN stock s ON p.proId = s.proId INNER JOIN marca m on m.marId=p.marId INNER JOIN estado e ON e.estId = s.estId
+                      WHERE s.stoCantidad > 0 AND e.estDisponible = 'Disponible'";
 } else {
     $product_query = "SELECT DISTINCT p.proId, p.proNombre, p.proPrecio, p.proImg, m.marNombre FROM producto p
-                      INNER JOIN stock s ON p.proId = s.proId INNER JOIN marca m on m.marId=p.marId
-                      WHERE s.stoCantidad > 0 AND p.catId = $category";
+                      INNER JOIN stock s ON p.proId = s.proId INNER JOIN marca m on m.marId=p.marId INNER JOIN estado e ON e.estId = s.estId
+                      WHERE s.stoCantidad > 0 AND p.catId = $category AND e.estDisponible = 'Disponible' ";
 }
 
 if ($brand != '') {

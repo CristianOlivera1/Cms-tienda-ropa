@@ -14,7 +14,7 @@
              </div>
          </div>
          <div class="fond-section-categories">
-             <img src="../recursos/img/welcome/all-categories.svg" alt="section-all-categorias">
+             <img src="../recursos/img/welcome/all-categories.png" alt="section-all-categorias">
          </div>
      </div>
  </section>
