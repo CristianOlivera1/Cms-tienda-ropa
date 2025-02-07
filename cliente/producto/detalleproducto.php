@@ -209,5 +209,5 @@ while ($row = mysqli_fetch_assoc($stock)) {
         }
         updateStock();
 </script>
-
+<?php include "../scroll-marcas.php"; ?>
 <?php include "../footer.php"; ?>

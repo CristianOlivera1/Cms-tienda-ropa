@@ -244,6 +244,44 @@ ul li {
 }
 /* carrusel portada */
 
+/*scrol marcas*/
+.scroller {
+    max-width: 100%;
+    overflow: hidden;
+    -webkit-mask: linear-gradient(90deg, transparent, white 20%, white 80%, transparent);
+    mask: linear-gradient(90deg, transparent, white 20%, white 80%, transparent);
+    background-color: black;
+    padding: 1rem 10px;
+}
+
+.scroller__inner {
+    display: flex;
+    gap: 1rem;
+    animation: scroll 20s linear infinite;
+}
+
+.scroller__inner img {
+    max-height: 100px;
+    border-radius: 10px;
+    object-fit: cover;
+    transition: 300ms;
+    filter: grayscale(.2);
+    cursor: pointer;
+}
+
+.scroller__inner img:hover {
+    transform: scale(1.1);
+    filter: saturate(1.5);
+}
+
+@keyframes scroll {
+    to {
+        transform: translateX(-50%);
+    }
+}
+/*scrol marcas*/
+
+
 img {
     height: auto;
     max-width: 100%;

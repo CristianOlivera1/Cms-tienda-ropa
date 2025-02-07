@@ -153,5 +153,5 @@ $sale_product_ids_str = implode(',', $sale_product_ids);
     </div>
 </section>
 <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-
+<?php include "cliente/scroll-marcas.php"; ?>
 <?php include "cliente/footer.php"; ?>

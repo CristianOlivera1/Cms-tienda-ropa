@@ -179,4 +179,5 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
+<?php include "../scroll-marcas.php"; ?>
 <?php include "../footer.php"; ?>
