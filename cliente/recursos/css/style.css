@@ -250,8 +250,9 @@ ul li {
     overflow: hidden;
     -webkit-mask: linear-gradient(90deg, transparent, white 20%, white 80%, transparent);
     mask: linear-gradient(90deg, transparent, white 20%, white 80%, transparent);
-    background-color: black;
+    background-color: rgb(255, 255, 255);
     padding: 1rem 10px;
+    border-bottom: 1px solid #ddd;
 }
 
 .scroller__inner {
