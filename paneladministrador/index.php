@@ -1,12 +1,12 @@
 <?php
 include "coneccionbd.php";
 include "header.php";
-include "sidebar.php"; 
+include "sidebar.php";
 
 // Obtener el nombre de usuario de la sesión
 $username = $_SESSION['admin_username'];
 
-// Consultas para obtener el total de categorías y productos
+// Consultas para obtener el categorías y productos
 $queryCategorias = "SELECT COUNT(*) AS totalCategorias FROM categoria";
 $resultCategorias = mysqli_query($con, $queryCategorias);
 $totalCategorias = mysqli_fetch_assoc($resultCategorias)['totalCategorias'];
@@ -14,6 +14,14 @@ $totalCategorias = mysqli_fetch_assoc($resultCategorias)['totalCategorias'];
 $queryProductos = "SELECT COUNT(*) AS totalProductos FROM producto";
 $resultProductos = mysqli_query($con, $queryProductos);
 $totalProductos = mysqli_fetch_assoc($resultProductos)['totalProductos'];
+
+$queryMarcas = "SELECT COUNT(*) AS totalMarcas FROM marca";
+$resultMarcas = mysqli_query($con, $queryMarcas);
+$totalMarcas = mysqli_fetch_assoc($resultMarcas)['totalMarcas'];
+
+$queryStocks = "SELECT COUNT(*) AS totalStocks FROM stock";
+$resultStocks = mysqli_query($con, $queryStocks);
+$totalStocks = mysqli_fetch_assoc($resultStocks)['totalStocks'];
 
 // Consultas para obtener los datos necesarios
 $queryCantidadVentas = "SELECT COUNT(*) AS cantidad FROM ventas v INNER JOIN detalleventa dv ON dv.venId = v.venId";
@@ -47,36 +55,6 @@ $clienteFrecuente = ($resultCliente && mysqli_num_rows($resultCliente) > 0) ? my
 
 ?>
 
-<style>
-    body {
-        background-color: #f4f7f9;
-        font-family: 'Poppins', sans-serif;
-    }
-    .main-content {
-        min-height: 100vh;
-        padding: 20px;
-    }
-    .card {
-        border-radius: 15px;
-        transition: transform 0.3s ease-in-out;
-    }
-    .card:hover {
-        transform: translateY(-5px);
-    }
-    .avatar-lg {
-        width: 80px;
-        height: 80px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 2rem;
-        border-radius: 50%;
-    }
-    .page-title-box h4 {
-        font-weight: 700;
-    }
-</style>
-
 <div class="main-content">
     <div class="page-content">
         <div class="container-fluid">
@@ -93,43 +71,169 @@ $clienteFrecuente = ($resultCliente && mysqli_num_rows($resultCliente) > 0) ? my
                     </div>
                 </div>
             </div>
-            
-            <div class="row">
-                <div class="col text-center">
-                    <h4 class="fs-16 mb-1 text-dark">Hola, <?php echo htmlspecialchars($username); ?>!</h4>
-                    <p class="text-muted mb-4">Bienvenido de nuevo a tu tablero de administración.</p>
+
+            <div class="card-header bg-primary text-white rounded-top-4 mb-3">
+                <h5 class="card-title mb-0 text-center text-white">Reportes Generales</h5>
+            </div>
+
+            <div class="row justify-content-center">
+                <div class="col-lg-3 col-md-6">
+                    <div class="card border-0 shadow-sm text-center">
+                        <div class="card-body p-2">
+                            <div class="mb-3 mt-3">
+                               <img src="recursos/images/tablero/categories.png" alt="categories">
+                            </div>
+                            <h6 class="card-title">Categorias</h6>
+                            <p class="card-text fw-bold"><?php echo htmlspecialchars($totalCategorias); ?></p>
+                            <div class="position-absolute top-0 end-0 p-2">
+                                <a href="detallesproducto/categoria/gestionar-categoria.php">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 256 256">
+                                        <path fill="currentColor" d="M224 104a8 8 0 0 1-16 0V59.32l-66.33 66.34a8 8 0 0 1-11.32-11.32L196.68 48H152a8 8 0 0 1 0-16h64a8 8 0 0 1 8 8Zm-40 24a8 8 0 0 0-8 8v72H48V80h72a8 8 0 0 0 0-16H48a16 16 0 0 0-16 16v128a16 16 0 0 0 16 16h128a16 16 0 0 0 16-16v-72a8 8 0 0 0-8-8" />
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <div class="card border-0 shadow-sm text-center">
+                        <div class="card-body p-2">
+                            <div class="mb-3 mt-3">
+                               <img src="recursos/images/tablero/productos.png" alt="products">
+                            </div>
+                            <h6 class="card-title">Productos</h6>
+                            <p class="card-text fw-bold"><?php echo htmlspecialchars($totalProductos); ?></p>
+                            <div class="position-absolute top-0 end-0 p-2">
+                                <a href="productos/productos/gestionar-producto.php">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 256 256">
+                                        <path fill="currentColor" d="M224 104a8 8 0 0 1-16 0V59.32l-66.33 66.34a8 8 0 0 1-11.32-11.32L196.68 48H152a8 8 0 0 1 0-16h64a8 8 0 0 1 8 8Zm-40 24a8 8 0 0 0-8 8v72H48V80h72a8 8 0 0 0 0-16H48a16 16 0 0 0-16 16v128a16 16 0 0 0 16 16h128a16 16 0 0 0 16-16v-72a8 8 0 0 0-8-8" />
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <div class="card border-0 shadow-sm text-center">
+                        <div class="card-body p-2">
+                            <div class="mb-3 mt-3">
+                               <img src="recursos/images/tablero/stock.png" alt="stocks">
+                            </div>
+                            <h6 class="card-title">Stocks</h6>
+                            <p class="card-text fw-bold"><?php echo htmlspecialchars($totalStocks); ?></p>
+                            <div class="position-absolute top-0 end-0 p-2">
+                                <a href="#">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 256 256">
+                                        <path fill="currentColor" d="M224 104a8 8 0 0 1-16 0V59.32l-66.33 66.34a8 8 0 0 1-11.32-11.32L196.68 48H152a8 8 0 0 1 0-16h64a8 8 0 0 1 8 8Zm-40 24a8 8 0 0 0-8 8v72H48V80h72a8 8 0 0 0 0-16H48a16 16 0 0 0-16 16v128a16 16 0 0 0 16 16h128a16 16 0 0 0 16-16v-72a8 8 0 0 0-8-8" />
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <div class="card border-0 shadow-sm text-center">
+                        <div class="card-body p-2">
+                            <div class="mb-3 mt-3">
+                               <img src="recursos/images/tablero/marcas.png" alt="brands">
+                            </div>
+                            <h6 class="card-title">Marcas</h6>
+                            <p class="card-text fw-bold"><?php echo htmlspecialchars($totalMarcas); ?></p>
+                            <div class="position-absolute top-0 end-0 p-2">
+                                <a href="#">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 256 256">
+                                        <path fill="currentColor" d="M224 104a8 8 0 0 1-16 0V59.32l-66.33 66.34a8 8 0 0 1-11.32-11.32L196.68 48H152a8 8 0 0 1 0-16h64a8 8 0 0 1 8 8Zm-40 24a8 8 0 0 0-8 8v72H48V80h72a8 8 0 0 0 0-16H48a16 16 0 0 0-16 16v128a16 16 0 0 0 16 16h128a16 16 0 0 0 16-16v-72a8 8 0 0 0-8-8" />
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <div class="card border-0 shadow-sm text-center">
+                        <div class="card-body p-2">
+                            <div class="mb-3 mt-3">
+                               <img src="recursos/images/tablero/tallas.png" alt="brands">
+                            </div>
+                            <h6 class="card-title">Tallas</h6>
+                            <p class="card-text fw-bold"><?php echo htmlspecialchars($totalMarcas); ?></p>
+                            <div class="position-absolute top-0 end-0 p-2">
+                                <a href="#">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 256 256">
+                                        <path fill="currentColor" d="M224 104a8 8 0 0 1-16 0V59.32l-66.33 66.34a8 8 0 0 1-11.32-11.32L196.68 48H152a8 8 0 0 1 0-16h64a8 8 0 0 1 8 8Zm-40 24a8 8 0 0 0-8 8v72H48V80h72a8 8 0 0 0 0-16H48a16 16 0 0 0-16 16v128a16 16 0 0 0 16 16h128a16 16 0 0 0 16-16v-72a8 8 0 0 0-8-8" />
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <div class="card border-0 shadow-sm text-center">
+                        <div class="card-body p-2">
+                            <div class="mb-3 mt-3">
+                               <img src="recursos/images/tablero/colores.png" alt="brands">
+                            </div>
+                            <h6 class="card-title">Colores</h6>
+                            <p class="card-text fw-bold"><?php echo htmlspecialchars($totalMarcas); ?></p>
+                            <div class="position-absolute top-0 end-0 p-2">
+                                <a href="#">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 256 256">
+                                        <path fill="currentColor" d="M224 104a8 8 0 0 1-16 0V59.32l-66.33 66.34a8 8 0 0 1-11.32-11.32L196.68 48H152a8 8 0 0 1 0-16h64a8 8 0 0 1 8 8Zm-40 24a8 8 0 0 0-8 8v72H48V80h72a8 8 0 0 0 0-16H48a16 16 0 0 0-16 16v128a16 16 0 0 0 16 16h128a16 16 0 0 0 16-16v-72a8 8 0 0 0-8-8" />
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <div class="card border-0 shadow-sm text-center">
+                        <div class="card-body p-2">
+                            <div class="mb-3 mt-3">
+                               <img src="recursos/images/tablero/clientes.png" alt="brands">
+                            </div>
+                            <h6 class="card-title">Clientes</h6>
+                            <p class="card-text fw-bold"><?php echo htmlspecialchars($totalMarcas); ?></p>
+                            <div class="position-absolute top-0 end-0 p-2">
+                                <a href="#">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 256 256">
+                                        <path fill="currentColor" d="M224 104a8 8 0 0 1-16 0V59.32l-66.33 66.34a8 8 0 0 1-11.32-11.32L196.68 48H152a8 8 0 0 1 0-16h64a8 8 0 0 1 8 8Zm-40 24a8 8 0 0 0-8 8v72H48V80h72a8 8 0 0 0 0-16H48a16 16 0 0 0-16 16v128a16 16 0 0 0 16 16h128a16 16 0 0 0 16-16v-72a8 8 0 0 0-8-8" />
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <div class="card border-0 shadow-sm text-center">
+                        <div class="card-body p-2">
+                            <div class="mb-3 mt-3">
+                               <img src="recursos/images/tablero/reseñas.png" alt="brands">
+                            </div>
+                            <h6 class="card-title">Reseñas</h6>
+                            <p class="card-text fw-bold"><?php echo htmlspecialchars($totalMarcas); ?></p>
+                            <div class="position-absolute top-0 end-0 p-2">
+                                <a href="#">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 256 256">
+                                        <path fill="currentColor" d="M224 104a8 8 0 0 1-16 0V59.32l-66.33 66.34a8 8 0 0 1-11.32-11.32L196.68 48H152a8 8 0 0 1 0-16h64a8 8 0 0 1 8 8Zm-40 24a8 8 0 0 0-8 8v72H48V80h72a8 8 0 0 0 0-16H48a16 16 0 0 0-16 16v128a16 16 0 0 0 16 16h128a16 16 0 0 0 16-16v-72a8 8 0 0 0-8-8" />
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="row g-4 justify-content-center">
-    <div class="col-lg-4 col-md-6">
-        <div class="card border-0 shadow-sm text-center h-100">
-            <div class="card-body">
-                <div class="mb-3">
-                    <i class="ri-git-merge-fill text-primary fs-1"></i>
-                </div>
-                <h5 class="card-title">Total de Categorías</h5>
-                <p class="card-text display-6 fw-bold"><?php echo htmlspecialchars($totalCategorias); ?></p>
-            </div>
-        </div>
-    </div>
-    
-    <div class="col-lg-4 col-md-6">
-        <div class="card border-0 shadow-sm text-center h-100">
-            <div class="card-body">
-                <div class="mb-3">
-                    <i class="ri-server-line text-success fs-1"></i>
-                </div>
-                <h5 class="card-title">Total de Productos</h5>
-                <p class="card-text display-6 fw-bold"><?php echo htmlspecialchars($totalProductos); ?></p>
-            </div>
-        </div>
-    </div>
-</div>
             <div class="col-12 mt-4">
                 <div class="card shadow-lg border-0 rounded-4">
                     <div class="card-header bg-primary text-white rounded-top-4 py-3">
-                    <h5 class="card-title mb-0 text-center text-white">Reportes de Ventas</h5>
+                        <h5 class="card-title mb-0 text-center text-white">Reportes de Ventas</h5>
                     </div>
                     <div class="card-body">
                         <div class="row g-4">
