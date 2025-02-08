@@ -14,13 +14,9 @@ function obtenerConteo($con, $tabla) {
 }
 
 // Obtener los conteos
-$totalCategorias = obtenerConteo($con, 'categoria');
 $totalProductos = obtenerConteo($con, 'producto');
-$totalResenhas = obtenerConteo($con, 'resenhas');
 $totalStocks = obtenerConteo($con, 'stock');
-$totalTallas = obtenerConteo($con, 'talla');
-$totalColores = obtenerConteo($con, 'color');
-$totalClientes = obtenerConteo($con, 'cliente');
+$totalUsuarios = obtenerConteo($con, 'usuario');
 $totalOfertas = obtenerConteo($con, 'oferta');
 
 // Consultas para obtener los datos necesarios
@@ -100,14 +96,10 @@ function generarTarjetaReporte($titulo, $valor, $imagen, $enlace) {
 
             <div class="row justify-content-center">
                 <?php
-                echo generarTarjetaReporte('Categorias', $totalCategorias, 'recursos/images/tablero/categories.png', 'reportes/categorias/reporte-categorias.php');
                 echo generarTarjetaReporte('Productos', $totalProductos, 'recursos/images/tablero/productos.png', 'reportes/productos/reporte-productos.php');
                 echo generarTarjetaReporte('Stocks', $totalStocks, 'recursos/images/tablero/stock.png', 'reportes/stocks/reporte-stocks.php');
                 echo generarTarjetaReporte('Ofertas', $totalOfertas, 'recursos/images/tablero/ofertas.png', 'reportes/ofertas/reporte-ofertas.php');
-                echo generarTarjetaReporte('Tallas', $totalTallas, 'recursos/images/tablero/tallas.png', 'reportes/tallas/reporte-tallas.php');
-                echo generarTarjetaReporte('Colores', $totalColores, 'recursos/images/tablero/colores.png', 'reportes/colores/reporte-colores.php');
-                echo generarTarjetaReporte('Clientes', $totalClientes, 'recursos/images/tablero/clientes.png', 'reportes/clientes/reporte-clientes.php');
-                echo generarTarjetaReporte('Reseñas', $totalResenhas ?: '0', 'recursos/images/tablero/reseñas.png', 'reportes/resenhas/reporte-resenhas.php');
+                echo generarTarjetaReporte('Usuarios', $totalUsuarios, 'recursos/images/tablero/usuarios.png', 'reportes/usuarios/reporte-usuarios.php');
                 ?>
             </div>
 

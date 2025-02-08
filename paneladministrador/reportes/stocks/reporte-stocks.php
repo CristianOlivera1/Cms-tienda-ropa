@@ -43,6 +43,44 @@ $stmt_total->execute();
 $result_total = $stmt_total->get_result();
 $total_registros = $result_total->fetch_assoc()['total'];
 $total_paginas = ceil($total_registros / $registros_por_pagina);
+
+// Obtener datos para el gráfico de barras (Cantidad de Productos por Estado)
+$query_estado = "SELECT e.estDisponible, COUNT(s.stoId) as cantidad FROM estado e 
+                 LEFT JOIN stock s ON e.estId = s.estId 
+                 GROUP BY e.estDisponible";
+$result_estado = mysqli_query($con, $query_estado);
+$estados = [];
+$cantidades_estado = [];
+while ($row2 = mysqli_fetch_assoc($result_estado)) {
+    $estados[] = $row2['estDisponible'];
+    $cantidades_estado[] = $row2['cantidad'];
+}
+
+// Obtener datos para el gráfico de líneas (Tendencia de Stocks por Mes)
+$query_mes = "SELECT DATE_FORMAT(s.stoFechaRegis, '%Y-%m') as mes, COUNT(s.stoId) as cantidad FROM stock s 
+              GROUP BY mes ORDER BY mes";
+$result_mes = mysqli_query($con, $query_mes);
+$meses = [];
+$cantidades_mes = [];
+while ($row2 = mysqli_fetch_assoc($result_mes)) {
+    $meses[] = $row2['mes'];
+    $cantidades_mes[] = $row2['cantidad'];
+}
+
+// Obtener datos para el gráfico de barras (Productos por Agotarse)
+$query_agotarse = "SELECT p.proNombre, c.colNombre, t.talNombre, s.stoCantidad FROM stock s 
+                   INNER JOIN producto p ON s.proId = p.proId 
+                   INNER JOIN color c ON s.colId = c.colId 
+                   INNER JOIN talla t ON s.talId = t.talId 
+                   WHERE s.stoCantidad <= 10";
+$result_agotarse = mysqli_query($con, $query_agotarse);
+$productos_agotarse = [];
+$cantidades_agotarse = [];
+
+while ($row2 = mysqli_fetch_assoc($result_agotarse)) {
+    $productos_agotarse[] = $row2['proNombre'];
+    $cantidades_agotarse[] = $row2['stoCantidad'];
+}
 ?>
 <div class="main-content">
     <div class="page-content">
@@ -63,20 +101,33 @@ $total_paginas = ceil($total_registros / $registros_por_pagina);
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-xxl-9">
-                    <div class="card mt-xxl-n5">
-                        <div class="card-header">
-                            <ul class="nav nav-tabs-custom rounded card-header-tabs border-bottom-0" role="tablist">
-                                <li class="nav-item">
-                                    <a class="nav-link active" data-bs-toggle="tab" role="tab" aria-selected="false">
-                                        <i class="fas fa-box"></i> grafico de Stock
-                                    </a>
-                                </li>
-                            </ul>
+            <!-- Pestañas para los gráficos -->
+            <div class="row" style="background-color: white;">
+                <div class="col-12">
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="estado-tab" data-bs-toggle="tab" data-bs-target="#estado" type="button" role="tab" aria-controls="estado" aria-selected="true">Productos por Estado</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="mes-tab" data-bs-toggle="tab" data-bs-target="#mes" type="button" role="tab" aria-controls="mes" aria-selected="false">Tendencia de Stocks por Mes</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="agotarse-tab" data-bs-toggle="tab" data-bs-target="#agotarse" type="button" role="tab" aria-controls="agotarse" aria-selected="false">Stock por Agotarse</button>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="myTabContent">
+                        <div class="tab-pane fade show active" id="estado" role="tabpanel" aria-labelledby="estado-tab">
+                            <canvas id="barChart" class="mt-4"></canvas>
                         </div>
-                        <!-- grafico de stocks -->
+                        <div class="tab-pane fade" id="mes" role="tabpanel" aria-labelledby="mes-tab">
+                            <canvas id="lineChart" class="mt-4"></canvas>
+                        </div>
+                        <div class="tab-pane fade" id="agotarse" role="tabpanel" aria-labelledby="agotarse-tab">
+                            <canvas id="agotarseChart" class="mt-4"></canvas>
+                        </div>
                     </div>
+                </div>
+            </div>
 
                     <div class="card mt-4" id="example">
                         <div class="card-header">
@@ -144,7 +195,7 @@ $total_paginas = ceil($total_registros / $registros_por_pagina);
                                 </thead>
                                 <tbody>
                                 <?php
-                             $query = "SELECT s.stoId, p.proNombre, e.estDisponible, c.colNombre, t.talNombre, s.stoCantidad, p.proImg, p.proPrecio, cat.catNombre, m.marNombre, 
+                             $query = "SELECT s.stoId, p.proNombre, e.estDisponible, c.colNombre, t.talNombre, s.stoCantidad,s.stoFechaRegis, p.proImg, p.proPrecio, cat.catNombre, m.marNombre, 
                              CASE WHEN o.stoId IS NOT NULL THEN 'En oferta' ELSE e.estDisponible END AS estado
                              FROM stock AS s
                              INNER JOIN producto AS p ON s.proId = p.proId
@@ -193,6 +244,7 @@ $total_paginas = ceil($total_registros / $registros_por_pagina);
                                    <td>{$row['colNombre']}</td>
                                    <td>{$row['talNombre']}</td>
                                    <td>{$row['stoCantidad']}</td>
+                                   <td>{$row['stoFechaRegis']}</td>
                               </tr>";
                                             $numero_registro++;
                                     }
@@ -213,6 +265,84 @@ $total_paginas = ceil($total_registros / $registros_por_pagina);
         <p id="tooltip-category" style="margin: 0; font-weight: bold;"></p>
         <p id="tooltip-price" style="margin: 0;"></p>
     </div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+    function cambiarReporte() {
+        const tipoReporte = document.getElementById('reporte_tipo').value;
+        document.querySelectorAll('.tab-pane').forEach(tab => tab.classList.remove('show', 'active'));
+        document.getElementById(tipoReporte).classList.add('show', 'active');
+    }
+
+    // Gráfico de Barras: Cantidad de Productos por Estado
+    var ctxBar = document.getElementById('barChart').getContext('2d');
+    var barChart = new Chart(ctxBar, {
+        type: 'bar',
+        data: {
+            labels: <?php echo json_encode($estados); ?>,
+            datasets: [{
+                label: 'Cantidad de Stock por Estado',
+                data: <?php echo json_encode($cantidades_estado); ?>,
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // Gráfico de Líneas: Tendencia de Stocks por Mes
+    var ctxLine = document.getElementById('lineChart').getContext('2d');
+    var lineChart = new Chart(ctxLine, {
+        type: 'line',
+        data: {
+            labels: <?php echo json_encode($meses); ?>,
+            datasets: [{
+                label: 'Tendencia de Stocks por Mes',
+                data: <?php echo json_encode($cantidades_mes); ?>,
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // Gráfico de Barras: Productos por Agotarse (Cantidad <= 10)
+    var ctxAgotarse = document.getElementById('agotarseChart').getContext('2d');
+    var agotarseChart = new Chart(ctxAgotarse, {
+        type: 'bar',
+        data: {
+            labels: <?php echo json_encode($productos_agotarse); ?>,
+            datasets: [{
+            label: 'Stock por Agotarse',
+            data: <?php echo json_encode($cantidades_agotarse); ?>,
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            borderColor: 'rgba(255, 99, 132, 1)',
+            borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
     <script src="../../recursos/js/script.js"></script>
 </div>
 

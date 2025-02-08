@@ -33,7 +33,17 @@ $stmt->execute();
 $result = $stmt->get_result();
 
 //reporte
-
+// Obtener datos para el gráfico de barras (Cantidad de Productos por Categoría)
+$query_bar = "SELECT c.catNombre, COUNT(p.proId) as cantidad FROM categoria c 
+              LEFT JOIN producto p ON c.catId = p.catId 
+              GROUP BY c.catNombre";
+$result_bar = mysqli_query($con, $query_bar);
+$categorias = [];
+$cantidades = [];
+while ($row = mysqli_fetch_assoc($result_bar)) {
+    $categorias[] = $row['catNombre'];
+    $cantidades[] = $row['cantidad'];
+}
 // Obtener datos para el gráfico de pastel (Distribución de Productos por Marca)
 $query_pie = "SELECT m.marNombre, COUNT(p.proId) as cantidad FROM marca m 
               LEFT JOIN producto p ON m.marId = p.marId 
@@ -77,122 +87,207 @@ while ($row = mysqli_fetch_assoc($result_line)) {
 
             <div class="row">
                 <div class="col-xxl-9">
-                    <div class="card mt-xxl-n5">
-                        <div class="card-header">
-                            <ul class="nav nav-tabs-custom rounded card-header-tabs border-bottom-0" role="tablist">
+                    <!-- Pestañas para los gráficos -->
+                    <div class="row" style="background-color: white;">
+                        <div class="col-12">
+                            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active" id="bar-tab" data-bs-toggle="tab" data-bs-target="#bar" type="button" role="tab" aria-controls="bar" aria-selected="true">Productos por Categoría</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="pie-tab" data-bs-toggle="tab" data-bs-target="#pie" type="button" role="tab" aria-controls="pie" aria-selected="false">Productos por Marca</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="line-tab" data-bs-toggle="tab" data-bs-target="#line" type="button" role="tab" aria-controls="line" aria-selected="false">Productos por Mes</button>
+                                </li>
                                 <li class="nav-item">
-                                    <a class="nav-link active" data-bs-toggle="tab" role="tab" aria-selected="false">
-                                        <i class="fas fa-box"></i> Productos por Marca
-                                    </a>
+                                    <button class="nav-link" id="no-stock-tab" data-bs-toggle="tab" data-bs-target="#no-stock" type="button" role="tab">Productos Sin Registro en Stock</button>
                                 </li>
                             </ul>
-                        </div>
-                        <div class="card-body">
-                            <div class="d-flex justify-content-center">
-                                <canvas id="pieChart" class="mt-2" style="max-width: 600px; max-height: 600px;"></canvas>
-                            </div>
+                            <div class="tab-content" id="myTabContent">
+                                <div class="tab-pane fade show active" id="bar" role="tabpanel" aria-labelledby="bar-tab">
+                                    <canvas id="barChart" class="mt-4"></canvas>
+                                </div>
 
-                            <div class="card-header">
-                            <ul class="nav nav-tabs-custom rounded card-header-tabs border-bottom-0" role="tablist">
-                                <li class="nav-item">
-                                    <a class="nav-link active" data-bs-toggle="tab" role="tab" aria-selected="false">
-                                        <i class="fas fa-box"></i> Productos por fechas
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                            <canvas id="lineChart" class="mt-4"></canvas>
+                                <div class="tab-pane fade justify-content-center" id="pie" role="tabpanel" aria-labelledby="pie-tab" style="height: 600px;">
+                                    <canvas id="pieChart" class="mt-4" style="height: 100%;"></canvas>
+                                </div>
+
+                                <div class="tab-pane fade" id="line" role="tabpanel" aria-labelledby="line-tab">
+                                    <canvas id="lineChart" class="mt-4"></canvas>
+                                </div>
+
+                                <div class="tab-pane fade" id="no-stock" role="tabpanel">
+                                    <div class="container mt-4">
+                                        <h4 class="mb-4">Productos Sin Registro en Stock</h4>
+                                        <div class="row">
+                                            <?php
+                                            $productos_por_pagina = 9;
+                                            $pagina_actual_no_stock = isset($_GET['pagina_no_stock']) ? (int)$_GET['pagina_no_stock'] : 1;
+                                            $offset_no_stock = ($pagina_actual_no_stock - 1) * $productos_por_pagina;
+
+                                            $query_total_no_stock = "SELECT COUNT(*) as total FROM producto p
+                                                                     LEFT JOIN stock s ON p.proId = s.proId
+                                                                     WHERE s.proId IS NULL";
+                                            $result_total_no_stock = mysqli_query($con, $query_total_no_stock);
+                                            $total_productos_no_stock = mysqli_fetch_assoc($result_total_no_stock)['total'];
+                                            $total_paginas_no_stock = ceil($total_productos_no_stock / $productos_por_pagina);
+
+                                            $query_no_stock = "SELECT p.proId, p.proNombre, p.proImg, m.marNombre
+                                                               FROM producto p
+                                                               LEFT JOIN stock s ON p.proId = s.proId
+                                                               INNER JOIN marca m ON m.marId = p.marId
+                                                               WHERE s.proId IS NULL
+                                                               LIMIT $productos_por_pagina OFFSET $offset_no_stock";
+
+                                            $result_no_stock = mysqli_query($con, $query_no_stock);
+
+                                            while ($producto = mysqli_fetch_assoc($result_no_stock)) {
+                                                echo "
+                            <div class='col-md-4'>
+                                <div class='card mb-4'>
+                                    <div class='d-flex align-items-center p-2'>
+                                        <img src='/paneladministrador/recursos/uploads/producto/{$producto['proImg']}' class='rounded-circle me-3' alt='{$producto['proNombre']}' style='width: 50px; height: 50px;'>
+                                        <div>
+                                            <p class='card-title mb-1'>{$producto['marNombre']} - {$producto['proNombre']}</p>
+                                            <p class='text-warning mb-0'><strong>No registrado en stock</strong></p>
+                                        </div>
+                                        <a href='http://localhost:3000/paneladministrador/productos/stock/gestionar-stock.php' class='btn btn-primary btn-sm' style='margin-top: auto;'>Registrar</a>
+                                    </div>
+                                </div>
+                            </div>";
+                                            }
+                                            ?>
+                                        </div>
+                                        <!-- Paginación -->
+                                        <nav aria-label="Page navigation example">
+                                            <ul class="pagination justify-content-center">
+                                                <?php for ($i = 1; $i <= $total_paginas_no_stock; $i++): ?>
+                                                    <li class="page-item <?php echo ($i == $pagina_actual_no_stock) ? 'active' : ''; ?>">
+                                                        <a class="page-link" href="#" onclick="loadNoStockPage(<?php echo $i; ?>)"><?php echo $i; ?></a>
+                                                    </li>
+                                                <?php endfor; ?>
+                                            </ul>
+                                        </nav>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
                     <div class="card mt-4">
                         <div class="card-header">
-                            <h5 class="card-title mb-0">Lista de Productos<div class="badge-total">Total: <?php echo $total_registros; ?></div></h5>
+                            <h5 class="card-title mb-0">Lista de Productos<div class="badge-total">Total: <?php echo $total_registros; ?></div>
+                            </h5>
                         </div>
                         <div class="card-body">
-                        <form method="GET" action="" id="filterForm">
-                        <div class="row mb-3">
-                       
-                                <div class="col-md-3">
-                                    <div class="input-group">
-                                        <input type="text" id="search" class="form-control" placeholder="Buscar producto" value="<?php echo htmlspecialchars($search); ?>" onkeyup="if(event.keyCode == 13) window.location.href='?search='+this.value">
-                                        <span class="input-group-text"><i class="ri-search-2-line"></i></span>
+                            <form method="GET" action="" id="filterForm">
+                                <div class="row mb-3">
+
+                                    <div class="col-md-3">
+                                        <div class="input-group">
+                                            <input type="text" id="search" class="form-control" placeholder="Buscar producto" value="<?php echo htmlspecialchars($search); ?>" onkeyup="if(event.keyCode == 13) window.location.href='?search='+this.value">
+                                            <span class="input-group-text"><i class="ri-search-2-line"></i></span>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <select name="categoria" class="form-select me-2" onchange="this.form.submit()">
-                                        <option value="">Todas las categorías</option>
-                                        <?php
-                                        $query_categorias = "SELECT * FROM categoria";
-                                        $result_categorias = mysqli_query($con, $query_categorias);
-                                        while ($row_categoria = mysqli_fetch_assoc($result_categorias)) {
-                                            $selected = ($filter_categoria == $row_categoria['catId']) ? 'selected' : '';
-                                            echo "<option value='{$row_categoria['catId']}' $selected>{$row_categoria['catNombre']}</option>";
-                                        }
-                                        ?>
-                                    </select>
-                                </div>
-                                <div class="col-md-3">
-                                    <select name="marca" class="form-select me-2" onchange="this.form.submit()">
-                                        <option value="">Todas las marcas</option>
-                                        <?php
-                                        $query_marcas = "SELECT * FROM marca";
-                                        $result_marcas = mysqli_query($con, $query_marcas);
-                                        while ($row_marca = mysqli_fetch_assoc($result_marcas)) {
-                                            $selected = ($filter_marca == $row_marca['marId']) ? 'selected' : '';
-                                            echo "<option value='{$row_marca['marId']}' $selected>{$row_marca['marNombre']}</option>";
-                                        }
-                                        ?>
-                                    </select>
-                                </div>
-                                <div class="col-md-3 d-flex justify-content-end">
-                        </form>
-                                <!-- Paginación -->
-                                <nav aria-label="Page navigation example">
-                                    <ul class="pagination justify-content-center">
-                                        <?php for ($i = 1; $i <= $total_paginas; $i++): ?>
-                                            <li class="page-item <?php echo ($i == $pagina_actual) ? 'active' : ''; ?>">
-                                                <a class="page-link" href="?pagina=<?php echo $i; ?>&search=<?php echo htmlspecialchars($search); ?>#example"><?php echo $i; ?></a>
-                                            </li>
-                                        <?php endfor; ?>
-                                    </ul>
-                                </nav>
-                                </div>
-                            </div>
-                            <!-- Tabla de productos -->
-                            <table class="table table-bordered dt-responsive nowrap table-striped align-middle" style="width:100%">
-                                <thead>
-                                    <tr>
-                                        <th>N</th>
-                                        <th>Nombre del Producto</th>
-                                        <th>Imagen Principal</th>
-                                        <th>Precio</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php
-                                    $numero = $offset + 1;
-                                    while ($row = $result->fetch_assoc()) {
-                                        $image_path1 = "../../recursos/uploads/producto/" . htmlspecialchars($row['proImg']);
-                                        echo "<tr id='producto-{$row['proId']}' ondblclick='openProductModal({$row['proId']}, \"{$row['proNombre']}\", \"{$row['proDescripcion']}\", \"{$row['proImg']}\", \"{$row['proImg2']}\", {$row['proPrecio']}, \"{$row['catNombre']}\", \"{$row['marNombre']}\")'>
+                                    <div class="col-md-3">
+                                        <select name="categoria" class="form-select me-2" onchange="this.form.submit()">
+                                            <option value="">Todas las categorías</option>
+                                            <?php
+                                            $query_categorias = "SELECT * FROM categoria";
+                                            $result_categorias = mysqli_query($con, $query_categorias);
+                                            while ($row_categoria = mysqli_fetch_assoc($result_categorias)) {
+                                                $selected = ($filter_categoria == $row_categoria['catId']) ? 'selected' : '';
+                                                echo "<option value='{$row_categoria['catId']}' $selected>{$row_categoria['catNombre']}</option>";
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <select name="marca" class="form-select me-2" onchange="this.form.submit()">
+                                            <option value="">Todas las marcas</option>
+                                            <?php
+                                            $query_marcas = "SELECT * FROM marca";
+                                            $result_marcas = mysqli_query($con, $query_marcas);
+                                            while ($row_marca = mysqli_fetch_assoc($result_marcas)) {
+                                                $selected = ($filter_marca == $row_marca['marId']) ? 'selected' : '';
+                                                echo "<option value='{$row_marca['marId']}' $selected>{$row_marca['marNombre']}</option>";
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3 d-flex justify-content-end">
+                            </form>
+                            <!-- Paginación -->
+                            <nav aria-label="Page navigation example">
+                                <ul class="pagination justify-content-center">
+                                    <?php for ($i = 1; $i <= $total_paginas; $i++): ?>
+                                        <li class="page-item <?php echo ($i == $pagina_actual) ? 'active' : ''; ?>">
+                                            <a class="page-link" href="?pagina=<?php echo $i; ?>&search=<?php echo htmlspecialchars($search); ?>#example"><?php echo $i; ?></a>
+                                        </li>
+                                    <?php endfor; ?>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                    <!-- Tabla de productos -->
+                    <table class="table table-bordered dt-responsive nowrap table-striped align-middle" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>N</th>
+                                <th>Nombre del Producto</th>
+                                <th>Imagen Principal</th>
+                                <th>Precio</th>
+                                <th>Fecha de registro</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            $numero = $offset + 1;
+                            while ($row = $result->fetch_assoc()) {
+                                $image_path1 = "../../recursos/uploads/producto/" . htmlspecialchars($row['proImg']);
+                                echo "<tr id='producto-{$row['proId']}' ondblclick='openProductModal({$row['proId']}, \"{$row['proNombre']}\", \"{$row['proDescripcion']}\", \"{$row['proImg']}\", \"{$row['proImg2']}\", {$row['proPrecio']}, \"{$row['catNombre']}\", \"{$row['marNombre']}\")'>
                                                 <td>{$numero}</td>
                                                 <td>" . htmlspecialchars($row['proNombre']) . "</td>
                                                 <td><img src='" . $image_path1 . "' alt='" . htmlspecialchars($row['proNombre']) . "' style='width: 50px; height: 50px;'></td>
                                                 <td>S/. " . htmlspecialchars($row['proPrecio']) . "</td>
+                                                <td>{$row['proFechaRegistro']}</td>
+
                                             </tr>";
-                                        $numero++;
-                                    }
-                                    ?>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                                $numero++;
+                            }
+                            ?>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
+    </div>
+</div>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-        <script>
-
+<script>
+    // Gráfico de Barras: Cantidad de Productos por Categoría
+    var ctxBar = document.getElementById('barChart').getContext('2d');
+    var barChart = new Chart(ctxBar, {
+        type: 'bar',
+        data: {
+            labels: <?php echo json_encode($categorias); ?>,
+            datasets: [{
+                label: 'Cantidad de Productos por categorias',
+                data: <?php echo json_encode($cantidades); ?>,
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
     // Gráfico de Pastel: Distribución de Productos por Marca
     var ctxPie = document.getElementById('pieChart').getContext('2d');
     var pieChart = new Chart(ctxPie, {
@@ -275,6 +370,20 @@ while ($row = mysqli_fetch_assoc($result_line)) {
             }
         }
     });
+
+    function loadNoStockPage(page) {
+        $.ajax({
+            url: 'reporte-productos.php',
+            type: 'GET',
+            data: {
+                pagina_no_stock: page
+            },
+            success: function(response) {
+                var newContent = $(response).find('#no-stock .container').html();
+                $('#no-stock .container').html(newContent);
+            }
+        });
+    }
 </script>
 
 <script src="../../recursos/js/script.js"></script>
