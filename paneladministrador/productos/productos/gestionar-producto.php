@@ -129,7 +129,6 @@ $result = $stmt->get_result();
                 <div class="col-12">
                     <div class="page-title-box d-sm-flex align-items-center justify-content-between">
                         <h4 class="mb-sm-0">Gestionar Productos</h4>
-
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
                                 <li class="breadcrumb-item"><a>Productos</a></li>
@@ -328,7 +327,6 @@ $result = $stmt->get_result();
                 </div>
             </div>
         </div>
-    </div>
     <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -379,6 +377,4 @@ $result = $stmt->get_result();
         </div>
     </div>
     <script src="../../recursos/js/script.js"></script>
-
-</div>
 <?php include "../../footer.php"; ?>

@@ -6,22 +6,22 @@ include "sidebar.php";
 // Obtener el nombre de usuario de la sesión
 $username = $_SESSION['admin_username'];
 
-// Consultas para obtener el categorías y productos
-$queryCategorias = "SELECT COUNT(*) AS totalCategorias FROM categoria";
-$resultCategorias = mysqli_query($con, $queryCategorias);
-$totalCategorias = mysqli_fetch_assoc($resultCategorias)['totalCategorias'];
+// Función para obtener el conteo de una tabla
+function obtenerConteo($con, $tabla) {
+    $query = "SELECT COUNT(*) AS total FROM $tabla";
+    $result = mysqli_query($con, $query);
+    return mysqli_fetch_assoc($result)['total'];
+}
 
-$queryProductos = "SELECT COUNT(*) AS totalProductos FROM producto";
-$resultProductos = mysqli_query($con, $queryProductos);
-$totalProductos = mysqli_fetch_assoc($resultProductos)['totalProductos'];
-
-$queryMarcas = "SELECT COUNT(*) AS totalMarcas FROM marca";
-$resultMarcas = mysqli_query($con, $queryMarcas);
-$totalMarcas = mysqli_fetch_assoc($resultMarcas)['totalMarcas'];
-
-$queryStocks = "SELECT COUNT(*) AS totalStocks FROM stock";
-$resultStocks = mysqli_query($con, $queryStocks);
-$totalStocks = mysqli_fetch_assoc($resultStocks)['totalStocks'];
+// Obtener los conteos
+$totalCategorias = obtenerConteo($con, 'categoria');
+$totalProductos = obtenerConteo($con, 'producto');
+$totalResenhas = obtenerConteo($con, 'resenhas');
+$totalStocks = obtenerConteo($con, 'stock');
+$totalTallas = obtenerConteo($con, 'talla');
+$totalColores = obtenerConteo($con, 'color');
+$totalClientes = obtenerConteo($con, 'cliente');
+$totalOfertas = obtenerConteo($con, 'oferta');
 
 // Consultas para obtener los datos necesarios
 $queryCantidadVentas = "SELECT COUNT(*) AS cantidad FROM ventas v INNER JOIN detalleventa dv ON dv.venId = v.venId";
@@ -53,6 +53,28 @@ $queryClienteFrecuente = "
 $resultCliente = mysqli_query($con, $queryClienteFrecuente);
 $clienteFrecuente = ($resultCliente && mysqli_num_rows($resultCliente) > 0) ? mysqli_fetch_assoc($resultCliente)['cliNombre'] : 'N/A';
 
+// Función para generar las tarjetas de reporte
+function generarTarjetaReporte($titulo, $valor, $imagen, $enlace) {
+    return "
+    <div class='col-lg-3 col-md-6'>
+        <div class='card border-0 shadow-sm text-center card-report-hover'>
+            <div class='card-body p-2'>
+                <div class='mb-3 mt-3'>
+                   <img src='$imagen' alt='$titulo'>
+                </div>
+                <h6 class='card-title'>$titulo</h6>
+                <p class='card-text fw-bold'>" . htmlspecialchars($valor) . "</p>
+                <div class='position-absolute top-0 end-0 p-2'>
+                    <a href='$enlace'>
+                        <svg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 256 256'>
+                            <path fill='currentColor' d='M224 104a8 8 0 0 1-16 0V59.32l-66.33 66.34a8 8 0 0 1-11.32-11.32L196.68 48H152a8 8 0 0 1 0-16h64a8 8 0 0 1 8 8Zm-40 24a8 8 0 0 0-8 8v72H48V80h72a8 8 0 0 0 0-16H48a16 16 0 0 0-16 16v128a16 16 0 0 0 16 16h128a16 16 0 0 0 16-16v-72a8 8 0 0 0-8-8' />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>";
+}
 ?>
 
 <div class="main-content">
@@ -77,157 +99,16 @@ $clienteFrecuente = ($resultCliente && mysqli_num_rows($resultCliente) > 0) ? my
             </div>
 
             <div class="row justify-content-center">
-                <div class="col-lg-3 col-md-6">
-                    <div class="card border-0 shadow-sm text-center">
-                        <div class="card-body p-2">
-                            <div class="mb-3 mt-3">
-                               <img src="recursos/images/tablero/categories.png" alt="categories">
-                            </div>
-                            <h6 class="card-title">Categorias</h6>
-                            <p class="card-text fw-bold"><?php echo htmlspecialchars($totalCategorias); ?></p>
-                            <div class="position-absolute top-0 end-0 p-2">
-                                <a href="detallesproducto/categoria/gestionar-categoria.php">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 256 256">
-                                        <path fill="currentColor" d="M224 104a8 8 0 0 1-16 0V59.32l-66.33 66.34a8 8 0 0 1-11.32-11.32L196.68 48H152a8 8 0 0 1 0-16h64a8 8 0 0 1 8 8Zm-40 24a8 8 0 0 0-8 8v72H48V80h72a8 8 0 0 0 0-16H48a16 16 0 0 0-16 16v128a16 16 0 0 0 16 16h128a16 16 0 0 0 16-16v-72a8 8 0 0 0-8-8" />
-                                    </svg>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-3 col-md-6">
-                    <div class="card border-0 shadow-sm text-center">
-                        <div class="card-body p-2">
-                            <div class="mb-3 mt-3">
-                               <img src="recursos/images/tablero/productos.png" alt="products">
-                            </div>
-                            <h6 class="card-title">Productos</h6>
-                            <p class="card-text fw-bold"><?php echo htmlspecialchars($totalProductos); ?></p>
-                            <div class="position-absolute top-0 end-0 p-2">
-                                <a href="productos/productos/gestionar-producto.php">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 256 256">
-                                        <path fill="currentColor" d="M224 104a8 8 0 0 1-16 0V59.32l-66.33 66.34a8 8 0 0 1-11.32-11.32L196.68 48H152a8 8 0 0 1 0-16h64a8 8 0 0 1 8 8Zm-40 24a8 8 0 0 0-8 8v72H48V80h72a8 8 0 0 0 0-16H48a16 16 0 0 0-16 16v128a16 16 0 0 0 16 16h128a16 16 0 0 0 16-16v-72a8 8 0 0 0-8-8" />
-                                    </svg>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-3 col-md-6">
-                    <div class="card border-0 shadow-sm text-center">
-                        <div class="card-body p-2">
-                            <div class="mb-3 mt-3">
-                               <img src="recursos/images/tablero/stock.png" alt="stocks">
-                            </div>
-                            <h6 class="card-title">Stocks</h6>
-                            <p class="card-text fw-bold"><?php echo htmlspecialchars($totalStocks); ?></p>
-                            <div class="position-absolute top-0 end-0 p-2">
-                                <a href="#">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 256 256">
-                                        <path fill="currentColor" d="M224 104a8 8 0 0 1-16 0V59.32l-66.33 66.34a8 8 0 0 1-11.32-11.32L196.68 48H152a8 8 0 0 1 0-16h64a8 8 0 0 1 8 8Zm-40 24a8 8 0 0 0-8 8v72H48V80h72a8 8 0 0 0 0-16H48a16 16 0 0 0-16 16v128a16 16 0 0 0 16 16h128a16 16 0 0 0 16-16v-72a8 8 0 0 0-8-8" />
-                                    </svg>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-3 col-md-6">
-                    <div class="card border-0 shadow-sm text-center">
-                        <div class="card-body p-2">
-                            <div class="mb-3 mt-3">
-                               <img src="recursos/images/tablero/marcas.png" alt="brands">
-                            </div>
-                            <h6 class="card-title">Marcas</h6>
-                            <p class="card-text fw-bold"><?php echo htmlspecialchars($totalMarcas); ?></p>
-                            <div class="position-absolute top-0 end-0 p-2">
-                                <a href="#">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 256 256">
-                                        <path fill="currentColor" d="M224 104a8 8 0 0 1-16 0V59.32l-66.33 66.34a8 8 0 0 1-11.32-11.32L196.68 48H152a8 8 0 0 1 0-16h64a8 8 0 0 1 8 8Zm-40 24a8 8 0 0 0-8 8v72H48V80h72a8 8 0 0 0 0-16H48a16 16 0 0 0-16 16v128a16 16 0 0 0 16 16h128a16 16 0 0 0 16-16v-72a8 8 0 0 0-8-8" />
-                                    </svg>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-3 col-md-6">
-                    <div class="card border-0 shadow-sm text-center">
-                        <div class="card-body p-2">
-                            <div class="mb-3 mt-3">
-                               <img src="recursos/images/tablero/tallas.png" alt="brands">
-                            </div>
-                            <h6 class="card-title">Tallas</h6>
-                            <p class="card-text fw-bold"><?php echo htmlspecialchars($totalMarcas); ?></p>
-                            <div class="position-absolute top-0 end-0 p-2">
-                                <a href="#">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 256 256">
-                                        <path fill="currentColor" d="M224 104a8 8 0 0 1-16 0V59.32l-66.33 66.34a8 8 0 0 1-11.32-11.32L196.68 48H152a8 8 0 0 1 0-16h64a8 8 0 0 1 8 8Zm-40 24a8 8 0 0 0-8 8v72H48V80h72a8 8 0 0 0 0-16H48a16 16 0 0 0-16 16v128a16 16 0 0 0 16 16h128a16 16 0 0 0 16-16v-72a8 8 0 0 0-8-8" />
-                                    </svg>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-3 col-md-6">
-                    <div class="card border-0 shadow-sm text-center">
-                        <div class="card-body p-2">
-                            <div class="mb-3 mt-3">
-                               <img src="recursos/images/tablero/colores.png" alt="brands">
-                            </div>
-                            <h6 class="card-title">Colores</h6>
-                            <p class="card-text fw-bold"><?php echo htmlspecialchars($totalMarcas); ?></p>
-                            <div class="position-absolute top-0 end-0 p-2">
-                                <a href="#">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 256 256">
-                                        <path fill="currentColor" d="M224 104a8 8 0 0 1-16 0V59.32l-66.33 66.34a8 8 0 0 1-11.32-11.32L196.68 48H152a8 8 0 0 1 0-16h64a8 8 0 0 1 8 8Zm-40 24a8 8 0 0 0-8 8v72H48V80h72a8 8 0 0 0 0-16H48a16 16 0 0 0-16 16v128a16 16 0 0 0 16 16h128a16 16 0 0 0 16-16v-72a8 8 0 0 0-8-8" />
-                                    </svg>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-3 col-md-6">
-                    <div class="card border-0 shadow-sm text-center">
-                        <div class="card-body p-2">
-                            <div class="mb-3 mt-3">
-                               <img src="recursos/images/tablero/clientes.png" alt="brands">
-                            </div>
-                            <h6 class="card-title">Clientes</h6>
-                            <p class="card-text fw-bold"><?php echo htmlspecialchars($totalMarcas); ?></p>
-                            <div class="position-absolute top-0 end-0 p-2">
-                                <a href="#">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 256 256">
-                                        <path fill="currentColor" d="M224 104a8 8 0 0 1-16 0V59.32l-66.33 66.34a8 8 0 0 1-11.32-11.32L196.68 48H152a8 8 0 0 1 0-16h64a8 8 0 0 1 8 8Zm-40 24a8 8 0 0 0-8 8v72H48V80h72a8 8 0 0 0 0-16H48a16 16 0 0 0-16 16v128a16 16 0 0 0 16 16h128a16 16 0 0 0 16-16v-72a8 8 0 0 0-8-8" />
-                                    </svg>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-3 col-md-6">
-                    <div class="card border-0 shadow-sm text-center">
-                        <div class="card-body p-2">
-                            <div class="mb-3 mt-3">
-                               <img src="recursos/images/tablero/reseñas.png" alt="brands">
-                            </div>
-                            <h6 class="card-title">Reseñas</h6>
-                            <p class="card-text fw-bold"><?php echo htmlspecialchars($totalMarcas); ?></p>
-                            <div class="position-absolute top-0 end-0 p-2">
-                                <a href="#">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 256 256">
-                                        <path fill="currentColor" d="M224 104a8 8 0 0 1-16 0V59.32l-66.33 66.34a8 8 0 0 1-11.32-11.32L196.68 48H152a8 8 0 0 1 0-16h64a8 8 0 0 1 8 8Zm-40 24a8 8 0 0 0-8 8v72H48V80h72a8 8 0 0 0 0-16H48a16 16 0 0 0-16 16v128a16 16 0 0 0 16 16h128a16 16 0 0 0 16-16v-72a8 8 0 0 0-8-8" />
-                                    </svg>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <?php
+                echo generarTarjetaReporte('Categorias', $totalCategorias, 'recursos/images/tablero/categories.png', 'reportes/categorias/reporte-categorias.php');
+                echo generarTarjetaReporte('Productos', $totalProductos, 'recursos/images/tablero/productos.png', 'reportes/productos/reporte-productos.php');
+                echo generarTarjetaReporte('Stocks', $totalStocks, 'recursos/images/tablero/stock.png', 'reportes/stocks/reporte-stocks.php');
+                echo generarTarjetaReporte('Ofertas', $totalOfertas, 'recursos/images/tablero/ofertas.png', 'reportes/ofertas/reporte-ofertas.php');
+                echo generarTarjetaReporte('Tallas', $totalTallas, 'recursos/images/tablero/tallas.png', 'reportes/tallas/reporte-tallas.php');
+                echo generarTarjetaReporte('Colores', $totalColores, 'recursos/images/tablero/colores.png', 'reportes/colores/reporte-colores.php');
+                echo generarTarjetaReporte('Clientes', $totalClientes, 'recursos/images/tablero/clientes.png', 'reportes/clientes/reporte-clientes.php');
+                echo generarTarjetaReporte('Reseñas', $totalResenhas ?: '0', 'recursos/images/tablero/reseñas.png', 'reportes/resenhas/reporte-resenhas.php');
+                ?>
             </div>
 
             <div class="col-12 mt-4">

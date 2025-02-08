@@ -1,11 +1,11 @@
 /*TABLERO*/
 
 
-.card {
+.card-report-hover {
     border-radius: 15px;
     transition: transform 0.3s ease-in-out;
 }
-.card:hover {
+.card-report-hover:hover {
     transform: translateY(-5px);
 }
 

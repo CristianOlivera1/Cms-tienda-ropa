@@ -75,64 +75,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <div class="row">
                 <div class="col-12">
                     <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                        <h4 class="mb-sm-0">Gestionar Ofertas</h4>
+                        <h4 class="mb-sm-0">Reporte Ofertas</h4>
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
                                 <li class="breadcrumb-item"><a>Ofertas</a></li>
-                                <li class="breadcrumb-item active">Gestionar</li>
+                                <li class="breadcrumb-item active">Reporte</li>
                             </ol>
                         </div>
                     </div>
                 </div>
             </div>
-
             <div class="row">
                 <div class="col-xxl-8">
                     <div class="card mt-4">
                         <div class="card-header">
-                            <h5 class="card-title mb-0">Agregar Oferta</h5>
+                            <h5 class="card-title mb-0">Grafico Reporte de Ofertas</h5>
                         </div>
-
-                        <div class="card-body">
-                            <?php if ($error): ?>
-                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                    <?php echo $error; ?>
-                                    <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
-                                </div>
-                            <?php endif; ?>
-                            <?php if ($success): ?>
-                                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                    <strong>Éxito!</strong> <?php echo $success; ?>
-                                    <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
-                                </div>
-                            <?php endif; ?>
-                            <form method="POST" action="">
-                                <div class="mb-3">
-                                    <label for="stoId" class="form-label">Stock</label>
-                                    <select class="form-select" id="stoId" name="stoId" required>
-                                        <?php
-                                        $query = "SELECT stock.stoId,producto.proNombre FROM stock
-                                                inner join producto on producto.proId=stock.proId"; // Asegúrate de que esta tabla tenga datos
-                                        $result = mysqli_query($con, $query);
-                                        while ($row = mysqli_fetch_assoc($result)) {
-                                            echo "<option value='{$row['stoId']}'>{$row['proNombre']}</option>";
-                                        }
-                                        ?>
-                                    </select>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="ofePorcentaje" class="form-label">Porcentaje de Descuento</label>
-                                    <input type="number" class="form-control" id="ofePorcentaje" name="ofePorcentaje" required min="0" max="100">
-                                </div>
-                                <div class="mb-3">
-                                    <label for="ofeTiempo" class="form-label">Tiempo de Oferta (Fecha y Hora)</label>
-                                    <input type="datetime-local" class="form-control" id="ofeTiempo" name="ofeTiempo" required>
-                                </div>
-                                <button type="submit" class="btn btn-primary">Registrar Oferta</button>
-                            </form>
-                        </div>
+                      <!-- Grafico -->
                     </div>
-
                     <div class="card mt-4">
                         <div class="card-header">
                             <h5 class="card-title mb-0">Lista de Ofertas <div class="badge-total">Total: <?php echo $total_registros; ?></div></h5>
@@ -165,10 +125,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                         <th>Producto</th>
                                         <th>Porcentaje</th>
                                         <th>Tiempo de Oferta</th>
-                                        <th>Fecha de Registro</th>
                                         <th>Precio normal</th>
                                         <th>Precio oferta</th>
-                                        <th>Acción</th>
+                                        <th>Fecha de registro</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -193,17 +152,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                                 <td>{$row['proNombre']}</td>
                                                 <td>{$row['ofePorcentaje']}%</td>
                                                 <td>{$row['ofeTiempo']}</td>
+                                                <td>". number_format($row['precioNormal'], 2) . " Soles <br></td>
+                                                <td>" . number_format($row['precioDescontado'], 2) . " Soles</td>
                                                 <td>{$row['ofeFechaRegis']}</td>
-                                                <td>" . number_format($row['precioNormal'], 2) . " Soles <br>
-                                                    
-                                                </td>
-                                                <td>
-                                                    " . number_format($row['precioDescontado'], 2) . " Soles
-                                                </td>
-                                                <td>
-                                                    <a href='editaroferta.php?id={$row['ofeId']}' class='btn btn-soft-secondary btn-sm ms-2 me-1' aria-label='Editar' title='Editar'><i class='ri-pencil-fill align-bottom me-1' style='font-size: 1.5em;'></i></a>
-                                                    <a href='javascript:void(0);' class='btn btn-soft-danger btn-sm' onclick='confirmDeleteOfertas({$row['ofeId']})' aria-label='Eliminar' title='Eliminar'><i class='ri-delete-bin-fill align-bottom me-1' style='font-size: 1.5em;'></i></a>
-                                                </td>
                                             </tr>";
                                             $numeracion++;
                                     }
@@ -212,24 +163,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             </table>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Modal de confirmación -->
-    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="deleteModalLabel">Confirmar eliminación</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    ¿Estás seguro de que deseas eliminar esta oferta?
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-danger" id="confirmDeleteBtnOferta">Eliminar</button>
                 </div>
             </div>
         </div>
