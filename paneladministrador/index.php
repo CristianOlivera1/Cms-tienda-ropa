@@ -72,65 +72,102 @@ function generarTarjetaReporte($titulo, $valor, $imagen, $enlace) {
     </div>";
 }
 ?>
-
 <div class="main-content">
     <div class="page-content">
         <div class="container-fluid">
+            <!-- Encabezado del Tablero -->
             <div class="row">
                 <div class="col-12">
                     <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                        <h4 class="mb-sm-0 text-primary">Tablero</h4>
+                        <h4 class="mb-sm-0 text-primary fw-bold">Tablero</h4>
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
-                                <li class="breadcrumb-item"><a href="javascript: void(0);">Tableros</a></li>
-                                <li class="breadcrumb-item active">Tablero</li>
+                                <li class="breadcrumb-item"><a href="javascript: void(0);" class="text-muted">Tableros</a></li>
+                                <li class="breadcrumb-item active text-primary fw-bold">Tablero</li>
                             </ol>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="card-header bg-primary text-white rounded-top-4 mb-3">
-                <h5 class="card-title mb-0 text-center text-white">Reportes Generales</h5>
+            <!-- Sección Reportes Generales -->
+            <div class="card shadow-lg border-0 rounded-4 mt-4">
+                <div class="card-header bg-primary text-white rounded-top-4 py-3">
+                    <h5 class="card-title mb-0 text-center text-white fw-bold">Reportes Generales</h5>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row g-4 justify-content-center">
+                        <?php
+                        echo generarTarjetaReporte('Productos', $totalProductos, 'recursos/images/tablero/productos.png', 'reportes/productos/reporte-productos.php');
+                        echo generarTarjetaReporte('Stocks', $totalStocks, 'recursos/images/tablero/stock.png', 'reportes/stocks/reporte-stocks.php');
+                        echo generarTarjetaReporte('Ofertas', $totalOfertas, 'recursos/images/tablero/ofertas.png', 'reportes/ofertas/reporte-ofertas.php');
+                        echo generarTarjetaReporte('Usuarios', $totalUsuarios, 'recursos/images/tablero/usuarios.png', 'reportes/usuarios/reporte-usuarios.php');
+                        ?>
+                    </div>
+                </div>
             </div>
 
-            <div class="row justify-content-center">
-                <?php
-                echo generarTarjetaReporte('Productos', $totalProductos, 'recursos/images/tablero/productos.png', 'reportes/productos/reporte-productos.php');
-                echo generarTarjetaReporte('Stocks', $totalStocks, 'recursos/images/tablero/stock.png', 'reportes/stocks/reporte-stocks.php');
-                echo generarTarjetaReporte('Ofertas', $totalOfertas, 'recursos/images/tablero/ofertas.png', 'reportes/ofertas/reporte-ofertas.php');
-                echo generarTarjetaReporte('Usuarios', $totalUsuarios, 'recursos/images/tablero/usuarios.png', 'reportes/usuarios/reporte-usuarios.php');
-                ?>
-            </div>
-
+            <!-- Sección Reportes de Ventas -->
             <div class="col-12 mt-4">
                 <div class="card shadow-lg border-0 rounded-4">
                     <div class="card-header bg-primary text-white rounded-top-4 py-3">
-                        <h5 class="card-title mb-0 text-center text-white">Reportes de Ventas</h5>
+                        <h5 class="card-title mb-0 text-center text-white fw-bold">Reportes de Ventas</h5>
                     </div>
-                    <div class="card-body">
-                        <div class="row g-4">
+                    <div class="card-body p-4">
+                        <!-- Filtros de Fecha -->
+                        <div class="row mb-4 g-3">
                             <div class="col-md-4">
-                                <div class="card border-0 shadow-sm text-center h-100">
-                                    <div class="card-body">
+                                <button class="btn btn-primary w-100 rounded-pill shadow-sm" onclick="cargarReporte('dia')">Día</button>
+                            </div>
+                            <div class="col-md-4">
+                                <button class="btn btn-primary w-100 rounded-pill shadow-sm" onclick="cargarReporte('semana')">Esta Semana</button>
+                            </div>
+                            <div class="col-md-4">
+                                <button class="btn btn-primary w-100 rounded-pill shadow-sm" onclick="cargarReporte('mes')">Mes</button>
+                            </div>
+                        </div>
+                        <div class="row mb-4 g-3">
+                            <div class="col-md-4">
+                                <label for="fecha_desde" class="form-label text-muted">Desde:</label>
+                                <div class="input-group">
+                                    <input type="date" id="fecha_desde" class="form-control rounded-pill shadow-sm">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="fecha_hasta" class="form-label text-muted">Hasta:</label>
+                                <div class="input-group">
+                                    <input type="date" id="fecha_hasta" class="form-control rounded-pill shadow-sm">
+                                
+                                </div>
+                            </div>
+                            <div class="col-md-4 d-flex align-items-end">
+                                <button class="btn btn-secondary rounded-pill shadow-sm w-100" onclick="cargarReporte('rango')">Filtrar</button>
+                            </div>
+                        </div>
+
+                        <!-- Métricas de Ventas -->
+                        <div class="row g-4">
+                            <div class="col-md-3">
+                                <div class="card border-0 shadow-sm text-center h-100 hover-scale">
+                                    <div class="card-body p-4">
                                         <div class="mb-3">
                                             <i class="bi bi-cart-check-fill text-success fs-1"></i>
                                         </div>
-                                        <h5 class="card-title">Cantidad de Ventas</h5>
-                                        <p class="card-text display-6 fw-bold" id="cantidad-ventas">
+                                        <h5 class="card-title text-muted">Cantidad de Ventas</h5>
+                                        <p class="card-text display-6 fw-bold text-dark" id="cantidad-ventas">
                                             <?php echo htmlspecialchars($cantidadVentas); ?>
                                         </p>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="col-md-4">
-                                <div class="card border-0 shadow-sm text-center h-100">
-                                    <div class="card-body">
+                            <div class="col-md-3">
+                                <div class="card border-0 shadow-sm text-center h-100 hover-scale">
+                                    <div class="card-body p-4">
                                         <div class="mb-3">
                                             <i class="bi bi-currency-dollar text-primary fs-1"></i>
                                         </div>
-                                        <h5 class="card-title">Total Ventas</h5>
+                                        <h5 class="card-title text-muted">Total Ventas</h5>
                                         <p class="card-text display-6 fw-bold text-primary" id="total-ventas">
                                             <?php echo '$' . number_format($totalVentas, 2); ?>
                                         </p>
@@ -138,29 +175,27 @@ function generarTarjetaReporte($titulo, $valor, $imagen, $enlace) {
                                 </div>
                             </div>
 
-                            <div class="col-md-4">
-                                <div class="card border-0 shadow-sm text-center h-100">
-                                    <div class="card-body">
+                            <div class="col-md-3">
+                                <div class="card border-0 shadow-sm text-center h-100 hover-scale">
+                                    <div class="card-body p-4">
                                         <div class="mb-3">
                                             <i class="bi bi-bag-heart-fill text-danger fs-1"></i>
                                         </div>
-                                        <h5 class="card-title">Producto Más Vendido</h5>
+                                        <h5 class="card-title text-muted">Producto Más Vendido</h5>
                                         <p class="card-text display-6 fw-bold text-danger" id="producto-mas-vendido">
                                             <?php echo htmlspecialchars($productoFrecuente); ?>
                                         </p>
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="row mt-4">
-                            <div class="col-md-4 mx-auto">
-                                <div class="card border-0 shadow-sm text-center h-100">
-                                    <div class="card-body">
+                            <div class="col-md-3">
+                                <div class="card border-0 shadow-sm text-center h-100 hover-scale">
+                                    <div class="card-body p-4">
                                         <div class="mb-3">
                                             <i class="bi bi-person-fill text-warning fs-1"></i>
                                         </div>
-                                        <h5 class="card-title">Cliente Más Frecuente</h5>
+                                        <h5 class="card-title text-muted">Cliente Más Frecuente</h5>
                                         <p class="card-text display-6 fw-bold text-warning" id="cliente-frecuente">
                                             <?php echo htmlspecialchars($clienteFrecuente); ?>
                                         </p>
@@ -168,13 +203,86 @@ function generarTarjetaReporte($titulo, $valor, $imagen, $enlace) {
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Gráfico de Ventas -->
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <div class="card border-0 shadow-sm">
+                                    <div class="card-body p-4">
+                                        <canvas id="ventasChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    function cargarReporte(periodo) {
+        let url = 'obtener_reporte.php';
+        let params = {};
+
+        if (periodo === 'rango') {
+            params.fecha_desde = document.getElementById('fecha_desde').value;
+            params.fecha_hasta = document.getElementById('fecha_hasta').value;
+        } else {
+            params.periodo = periodo;
+        }
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(params)
+        })
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('cantidad-ventas').innerText = data.cantidadVentas ?? 0;
+            document.getElementById('total-ventas').innerText = '$' + (parseFloat(data.totalVentas) || 0).toFixed(2);
+            document.getElementById('producto-mas-vendido').innerText = data.productoFrecuente ?? 'N/A';
+            document.getElementById('cliente-frecuente').innerText = data.clienteFrecuente ?? 'N/A';
+
+            actualizarGrafico(data.grafico);
+        })
+        .catch(error => console.error('Error:', error));
+    }
+
+    let ventasChart;
+
+    function actualizarGrafico(datos) {
+        const ctx = document.getElementById('ventasChart').getContext('2d');
+        
+        if (ventasChart) {
+            ventasChart.destroy();
+        }
+
+        ventasChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: datos.labels,
+                datasets: [{
+                    label: 'Ventas',
+                    data: datos.data,
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+</script>
 <?php include "footer.php"; ?>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
