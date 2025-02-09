@@ -23,8 +23,18 @@ if (!isset($_SESSION['admin_id'])) {
     <link href="/paneladministrador/recursos/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <link href="/paneladministrador/recursos/css/icons.min.css" rel="stylesheet" type="text/css" />
     <link href="/paneladministrador/recursos/css/app.min.css" rel="stylesheet" type="text/css" />
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+      <!-- Open Graph Metadata -->
+    <meta property="og:title" content="Men's Store | Ropa de Moda para Hombres">
+    <meta property="og:description" content="Descubre las últimas tendencias en ropa de moda para hombres. Compra ahora y luce increíble.">
+    <meta property="og:image" content="https://github.com/CristianOlivera1/Resources-dev/raw/main/logoCO/preview/cms-menstore-preview.png">
+    <meta property="og:url" content="http://menstore.mypressonline.com">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="es_ES">
+    <meta property="og:site_name" content="Men's Store">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 
 <body>
