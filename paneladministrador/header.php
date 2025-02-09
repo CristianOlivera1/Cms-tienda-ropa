@@ -1,6 +1,5 @@
 <?php
 include "coneccionbd.php";
-
 //verifica si hay una session iniciada o crea una nueva
 session_start();
 // Verificar si la sesión de usuario no está establecida, entonces redirigir a la página de inicio de sesión
@@ -8,9 +7,9 @@ if (!isset($_SESSION['admin_id'])) {
     header("Location: /paneladministrador/login.php"); 
 } else {
     $username = $_SESSION['admin_username'];
+    $usuarioId = $_SESSION['admin_id'];
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="es" data-layout="vertical" data-topbar="light" data-sidebar="dark" data-sidebar-size="lg" data-sidebar-image="none">
 

@@ -1,7 +1,6 @@
 <?php
 include "../../header.php";
 include "../../sidebar.php";
-
 $error = '';
 $success = '';
 
@@ -43,6 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $error = 'El nombre de la categoría ya existe.';
         } else {
             $target_file = $categoria['catImg'];
+            $unique_name = $categoria['catImg'];
             if (!empty($categoria_img['name'])) {
                 // Manejar la carga de la nueva imagen
                 $target_dir = "../../recursos/uploads/categoria/";
@@ -75,6 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                 if ($stmt->execute()) {
                     $success = 'Categoría actualizada exitosamente.';
+                    registrarActividad($con, $usuarioId, "Update", "Actualizó la categoría: Nombre - " . htmlspecialchars($categoria_nombre) . ", Descripción - " . htmlspecialchars($categoria_descripcion) . ", Detalle - " . htmlspecialchars($categoria_detalle) . ".");
                     // Actualizar los datos de la categoría
                     $categoria['catNombre'] = $categoria_nombre;
                     $categoria['catDescripcion'] = $categoria_descripcion;

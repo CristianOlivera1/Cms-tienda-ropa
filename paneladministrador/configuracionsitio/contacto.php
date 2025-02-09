@@ -1,9 +1,11 @@
 <?php
 include "../header.php";
 include "../sidebar.php";
+include "../registrar_actividad.php";
 
 $error = '';
 $success = '';
+$usuarioId = $_SESSION['admin_id'];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $contact_phone = trim($_POST['contact_phone']);
@@ -21,6 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt->bind_param('ss', $contact_phone, $contact_email);
         if ($stmt->execute()) {
             $success = 'Datos de contacto actualizados correctamente.';
+            registrarActividad($con, $usuarioId, "Update", "Actualizó los datos de contacto: Teléfono - " . htmlspecialchars($contact_phone) . ", Email - " . htmlspecialchars($contact_email) . ".");
         } else {
             $error = 'Error al actualizar los datos de contacto.';
         }

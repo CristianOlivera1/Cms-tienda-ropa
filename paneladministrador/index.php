@@ -93,9 +93,9 @@ function generarTarjetaReporte($titulo, $valor, $imagen, $enlace) {
             <!-- Sección Reportes Generales -->
             <div class="card shadow-lg border-0 rounded-4 mt-4">
                 <div class="card-header bg-primary text-white rounded-top-4 py-3">
-                    <h5 class="card-title mb-0 text-center text-white fw-bold">Reportes Generales</h5>
+                    <h5 class="card-title mb-0 text-center text-white">Reportes Generales</h5>
                 </div>
-                <div class="card-body p-4">
+                <div class="card-body p-4 mt-3">
                     <div class="row g-4 justify-content-center">
                         <?php
                         echo generarTarjetaReporte('Productos', $totalProductos, 'recursos/images/tablero/productos.png', 'reportes/productos/reporte-productos.php');
@@ -108,10 +108,10 @@ function generarTarjetaReporte($titulo, $valor, $imagen, $enlace) {
             </div>
 
             <!-- Sección Reportes de Ventas -->
-            <div class="col-12 mt-4">
+            <div class="col-12 mt-5">
                 <div class="card shadow-lg border-0 rounded-4">
                     <div class="card-header bg-primary text-white rounded-top-4 py-3">
-                        <h5 class="card-title mb-0 text-center text-white fw-bold">Reportes de Ventas</h5>
+                        <h5 class="card-title mb-0 text-center text-white">Reportes de Ventas</h5>
                     </div>
                     <div class="card-body p-4">
                         <!-- Filtros de Fecha -->
@@ -146,7 +146,7 @@ function generarTarjetaReporte($titulo, $valor, $imagen, $enlace) {
                         </div>
 
                         <!-- Métricas de Ventas -->
-                        <div class="row g-4">
+                        <div class="row g-4 mt-2">
                             <div class="col-md-3">
                                 <div class="card border-0 shadow-sm text-center h-100 hover-scale">
                                     <div class="card-body p-4">

@@ -1,6 +1,7 @@
 <?php
 include "coneccionbd.php";
 $username=$_SESSION['admin_username'];
+include "registrar_actividad.php";
 
 if($_SESSION['cargo_gerente']=='Gerente'){
 

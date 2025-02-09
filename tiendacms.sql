@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 29-01-2025 a las 21:52:09
+-- Tiempo de generación: 08-02-2025 a las 23:33:23
 -- Versión del servidor: 10.4.27-MariaDB
 -- Versión de PHP: 8.2.0
 
@@ -74,7 +74,8 @@ INSERT INTO `categoria` (`catId`, `catNombre`, `catDescripcion`, `catDetalle`, `
 (45, 'Trajes', 'Ropa formal', 'Trajes para ocasiones especiales', '678d28f7b2ab6-traje-hombre-corte-slim-fit-varios-colores-rack-pack.jpg', '2025-01-19 11:31:51'),
 (46, 'Bañadores', 'Ropa de baño', 'Bañadores para la playa y piscina', '678d284d93640-35a29f02692b3d2ef70883aaadbeb693.jpg', '2025-01-19 11:29:01'),
 (47, 'Zapatillas', 'Calzado cómodo', 'Zapatillas deportivas y casuales', '678d27f537d62-Zapatos Tumblr.jpeg', '2025-01-19 11:27:33'),
-(48, 'Abrigos', 'Ropa de abrigo', 'Abrigos para el invierno', '678d27e9d5932-muchos-abrigos-estan-frente-ventana-que-hombres-miren_674594-21434.jpg', '2025-01-19 11:27:21');
+(48, 'Abrigos', 'Ropa de abrigo', 'Abrigos para el invierno', '678d27e9d5932-muchos-abrigos-estan-frente-ventana-que-hombres-miren_674594-21434.jpg', '2025-01-19 11:27:21'),
+(50, 'dddddddddd', 'sssssssssssss', 'sssasssssssssss', '67a6a909e0b0e-matthew-smith-Rfflri94rs8-unsplash (2).jpg', '2025-02-07 19:44:57');
 
 -- --------------------------------------------------------
 
@@ -100,7 +101,8 @@ CREATE TABLE `cliente` (
 INSERT INTO `cliente` (`cliId`, `cliDni`, `cliNombre`, `cliApellidoPaterno`, `cliApellidoMaterno`, `cliCorreo`, `cliFechaRegis`, `cliFechaNacimiento`) VALUES
 (4, '14785236', 'Luis', 'Alfaro', 'Chirinos', 'miguel@gmail.com', '2025-01-13 14:19:29', NULL),
 (6, '47859623', 'Luis F', 'Juarez', 'Peña', 'luis@gmail.com', '2025-01-13 14:19:43', NULL),
-(7, '41256378', 'Marco', 'Mejia', 'Llamocca', 'marco@gmail.com', '2025-01-13 14:18:29', NULL);
+(7, '41256378', 'Marco', 'Mejia', 'Llamocca', 'marco@gmail.com', '2025-01-13 14:18:29', NULL),
+(8, '63289575', 'Cristian', 'Olivera', 'Chavez', 'oliverachavezcristian@gmail.com', '2025-01-31 14:58:34', '2004-01-31');
 
 -- --------------------------------------------------------
 
@@ -184,7 +186,9 @@ CREATE TABLE `detalleventa` (
 INSERT INTO `detalleventa` (`detVenId`, `venId`, `stoId`, `detVenCantidad`, `detVenPrecio`, `detVenFechaRegis`) VALUES
 (1, 3, 41, 2, '20.00', '2025-01-20 13:19:11'),
 (2, 4, 42, 1, '25.00', '2025-01-20 13:25:14'),
-(3, 5, 44, 3, '10.00', '2025-01-20 13:28:41');
+(3, 5, 44, 3, '10.00', '2025-01-20 13:28:41'),
+(10, 12, 47, 2, '20.00', '2025-02-08 16:38:10'),
+(11, 13, 45, 1, '50.00', '2025-02-08 17:24:02');
 
 -- --------------------------------------------------------
 
@@ -261,6 +265,16 @@ CREATE TABLE `oferta` (
   `ofeFechaRegis` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Volcado de datos para la tabla `oferta`
+--
+
+INSERT INTO `oferta` (`ofeId`, `stoId`, `ofePorcentaje`, `ofeTiempo`, `ofeFechaRegis`) VALUES
+(29, 56, 50, '2025-02-22 15:14:00', '2025-02-08 15:14:27'),
+(30, 54, 30, '2025-02-23 15:14:00', '2025-02-08 15:14:51'),
+(31, 44, 20, '2025-02-12 15:15:00', '2025-02-08 15:15:22'),
+(32, 43, 10, '2025-02-10 15:15:00', '2025-02-08 15:15:46');
+
 -- --------------------------------------------------------
 
 --
@@ -308,7 +322,7 @@ INSERT INTO `producto` (`proId`, `catId`, `marId`, `proNombre`, `proDescripcion`
 (2, 28, 4, 'Camiseta Básica', 'Camiseta de algodón de varios colores', '679652b78d569-ce0600a4-1827-4d76-8995-bbc0b4e20de6.webp', '679652b78ee0f-88894263-053f-445f-9e26-4f5e2a89bc09.webp', '15.99', '2025-01-26 10:20:23'),
 (3, 28, 4, 'Camiseta Estampada', 'Camiseta con estampado gráfico', '678d85a83661b-5.jpg', '678d85a836a3e-6.jpg', '19.99', '2025-01-19 18:07:20'),
 (4, 29, 5, 'Pantalón Jeans', 'Pantalón de mezclilla azul', '678d850ca29d4-1pa.webp', '678d850ca2c5d-2.jpeg', '25.50', '2025-01-19 18:04:44'),
-(5, 29, 5, 'Pantalón Chino', 'Pantalón chino para ocasiones casuales', '678d84280200e-3pa.jpg', '678d842802ec6-4pa.jpg', '28.75', '2025-01-19 18:00:56'),
+(5, 29, 5, 'Pantalón Chino', 'Algodón Caqui para Hombre de Maden, Corte Recto Casual de Cintura Alta, Color Sólido, Largo Regular, Cierre de Botón, para Salidas Casuales de Adultos', '679b885a661a2-0a9a6fcb-4450-4a48-8b76-f77ed60ea1db.webp', '679b885a6913d-10339b8b-d653-401d-8510-f0f679b710f5.webp', '28.75', '2025-01-30 09:10:34'),
 (6, 30, 21, 'Gorra Deportiva', 'Gorra con logo deportivo', '678d8402bb281-3g.jpg', '678d8402bcf74-4g.jpeg', '12.99', '2025-01-19 18:00:18'),
 (7, 30, 21, 'Gorra Casual', 'Gorra de algodón, estilo urbano', '678d83d111c5d-1g.jpg', '678d83d111fb7-2g.jpg', '14.50', '2025-01-19 17:59:29'),
 (8, 31, 27, 'Zapatos Deportivos', 'Zapatos deportivos para entrenamiento', '678d84db8f599-zapatillas-de-hombre-seul.jpg', '678d84db8f8b8-IMG_0934.jpg.webp', '45.00', '2025-01-19 18:03:55'),
@@ -358,7 +372,13 @@ INSERT INTO `producto` (`proId`, `catId`, `marId`, `proNombre`, `proDescripcion`
 (53, 29, 35, 'Pantalones Rectos', 'Ajuste Slim y Estilo Casual de Negocios 2024, Caramelo, Tejido Trenzado, Lavables a Máquina', '679997675190f-0788cc64-6a4e-472d-a0f2-c726ad38e8b2.webp', '6799976751918-2ee7a886-652d-4ecf-a85b-22801230516a.webp', '80.00', '2025-01-28 21:50:15'),
 (54, 29, 5, 'Pantalones Cargo', 'Algodón para Hombre, Mezcla de 97% Algodón y 3% Spandex, Color Sólido, Corte Regular, con Cierre de Cremallera y Múltiples Bolsillos, para Uso en Toda', '679997959c8bc-c2de146d-ce6e-4fbf-8045-7343e37d6687.webp', '679997959c8c2-76b67882-e3b1-4bfc-addc-e39971063949.webp', '66.00', '2025-01-28 21:51:01'),
 (55, 29, 42, 'Vaqueros de Mezclilla', 'Elásticos de Ajuste Slim para Hombre - Pierna Recta Clásica, Azul Lavado con Bigotes, Uso Todo el Año', '679997c7c0bcd-420f987e-9a7e-45a3-8a7d-684c54917c91.webp', '679997c7c0bd5-1902a9e3-153f-4d4b-aad5-145bbf2b5942.webp', '44.00', '2025-01-28 21:51:51'),
-(56, 29, 28, 'Pantalon de negocios', 'Para las cuatro estaciones, cómodos pantalones ajustados de mezcla de algodón con microelástico y bolsillos, largo regular, color sólido', '679998089297e-89a9c929-13bf-4cb5-8d22-34c04e08e309.webp', '679998089298a-b58cdd3a-35e6-4a7b-8227-91f256ae4bc5.webp', '70.00', '2025-01-28 21:52:56');
+(56, 29, 28, 'Pantalon de negocios', 'Para las cuatro estaciones, cómodos pantalones ajustados de mezcla de algodón con microelástico y bolsillos, largo regular, color sólido', '679998089297e-89a9c929-13bf-4cb5-8d22-34c04e08e309.webp', '679998089298a-b58cdd3a-35e6-4a7b-8227-91f256ae4bc5.webp', '70.00', '2025-01-28 21:52:56'),
+(57, 29, 5, 'Pantalones Semi-Formales', 'DARALIOS - Antifricción, Tejido Elástico con Insignia Bordada, Lavables a Máquina, Pantalones Negros para Todas las Estaciones para Negocios Casuales', '679b894b739a0-db7592d0-7353-4958-96bb-e3f3ab8df801.webp', '679b894b739aa-cdd4e655-e77a-4ba8-adea-f8fc0c883a45.webp', '100.00', '2025-01-30 09:14:35'),
+(58, 29, 28, 'Pantalones de traje', 'Mezcla de algodón sólido para hombre, cintura media, corte regular, fondo de pierna recta, adecuado para otoño/invierno, todas las ocasiones.', '679b897b63224-d4b10f21-7eec-4b5c-b4cd-5ca04aacfeff.webp', '679b897b63232-504b798e-3614-4d21-b661-ac91e7743207.webp', '60.00', '2025-01-30 09:15:23'),
+(59, 29, 29, 'Pantalones de vestir', 'Casuales para hombre, corte ajustado, tejido de mezcla de nailon y elastano, color liso con bolsillos, cintura media, ligero estiramiento, para el tra', '679b89e10b519-0f30bb08-d1e6-4922-b217-41053e26b00e.webp', '679b89e10c533-2fcd2bf4-934b-4193-9d87-25fe09361c2c.webp', '55.00', '2025-01-30 09:17:05'),
+(60, 29, 31, 'Pantalones ajustados', 'Casuales de verano para hombre, corte regular de cintura media, color liso, nailon 79,10% elastano 20,90%, tejido de punto de alta elasticidad, brague', '679b8a1a8c281-21d05ea6-ec46-44b8-a178-d955398d8123.webp', '679b8a1a8c28a-a8d8e71d-0a97-4bdc-a1c7-eb195a9ffe2d.webp', '45.00', '2025-01-30 09:18:02'),
+(61, 29, 5, 'Pantalones Cargo Elásticos', 'Ajuste Slim para Hombre - Impermeables, Resistentes a UV y Manchas, Gris Claro con Múltiples Bolsillos, Cintura Elástica para Uso Casual a Semi-Formal', '679d23290802c-b14770ca-7b74-4dae-a104-158159dcf57c.webp', '679d232908039-ac23d0a4-8d6d-4a57-8943-1f13c667be21.webp', '66.00', '2025-01-31 14:23:21'),
+(62, 29, 29, 'Pantalones Sólidos', 'Elegantes Para Hombres Con Bolsillos, Pantalones De Algodón De Ajuste Delgado Y Transpirables Para Primavera Y Otoño', '679d2735852ce-ebfc809688e9f26294a20f2bcfcc4466.webp', '679d2735852dd-b6bfca6b0740c515c831197b544e7d3e.webp', '44.00', '2025-01-31 14:40:37');
 
 -- --------------------------------------------------------
 
@@ -447,7 +467,7 @@ INSERT INTO `stock` (`stoId`, `proId`, `estId`, `colId`, `talId`, `stoCantidad`,
 (85, 31, 1, 26, 12, 9, '2025-01-27 10:08:35'),
 (86, 30, 1, 13, 11, 7, '2025-01-27 10:09:17'),
 (87, 11, 1, 26, 1, 7, '2025-01-27 10:10:40'),
-(92, 29, 3, 20, 13, 2, '2025-01-28 11:37:55'),
+(92, 29, 1, 20, 13, 2, '2025-02-07 13:53:37'),
 (93, 47, 1, 34, 1, 15, '2025-01-28 20:04:42'),
 (94, 49, 1, 26, 12, 33, '2025-01-28 20:05:06'),
 (95, 48, 1, 25, 13, 12, '2025-01-28 20:05:48'),
@@ -455,7 +475,19 @@ INSERT INTO `stock` (`stoId`, `proId`, `estId`, `colId`, `talId`, `stoCantidad`,
 (97, 51, 1, 26, 12, 2, '2025-01-28 21:53:50'),
 (98, 54, 1, 22, 2, 14, '2025-01-28 21:54:15'),
 (99, 50, 1, 26, 1, 5, '2025-01-28 21:54:38'),
-(100, 53, 1, 13, 13, 14, '2025-01-28 21:54:57');
+(100, 53, 1, 13, 13, 14, '2025-01-28 21:54:57'),
+(101, 55, 1, 16, 1, 14, '2025-01-30 09:07:56'),
+(102, 52, 1, 13, 11, 12, '2025-01-30 09:08:46'),
+(103, 60, 1, 34, 1, 14, '2025-01-30 09:19:18'),
+(104, 59, 1, 13, 12, 3, '2025-01-30 09:19:58'),
+(105, 58, 1, 16, 12, 3, '2025-01-30 09:21:08'),
+(106, 57, 1, 13, 13, 12, '2025-01-30 09:27:28'),
+(107, 37, 1, 33, 11, 20, '2025-01-30 09:25:40'),
+(108, 17, 1, 16, 1, 12, '2025-01-30 09:28:27'),
+(109, 21, 1, 34, 1, 8, '2025-01-30 09:30:02'),
+(110, 28, 1, 13, 1, 5, '2025-01-30 09:31:02'),
+(111, 61, 1, 16, 1, 14, '2025-01-31 14:29:55'),
+(112, 62, 1, 34, 12, 4, '2025-02-06 20:45:08');
 
 -- --------------------------------------------------------
 
@@ -536,7 +568,12 @@ INSERT INTO `ventas` (`venId`, `cliId`, `venFechaRegis`) VALUES
 (5, 6, '2025-01-13 14:49:46'),
 (6, 4, '2025-01-27 15:35:00'),
 (7, 7, '2025-01-27 15:35:07'),
-(8, 6, '2025-01-27 15:35:14');
+(8, 6, '2025-01-27 15:35:14'),
+(9, 6, '2025-01-31 14:47:51'),
+(10, 6, '2025-01-31 14:51:16'),
+(11, 8, '2025-01-31 14:59:47'),
+(12, 6, '2025-02-08 16:34:41'),
+(13, 6, '2025-02-08 17:22:14');
 
 --
 -- Índices para tablas volcadas
@@ -664,13 +701,13 @@ ALTER TABLE `cargo`
 -- AUTO_INCREMENT de la tabla `categoria`
 --
 ALTER TABLE `categoria`
-  MODIFY `catId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
+  MODIFY `catId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 
 --
 -- AUTO_INCREMENT de la tabla `cliente`
 --
 ALTER TABLE `cliente`
-  MODIFY `cliId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `cliId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de la tabla `color`
@@ -688,7 +725,7 @@ ALTER TABLE `contacto`
 -- AUTO_INCREMENT de la tabla `detalleventa`
 --
 ALTER TABLE `detalleventa`
-  MODIFY `detVenId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `detVenId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT de la tabla `estado`
@@ -706,7 +743,7 @@ ALTER TABLE `marca`
 -- AUTO_INCREMENT de la tabla `oferta`
 --
 ALTER TABLE `oferta`
-  MODIFY `ofeId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `ofeId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- AUTO_INCREMENT de la tabla `portada`
@@ -718,7 +755,7 @@ ALTER TABLE `portada`
 -- AUTO_INCREMENT de la tabla `producto`
 --
 ALTER TABLE `producto`
-  MODIFY `proId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
+  MODIFY `proId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=63;
 
 --
 -- AUTO_INCREMENT de la tabla `resenhas`
@@ -730,7 +767,7 @@ ALTER TABLE `resenhas`
 -- AUTO_INCREMENT de la tabla `stock`
 --
 ALTER TABLE `stock`
-  MODIFY `stoId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=101;
+  MODIFY `stoId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=113;
 
 --
 -- AUTO_INCREMENT de la tabla `talla`
@@ -748,7 +785,7 @@ ALTER TABLE `usuario`
 -- AUTO_INCREMENT de la tabla `ventas`
 --
 ALTER TABLE `ventas`
-  MODIFY `venId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `venId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- Restricciones para tablas volcadas

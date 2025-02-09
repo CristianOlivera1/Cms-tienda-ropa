@@ -1,9 +1,11 @@
 <?php
 include "../header.php";
 include "../sidebar.php";
+include "../registrar_actividad.php";
 
 $error = '';
 $success = '';
+$usuarioId = $_SESSION['admin_id'];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $titulo = trim($_POST['titulo']);
@@ -17,6 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt->bind_param('ss', $titulo, $descripcion);
         if ($stmt->execute()) {
             $success = 'Información de la portada actualizada exitosamente.';
+            registrarActividad($con, $usuarioId,"Update", "Actualizó los datos de la portada. Título: " . htmlspecialchars($titulo) . ", Descripción: " . htmlspecialchars($descripcion));
         } else {
             $error = 'Error al actualizar la información de la portada.';
         }

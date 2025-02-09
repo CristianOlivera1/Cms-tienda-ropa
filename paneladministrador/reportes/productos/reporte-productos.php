@@ -385,6 +385,5 @@ while ($row = mysqli_fetch_assoc($result_line)) {
         });
     }
 </script>
-
 <script src="../../recursos/js/script.js"></script>
 <?php include "../../footer.php"; ?>
