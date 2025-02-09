@@ -22,7 +22,7 @@
             <!-- Encabezado de Sección -->
             <div class="section-heading text-center mb-3">
                 <h2>Contáctanos</h2>
-                <p class="d-none d-sm-block mt-4">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Voluptatem magnam sint voluptas aut sit pariatur perferendis maxime ea, mollitia id architecto nostrum ut, nobis nihil, eligendi possimus vitae quo. Ullam.</p>
+                <p class="d-none d-sm-block mt-4">En nuestra tienda encontrarás una amplia variedad de ropa de alta calidad. Desde prendas casuales hasta atuendos formales, tenemos algo para cada ocasión. Nuestro compromiso es ofrecerte lo mejor en moda y estilo.</p>
             </div>
             <!-- Contáctanos -->
             <div class="contact-us">

@@ -18,7 +18,7 @@ $selectedCategory = isset($_GET['category']) ? $_GET['category'] : '';
                         <li class="breadcrumb-item text-white active">
                             <?php
                             if ($selectedCategory) {
-                                $category_query = mysqli_query($con, "SELECT catNombre FROM Categoria WHERE catId = $selectedCategory");
+                                $category_query = mysqli_query($con, "SELECT catNombre FROM categoria WHERE catId = $selectedCategory");
                                 $category = mysqli_fetch_assoc($category_query);
                                 echo $category['catNombre'];
                             }
@@ -94,7 +94,7 @@ $selectedCategory = isset($_GET['category']) ? $_GET['category'] : '';
                         </div>
                     </div>
                     <?php
-                    $categories = mysqli_query($con, "SELECT catId, catNombre FROM Categoria");
+                    $categories = mysqli_query($con, "SELECT catId, catNombre FROM categoria");
                     while ($category = mysqli_fetch_assoc($categories)) {
                         $activeClass = $selectedCategory == $category['catId'] ? 'show active' : '';
                         echo "<div class='tab-pane fade $activeClass' id='v-pills-{$category['catId']}' role='tabpanel' aria-labelledby='v-pills-{$category['catId']}-tab'>";

@@ -152,7 +152,7 @@ while ($row = mysqli_fetch_assoc($result_line)) {
                                             <p class='card-title mb-1'>{$producto['marNombre']} - {$producto['proNombre']}</p>
                                             <p class='text-warning mb-0'><strong>No registrado en stock</strong></p>
                                         </div>
-                                        <a href='http://localhost:3000/paneladministrador/productos/stock/gestionar-stock.php' class='btn btn-primary btn-sm' style='margin-top: auto;'>Registrar</a>
+                                        <a href='/paneladministrador/productos/stock/gestionar-stock.php' class='btn btn-primary btn-sm' style='margin-top: auto;'>Registrar</a>
                                     </div>
                                 </div>
                             </div>";
