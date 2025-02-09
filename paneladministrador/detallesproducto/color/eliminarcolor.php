@@ -1,5 +1,10 @@
 <?php
 include "../../coneccionbd.php";
+include "../../registrar_actividad.php";
+
+session_start();
+$usuarioId = $_SESSION['admin_id'];
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['action'] == 'delete') {
     $color_id = $_POST['color_id'];
 
@@ -17,6 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
         $stmt = $con->prepare($query);
         $stmt->bind_param('i', $color_id);
         if ($stmt->execute()) {
+            registrarActividad($con, $usuarioId, "Color", "Delete", "Eliminó el color con ID: " . htmlspecialchars($color_id) . ".");
             echo json_encode(['success' => true]);
         } else {
             echo json_encode(['success' => false, 'error' => 'Error al eliminar el color.']);

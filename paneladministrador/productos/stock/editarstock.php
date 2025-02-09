@@ -4,7 +4,7 @@ include "../../sidebar.php";
 
 $error = '';
 $success = '';
-
+$usuarioId = $_SESSION['admin_id'];
 if (isset($_GET['id'])) {
     $stock_id = $_GET['id'];
 
@@ -47,6 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $stmt = $con->prepare($query);
             $stmt->bind_param('iiiiii', $proId, $estId, $colId, $talId, $stoCantidad, $stock_id);
             if ($stmt->execute()) {
+                registrarActividad($con, $usuarioId, "Stock", "Update", "Actualizó el stock: Producto ID - " . htmlspecialchars($proId) . ", Estado ID - " . htmlspecialchars($estId) . ", Color ID - " . htmlspecialchars($colId) . ", Talla ID - " . htmlspecialchars($talId) . ", Cantidad - " . htmlspecialchars($stoCantidad) . ".");
                 $success = 'Stock actualizado exitosamente.';
                 // Actualizar los datos del stock
                 $stock['proId'] = $proId;

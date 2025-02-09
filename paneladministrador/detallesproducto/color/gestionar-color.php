@@ -4,6 +4,7 @@ include "../../sidebar.php";
 
 $error = '';
 $success = '';
+$usuarioId = $_SESSION['admin_id'];
 
 // Configuración de la paginación
 $registros_por_pagina = 10;
@@ -51,6 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $stmt->bind_param('ss', $color_nombre, $color_hex);
             if ($stmt->execute()) {
                 $success = 'Color registrado exitosamente.';
+                registrarActividad($con, $usuarioId, "Color", "Insert", "Inserto el color: Nombre - " . htmlspecialchars($color_nombre) . ", Código Hexadecimal - " . htmlspecialchars($color_hex) . ".");
                 $color_nombre = '';
                 $color_hex = '';
             } else {

@@ -5,7 +5,7 @@ include "../../sidebar.php";
 
 $error = '';
 $success = '';
-
+$usuarioId = $_SESSION['admin_id'];
 // Configuración de la paginación
 $registros_por_pagina = 10;
 $pagina_actual = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
@@ -47,11 +47,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['action'])) {
             $stmt->bind_param('s', $talla_nombre);
 
             if ($stmt->execute()) {
+                registrarActividad($con, $usuarioId, "Talla", "Insert", "Inserto la talla: Nombre - " . htmlspecialchars($talla_nombre) . ".");
                 // Redirigir después de registrar correctamente
                 header("Location: gestionar-talla.php?success=1");
-                exit(); // Asegurar que el script se detenga después de la redirección
+                exit();
             } else {
-                $error = 'Error al registrar la talla.'; // Manejar errores de ejecución
+                $error = 'Error al registrar la talla.';
             }
         }
     }

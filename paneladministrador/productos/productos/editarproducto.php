@@ -4,7 +4,7 @@ include "../../sidebar.php";
 
 $error = '';
 $success = '';
-
+$usuarioId = $_SESSION['admin_id'];
 if (isset($_GET['id'])) {
     $producto_id = $_GET['id'];
 
@@ -97,6 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmt_update->bind_param('iissssdi', $categoria_id, $marca_id, $producto_nombre, $producto_descripcion, $unique_name1, $unique_name2, $producto_precio, $producto_id);
 
                 if ($stmt_update->execute()) {
+                    registrarActividad($con, $usuarioId, "Producto", "Update", "Actualizó el producto: Nombre - " . htmlspecialchars($producto_nombre) . ", Precio - " . htmlspecialchars($producto_precio) . ", Categoría ID - " . htmlspecialchars($categoria_id) . ", Marca ID - " . htmlspecialchars($marca_id) . ".");
                     $success = 'Producto actualizado exitosamente.';
                 } else {
                     $error = 'Error al actualizar el producto.';

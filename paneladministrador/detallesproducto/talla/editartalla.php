@@ -4,6 +4,7 @@ include "../../sidebar.php";
 
 $error = '';
 $success = '';
+$usuarioId = $_SESSION['admin_id'];
 
 if (isset($_GET['id'])) {
     $talla_id = $_GET['id'];
@@ -48,6 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $stmt_update = $con->prepare($query_update);
                 $stmt_update->bind_param('si', $talla_nombre, $talla_id);
                 if ($stmt_update->execute()) {
+                    registrarActividad($con, $usuarioId, "Talla", "Update", "Actualizó la talla: Nombre - " . htmlspecialchars($talla_nombre) . ".");
                     $success = 'Talla actualizada exitosamente.';
                     // Actualizar los datos de la talla
                     $talla['talNombre'] = $talla_nombre;

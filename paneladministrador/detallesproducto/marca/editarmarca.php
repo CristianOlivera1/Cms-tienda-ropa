@@ -4,6 +4,7 @@ include "../../sidebar.php";
 
 $error = '';
 $success = '';
+$usuarioId = $_SESSION['admin_id'];
 
 if (isset($_GET['id'])) {
     $marca_id = $_GET['id'];
@@ -79,10 +80,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 }
                 if ($stmt->execute()) {
                     $success = 'Marca actualizada exitosamente.';
+                    registrarActividad($con, $usuarioId, "Marca", "Update", "Actualizó la marca: Nombre - " . htmlspecialchars($marca_nombre));
                     // Actualizar los datos de la marca
                     $marca['marNombre'] = $marca_nombre;
                     if (!empty($marca_img['name'])) {
-                        $marca['marImg'] = $unique_name; // Actualiza la imagen también
+                        $marca['marImg'] = $unique_name;
                     }
                 } else {
                     $error = 'Error al actualizar la marca.';

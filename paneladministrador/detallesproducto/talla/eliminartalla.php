@@ -1,5 +1,8 @@
 <?php
 include "../../coneccionbd.php";
+include "../../registrar_actividad.php";
+session_start();
+$usuarioId = $_SESSION['admin_id'];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['action'] == 'delete') {
     $talla_id = $_POST['talla_id'];
@@ -28,6 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
             $stmt = $con->prepare($query);
             $stmt->bind_param('i',  $talla_id);
             if ($stmt->execute()) {
+                registrarActividad($con, $usuarioId, "Talla", "Delete", "Eliminó la talla con ID: " . htmlspecialchars($talla_id) . ".");
                 echo json_encode(['success' => true]);
             } else {
                 echo json_encode(['success' => false, 'error' => 'Error al eliminar el talla.']);

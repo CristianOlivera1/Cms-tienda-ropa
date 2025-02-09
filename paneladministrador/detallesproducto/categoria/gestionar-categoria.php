@@ -5,6 +5,7 @@ include "../../sidebar.php";
 
 $error = '';
 $success = '';
+$usuarioId = $_SESSION['admin_id'];
 
 // Configuración de la paginación
 $registros_por_pagina = 10;
@@ -67,9 +68,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['action'])) {
                     $stmt = $con->prepare($query);
                     $stmt->bind_param('ssss', $categoria_nombre, $categoria_descripcion, $categoria_detalle, $unique_name); // Guardar solo el nombre del archivo
                     if ($stmt->execute()) {
-                        // Redirigir después de registrar correctamente
+                        // Registrar la actividad
+                        registrarActividad($con, $usuarioId, "Categoria", "Insert", "Inserto la categoría: Nombre - " . htmlspecialchars($categoria_nombre) . ", Descripción - " . htmlspecialchars($categoria_descripcion) . ", Detalle - " . htmlspecialchars($categoria_detalle) . ".");
                         header("Location: gestionar-categoria.php?success=1");
-                        exit(); // Asegurar que el script se detenga después de la redirección
+                        exit(); 
                     } else {
                         $error = 'Error al registrar la categoría.';
                     }

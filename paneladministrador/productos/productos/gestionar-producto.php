@@ -4,7 +4,7 @@ include "../../sidebar.php";
 
 $error = '';
 $success = '';
-
+$usuarioId = $_SESSION['admin_id'];
 // Variables para los campos del formulario
 $producto_nombre = '';
 $producto_descripcion = '';
@@ -75,6 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $stmt_insert = $con->prepare($query_insert);
                     $stmt_insert->bind_param('iissssd', $categoria_id, $marca_id, $producto_nombre, $producto_descripcion, $unique_name1, $unique_name2, $producto_precio);
                     if ($stmt_insert->execute()) {
+                        registrarActividad($con, $usuarioId, "Producto", "Insert", "Inserto el producto: Nombre - " . htmlspecialchars($producto_nombre) . ", Categoria - " . htmlspecialchars($categoria_id) . ", Precio - " . htmlspecialchars($producto_precio) . ".");
                         $success = 'Producto registrado exitosamente.';
                         // Limpiar los campos del formulario
                         $producto_nombre = '';

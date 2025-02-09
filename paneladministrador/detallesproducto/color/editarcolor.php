@@ -4,6 +4,7 @@ include "../../sidebar.php";
 
 $error = '';
 $success = '';
+$usuarioId = $_SESSION['admin_id'];
 
 if (isset($_GET['id'])) {
     $color_id = $_GET['id'];
@@ -47,6 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $stmt->bind_param('ssi', $color_nombre, $color_hex, $color_id);
             if ($stmt->execute()) {
                 $success = 'Color actualizado exitosamente.';
+                registrarActividad($con, $usuarioId, "Color", "Update", "Actualizó el color: Nombre - " . htmlspecialchars($color_nombre) . ", Código Hexadecimal - " . htmlspecialchars($color_hex) . ".");
                 // Actualizar los datos del color
                 $color['colNombre'] = $color_nombre;
                 $color['colCodigoHex'] = $color_hex;

@@ -1,5 +1,8 @@
 <?php
 include "../../coneccionbd.php";
+include "../../registrar_actividad.php";
+session_start();
+$usuarioId = $_SESSION['admin_id'];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['action'] == 'delete') {
     $categoria_id = $_POST['categoria_id'];
@@ -18,6 +21,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
         $stmt = $con->prepare($query);
         $stmt->bind_param('i', $categoria_id);
         if ($stmt->execute()) {
+            // Registrar la actividad de eliminación
+            registrarActividad($con, $usuarioId,"Categoria", "Delete", "Eliminó la categoría con ID: $categoria_id.");
             echo json_encode(['success' => true]);
         } else {
             echo json_encode(['success' => false, 'error' => 'Error al eliminar la categoría.']);

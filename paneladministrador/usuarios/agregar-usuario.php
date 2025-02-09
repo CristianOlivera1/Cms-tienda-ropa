@@ -8,6 +8,7 @@ $username = '';
 $password = '';
 $confirm_password = '';
 $carId = '';
+$usuarioId = $_SESSION['admin_id'];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = trim($_POST['username']);
@@ -36,6 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $stmt = $con->prepare($query);
             $stmt->bind_param('sss', $username, $hashed_password, $carId);
             if ($stmt->execute()) { 
+                registrarActividad($con, $usuarioId, "Usuario", "Insert", "Inserto el usuario: Nombre de Usuario - " . htmlspecialchars($username) . ", Cargo ID - " . htmlspecialchars($carId) . ".");
                 // Redirigir después de registrar el administrador
                 header("Location: listausuarios.php"); 
                 exit();

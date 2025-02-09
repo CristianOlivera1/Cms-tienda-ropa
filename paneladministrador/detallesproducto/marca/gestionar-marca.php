@@ -4,7 +4,7 @@ include "../../sidebar.php";
 
 $error = '';
 $success = '';
-
+$usuarioId = $_SESSION['admin_id'];
 // Configuración de la paginación
 $registros_por_pagina = 10;
 $pagina_actual = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
@@ -70,6 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['action'])) {
                     $stmt = $con->prepare($query);
                     $stmt->bind_param('ss', $marca_nombre, $unique_name);
                     if ($stmt->execute()) {
+                        registrarActividad($con, $usuarioId, "Marca", "Insert", "Inserto la marca: Nombre - " . htmlspecialchars($marca_nombre));
                         $success = 'Marca registrada exitosamente.';
                     } else {
                         $error = 'Error al registrar la marca: ' . mysqli_error($con);

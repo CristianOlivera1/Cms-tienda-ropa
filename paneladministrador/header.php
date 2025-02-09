@@ -9,6 +9,7 @@ if (!isset($_SESSION['admin_id'])) {
     $username = $_SESSION['admin_username'];
     $usuarioId = $_SESSION['admin_id'];
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="es" data-layout="vertical" data-topbar="light" data-sidebar="dark" data-sidebar-size="lg" data-sidebar-image="none">

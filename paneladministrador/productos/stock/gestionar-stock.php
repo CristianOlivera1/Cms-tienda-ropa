@@ -4,7 +4,7 @@ include "../../sidebar.php";
 
 $error = '';
 $success = '';
-
+$usuarioId = $_SESSION['admin_id'];
 // Configuración de la paginación
 $registros_por_pagina = 10;
 $pagina_actual = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
@@ -77,6 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $stmt = $con->prepare($query);
             $stmt->bind_param('iiiii', $proId, $estId, $colId, $talId, $stoCantidad);
             if ($stmt->execute()) {
+                registrarActividad($con, $usuarioId, "Stock", "Insert", "Registró el stock: Producto ID - " . htmlspecialchars($proId) . ", Estado ID - " . htmlspecialchars($estId) . ", Color ID - " . htmlspecialchars($colId) . ", Talla ID - " . htmlspecialchars($talId) . ", Cantidad - " . htmlspecialchars($stoCantidad) . ".");
                 $success = 'Stock registrado exitosamente.';
                 $proId = '';
                 $estId = '';

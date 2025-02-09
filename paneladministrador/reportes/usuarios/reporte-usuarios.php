@@ -2,7 +2,6 @@
 include "../../header.php";
 include "../../sidebar.php";
 ?>
-
 <div class="main-content">
     <div class="page-content">
         <div class="container-fluid">
@@ -34,15 +33,68 @@ include "../../sidebar.php";
                             </ul>
                         </div>
                         <div class="card-body p-4">
-                        <div class="d-flex justify-content-between align-items-center mt-3">
-                                        <div id="total-registros"></div>
-                                   
-                                    </div>
-                        <nav class="d-flex justify-content-end">
-                            <ul class="pagination" id="pagination">
-                                <!-- Paginación -->
-                            </ul>
-                        </nav>
+                            <!-- Filtros -->
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <?php
+                                    // Obtener los nombres de usuarios para el select
+                                    $queryUsuarios = "SELECT DISTINCT u.admUser FROM usuario u INNER JOIN actividades a ON u.admId = a.usuarioId";
+                                    $resultUsuarios = $con->query($queryUsuarios);
+
+                                    $usuarios = [];
+                                    while ($row = $resultUsuarios->fetch_assoc()) {
+                                        $usuarios[] = $row['admUser'];
+                                    }
+
+                                    // Generar el HTML para el select de usuarios
+                                    echo '<select id="filtroUsuario" class="form-select">';
+                                    echo '<option value="">Seleccione un usuario</option>';
+                                    foreach ($usuarios as $usuario) {
+                                        echo '<option value="' . htmlspecialchars($usuario) . '">' . htmlspecialchars($usuario) . '</option>';
+                                    }
+                                    echo '</select>';
+                                    ?>
+                                </div>
+                                <div class="col-md-4">
+                                    <select id="filtroTabla" class="form-select">
+                                        <option value="">Nombre de la tabla</option>
+                                        <option value="Usuario">Usuario</option>
+                                        <option value="Stock">Stock</option>
+                                        <option value="Producto">Producto</option>
+                                        <option value="Talla">Talla</option>
+                                        <option value="Marca">Marca</option>
+                                        <option value="Color">Color</option>
+                                        <option value="Categoria">Categoria</option>
+                                        <option value="Contacto">Contacto</option>
+                                        <option value="Portada">Portada</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <select id="filtroActividad" class="form-select">
+                                        <option value="">Actividad</option>
+                                        <option value="Insert">Insert</option>
+                                        <option value="Update">Update</option>
+                                        <option value="Delete">Delete</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4 mt-3">
+                                    <input type="datetime-local" id="filtroFechaDesde" class="form-control" placeholder="Fecha y hora desde">
+                                </div>
+                                <div class="col-md-4 mt-3">
+                                    <input type="datetime-local" id="filtroFechaHasta" class="form-control" placeholder="Fecha y hora hasta">
+                                </div>
+                                <div class="col-md-4 mt-3">
+                                    <button class="btn btn-primary w-100" onclick="cargarActividades(1)">Filtrar</button>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center mt-3">
+                                <div id="total-registros"></div>
+                            </div>
+                            <nav class="d-flex justify-content-end">
+                                <ul class="pagination" id="pagination">
+                                    <!-- Paginación -->
+                                </ul>
+                            </nav>
                             <div class="tab-content">
                                 <div class="tab-pane active" id="actividadesDetails" role="tabpanel">
                                     <div class="table-responsive">
@@ -51,6 +103,7 @@ include "../../sidebar.php";
                                                 <tr>
                                                     <th>N</th>
                                                     <th>Usuario</th>
+                                                    <th>Nombre de la tabla</th>
                                                     <th>Actividad</th>
                                                     <th>Descripción</th>
                                                     <th>Fecha</th>
@@ -62,7 +115,6 @@ include "../../sidebar.php";
                                             </tbody>
                                         </table>
                                     </div>
-                             
                                 </div>
                             </div>
                         </div>
@@ -98,22 +150,53 @@ include "../../sidebar.php";
     });
 
     function cargarActividades(pagina) {
-        fetch('obtener_reporte_usuarios.php?pagina=' + pagina)
+        const usuario = document.getElementById('filtroUsuario').value;
+        const tabla = document.getElementById('filtroTabla').value;
+        const actividad = document.getElementById('filtroActividad').value;
+        const fechaDesde = document.getElementById('filtroFechaDesde').value;
+        const fechaHasta = document.getElementById('filtroFechaHasta').value;
+
+        const params = new URLSearchParams({
+            pagina: pagina,
+            usuario: usuario,
+            tabla: tabla,
+            actividad: actividad,
+            fechaDesde: fechaDesde,
+            fechaHasta: fechaHasta
+        });
+
+        fetch('obtener_reporte_usuarios.php?' + params.toString())
             .then(response => response.json())
             .then(data => {
                 // Actualizar tabla de Actividades Recientes
                 const actividadesTable = document.getElementById('actividades-table');
                 actividadesTable.innerHTML = '';
                 data.actividades.forEach((actividad, index) => {
+                    let badgeColor;
+                    switch (actividad.actividad.toLowerCase()) {
+                        case 'insert':
+                            badgeColor = 'success';
+                            break;
+                        case 'update':
+                            badgeColor = 'warning';
+                            break;
+                        case 'delete':
+                            badgeColor = 'danger';
+                            break;
+                        default:
+                            badgeColor = 'secondary';
+                    }
+
                     const row = document.createElement('tr');
                     row.innerHTML = `
-                        <td>${(pagina - 1) * 15 + index + 1}</td>
-                        <td>${actividad.usuario}</td>
-                        <td>${actividad.actividad}</td>
-                        <td>${actividad.descripcion}</td>
-                        <td>${actividad.fecha}</td>
-                        <td><button class='btn btn-soft-danger btn-sm' onclick="confirmarEliminacion(${actividad.actId})"><i class="ri-delete-bin-fill align-bottom me-1" style='font-size: 1.5em;'></i></button></td>
-                    `;
+                <td>${(pagina - 1) * 15 + index + 1}</td>
+                <td>${actividad.usuario}</td>
+                <td>${actividad.nombreTabla}</td>
+                <td><span class="badge-${badgeColor}">${actividad.actividad}</span></td>
+                <td>${actividad.descripcion}</td>
+                <td>${actividad.fecha}</td>
+                <td><button class='btn btn-soft-danger btn-sm' onclick="confirmarEliminacion(${actividad.actId})"><i class="ri-delete-bin-fill align-bottom me-1" style='font-size: 1.5em;'></i></button></td>
+                `;
                     actividadesTable.appendChild(row);
                 });
 
@@ -147,23 +230,25 @@ include "../../sidebar.php";
 
     function eliminarActividad(actId) {
         fetch('eliminar_actividad.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ actId: actId })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                cargarActividades(1);
-                const deleteModal = bootstrap.Modal.getInstance(document.getElementById('deleteModal'));
-                deleteModal.hide();
-            } else {
-                alert('Error al eliminar la actividad.');
-            }
-        })
-        .catch(error => console.error('Error:', error));
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    actId: actId
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    cargarActividades(1);
+                    const deleteModal = bootstrap.Modal.getInstance(document.getElementById('deleteModal'));
+                    deleteModal.hide();
+                } else {
+                    alert('Error al eliminar la actividad.');
+                }
+            })
+            .catch(error => console.error('Error:', error));
     }
 </script>
 <?php include "../../footer.php"; ?>

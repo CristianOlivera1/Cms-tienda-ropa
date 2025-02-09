@@ -3,6 +3,7 @@ include "../sidebar.php";
 
 $error = '';
 $success = '';
+$usuarioId = $_SESSION['admin_id'];
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -32,6 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $stmt = $con->prepare($query);
             $stmt->bind_param('ssii', $username, $hashed_password, $carId, $id);
             if ($stmt->execute()) {
+                registrarActividad($con, $id, "Usuario", "Update", "Actualizó el usuario: Nombre de Usuario - " . htmlspecialchars($username) . ", Cargo ID - " . htmlspecialchars($carId) . ".");
                 $success = 'Usuario actualizado correctamente.';
             } else {
                 $error = 'Error al actualizar el usuario.';

@@ -1,5 +1,8 @@
 <?php
 include "../../coneccionbd.php";
+include "../../registrar_actividad.php";
+session_start();
+$usuarioId = $_SESSION['admin_id'];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['action'] == 'delete') {
     $marca_id = $_POST['marca_id'];
@@ -21,6 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
         $deleteStmt = $con->prepare($deleteQuery);
         $deleteStmt->bind_param('i', $marca_id);
         if ($deleteStmt->execute()) {
+            registrarActividad($con, $usuarioId, "Marca", "Delete", "Eliminó la marca con ID: " . htmlspecialchars($marca_id) . ".");
             echo json_encode(['success' => true]);
         } else {
             echo json_encode(['success' => false, 'error' => 'Error al eliminar la marca.']);

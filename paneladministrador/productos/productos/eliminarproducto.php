@@ -1,6 +1,9 @@
 <?php
-include "../../coneccionbd.php"; // Verifica la conexión a la base de datos
+include "../../coneccionbd.php";
+include "../../registrar_actividad.php";
 
+session_start();
+$usuarioId = $_SESSION['admin_id'];
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['action'] == 'delete' && isset($_POST['producto_id'])) {
     $producto_id = (int)$_POST['producto_id'];
 
@@ -33,6 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
     $stmt = $con->prepare($query);
     $stmt->bind_param('i', $producto_id);
     if ($stmt->execute()) {
+        registrarActividad($con, $usuarioId, "Producto", "Delete", "Eliminó el producto con ID: " . htmlspecialchars($producto_id) . ".");
         echo json_encode(['success' => true, 'message' => 'Producto eliminado con éxito.']);
     } else {
         echo json_encode(['success' => false, 'error' => 'Error al eliminar el producto.']);

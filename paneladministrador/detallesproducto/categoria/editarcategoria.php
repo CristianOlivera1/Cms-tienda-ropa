@@ -3,6 +3,7 @@ include "../../header.php";
 include "../../sidebar.php";
 $error = '';
 $success = '';
+$usuarioId = $_SESSION['admin_id'];
 
 if (isset($_GET['id'])) {
     $categoria_id = $_GET['id'];
@@ -75,7 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                 if ($stmt->execute()) {
                     $success = 'Categoría actualizada exitosamente.';
-                    registrarActividad($con, $usuarioId, "Update", "Actualizó la categoría: Nombre - " . htmlspecialchars($categoria_nombre) . ", Descripción - " . htmlspecialchars($categoria_descripcion) . ", Detalle - " . htmlspecialchars($categoria_detalle) . ".");
+                    registrarActividad($con, $usuarioId,"Categoria", "Update", "Actualizó la categoría: Nombre - " . htmlspecialchars($categoria_nombre) . ", Descripción - " . htmlspecialchars($categoria_descripcion) . ", Detalle - " . htmlspecialchars($categoria_detalle) . ".");
                     // Actualizar los datos de la categoría
                     $categoria['catNombre'] = $categoria_nombre;
                     $categoria['catDescripcion'] = $categoria_descripcion;
