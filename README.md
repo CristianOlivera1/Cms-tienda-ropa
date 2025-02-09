@@ -24,6 +24,8 @@ Este proyecto es un sistema de administración de contenido diseñado para gesti
 - **Gestión de Clientes**: Administra la información de los clientes registrados en la tienda.
 - **Gestión de Ventas**: Administra las ventas realizadas, incluyendo detalles de los productos vendidos, cantidad y precio.
 - **Reseñas de Productos**: Permite a los clientes dejar reseñas sobre los productos comprados.
+- **Chorizo**
+  
 
 ## Instalación
 
