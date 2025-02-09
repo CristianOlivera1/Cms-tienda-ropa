@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 08-02-2025 a las 23:33:23
+-- Tiempo de generación: 09-02-2025 a las 23:03:51
 -- Versión del servidor: 10.4.27-MariaDB
 -- Versión de PHP: 8.2.0
 
@@ -20,6 +20,67 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `tiendacms`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `actividades`
+--
+
+CREATE TABLE `actividades` (
+  `actId` int(11) NOT NULL,
+  `usuarioId` int(11) NOT NULL,
+  `nombreTabla` varchar(30) NOT NULL,
+  `actividad` varchar(30) NOT NULL,
+  `descripcion` varchar(255) NOT NULL,
+  `fecha` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `actividades`
+--
+
+INSERT INTO `actividades` (`actId`, `usuarioId`, `nombreTabla`, `actividad`, `descripcion`, `fecha`) VALUES
+(13, 4, '0', 'Update', 'Actualizó los datos de contacto: Teléfono - 954306631, Email - 221181@unamba.com.', '2025-02-08 18:54:41'),
+(14, 4, '0', 'Update', 'Actualizó la categoría: Nombre - dddddddddda, Descripción - sssssssssssssa, Detalle - sssasssssssssssa.', '2025-02-08 18:56:18'),
+(23, 4, 'Categoria', 'Insert', 'Inserto la categoría: Nombre - aaaaaaaaaa, Descripción - adddddddddddddddd, Detalle - ssssssssssssssssss.', '2025-02-09 07:19:28'),
+(24, 4, 'Categoria', 'Update', 'Actualizó la categoría: Nombre - aaaaaaaaaa2, Descripción - adddddddddddddddd, Detalle - ssssssssssssssssss.', '2025-02-09 07:19:45'),
+(25, 4, 'Categoria', 'Delete', 'Eliminó la categoría con ID: 76.', '2025-02-09 07:19:53'),
+(26, 4, 'Categoria', 'Insert', 'Inserto la categoría: Nombre - aaaaaa, Descripción - ssssss, Detalle - dddddd.', '2025-02-09 07:21:27'),
+(27, 4, 'Categoria', 'Insert', 'Inserto la categoría: Nombre - aaaaaaa, Descripción - aaaaaaaa, Detalle - aaaaaaaaaa.', '2025-02-09 07:23:16'),
+(28, 4, 'Categoria', 'Delete', 'Eliminó la categoría con ID: 78.', '2025-02-09 07:23:29'),
+(29, 4, 'Categoria', 'Insert', 'Inserto la categoría: Nombre - ssssss, Descripción - ddddd, Detalle - ssssss.', '2025-02-09 07:23:39'),
+(31, 4, 'Categoria', 'Insert', 'Inserto la categoría: Nombre - ssssssssssss, Descripción - ssssssssss, Detalle - sssssssssssssss.', '2025-02-09 07:32:28'),
+(32, 4, 'Categoria', 'Update', 'Actualizó la categoría: Nombre - ssssssssssss, Descripción - aaaaaaaaaa, Detalle - sssssssssssssss.', '2025-02-09 07:32:44'),
+(33, 4, 'Categoria', 'Insert', 'Inserto la categoría: Nombre - ssssssssssssss, Descripción - sssssss, Detalle - sssssssssss.', '2025-02-09 07:34:08'),
+(34, 4, 'Categoria', 'Delete', 'Eliminó la categoría con ID: 81.', '2025-02-09 07:34:11'),
+(35, 4, 'Categoria', 'Insert', 'Inserto la categoría: Nombre - ssssssss, Descripción - ssssssssss, Detalle - ssssssssss.', '2025-02-09 07:34:55'),
+(36, 4, 'Categoria', 'Delete', 'Eliminó la categoría con ID: 82.', '2025-02-09 07:34:58'),
+(37, 4, 'Categoria', 'Insert', 'Inserto la categoría: Nombre - sssssssss, Descripción - ssssssssss, Detalle - sssssssssss.', '2025-02-09 07:36:18'),
+(38, 4, 'Categoria', 'Delete', 'Eliminó la categoría con ID: 83.', '2025-02-09 07:36:21'),
+(39, 4, 'Categoria', 'Insert', 'Inserto la categoría: Nombre - ssssssss, Descripción - dddddddd, Detalle - ddssssssssssssssssssss.', '2025-02-09 07:44:52'),
+(40, 4, 'Categoria', 'Delete', 'Eliminó la categoría con ID: 84.', '2025-02-09 07:46:09'),
+(41, 4, 'Color', 'Update', 'Actualizó el color: Nombre - ddddddddddddd2, Código Hexadecimal - #5b2020.', '2025-02-09 07:46:18'),
+(42, 4, 'Color', 'Delete', 'Eliminó el color con ID: 53.', '2025-02-09 07:46:26'),
+(43, 4, 'Color', 'Delete', 'Eliminó el color con ID: 54.', '2025-02-09 07:46:33'),
+(44, 4, 'Color', 'Insert', 'Inserto el color: Nombre - ssssssssssssssss, Código Hexadecimal - #ce8383.', '2025-02-09 07:46:37'),
+(45, 4, 'Color', 'Delete', 'Eliminó el color con ID: 55.', '2025-02-09 07:46:45'),
+(46, 4, 'Marca', 'Insert', 'Inserto la marca: Nombre - AAAAAAAAAAAAA', '2025-02-09 07:52:25'),
+(47, 4, 'Marca', 'Update', 'Actualizó la marca: Nombre - AAAAAAAAAAAAA2', '2025-02-09 07:52:35'),
+(48, 4, 'Marca', 'Delete', 'Eliminó la marca con ID: 45.', '2025-02-09 07:52:42'),
+(49, 4, 'Talla', 'Insert', 'Inserto la talla: Nombre - aaaaaaaaaaaa.', '2025-02-09 07:56:10'),
+(50, 4, 'Talla', 'Update', 'Actualizó la talla: Nombre - aaaaaaaaaaaa2.', '2025-02-09 07:56:18'),
+(51, 4, 'Talla', 'Delete', 'Eliminó la talla con ID: 27.', '2025-02-09 07:56:25'),
+(52, 4, 'Producto', 'Insert', 'Inserto el producto: Nombre - aaaaaaaaa, Categoria - 28, Precio - 11.', '2025-02-09 08:01:48'),
+(53, 4, 'Producto', 'Update', 'Actualizó el producto: Nombre - aaaaaaaaa, Descripción - aaaaaaaaaaaaaaa2, Precio - 11, Categoría ID - 28, Marca ID - 5.', '2025-02-09 08:02:01'),
+(54, 4, 'Producto', 'Delete', 'Eliminó el producto con ID: 63.', '2025-02-09 08:02:40'),
+(55, 4, 'Stock', 'Insert', 'Registró el stock: Producto ID - 19, Estado ID - 1, Color ID - 27, Talla ID - 12, Cantidad - 10.', '2025-02-09 08:05:42'),
+(56, 4, 'Stock', 'Update', 'Actualizó el stock: Producto ID - 19, Estado ID - 1, Color ID - 27, Talla ID - 12, Cantidad - 11.', '2025-02-09 08:06:01'),
+(57, 4, 'Stock', 'Delete', 'Eliminó el stock con ID: 113.', '2025-02-09 08:06:14'),
+(58, 4, 'Usuario', 'Insert', 'Inserto el usuario: Nombre de Usuario - aaaaaaaaaaa, Cargo ID - 2.', '2025-02-09 08:09:02'),
+(60, 4, 'Usuario', 'Insert', 'Inserto el usuario: Nombre de Usuario - aaaaaaaa, Cargo ID - 2.', '2025-02-09 08:10:19'),
+(61, 4, 'Usuario', 'Delete', 'Eliminó el usuario con ID: 10.', '2025-02-09 08:10:23'),
+(62, 3, 'Talla', 'Insert', 'Inserto la talla: Nombre - ssssssssss.', '2025-02-09 08:37:25');
 
 -- --------------------------------------------------------
 
@@ -74,8 +135,7 @@ INSERT INTO `categoria` (`catId`, `catNombre`, `catDescripcion`, `catDetalle`, `
 (45, 'Trajes', 'Ropa formal', 'Trajes para ocasiones especiales', '678d28f7b2ab6-traje-hombre-corte-slim-fit-varios-colores-rack-pack.jpg', '2025-01-19 11:31:51'),
 (46, 'Bañadores', 'Ropa de baño', 'Bañadores para la playa y piscina', '678d284d93640-35a29f02692b3d2ef70883aaadbeb693.jpg', '2025-01-19 11:29:01'),
 (47, 'Zapatillas', 'Calzado cómodo', 'Zapatillas deportivas y casuales', '678d27f537d62-Zapatos Tumblr.jpeg', '2025-01-19 11:27:33'),
-(48, 'Abrigos', 'Ropa de abrigo', 'Abrigos para el invierno', '678d27e9d5932-muchos-abrigos-estan-frente-ventana-que-hombres-miren_674594-21434.jpg', '2025-01-19 11:27:21'),
-(50, 'dddddddddd', 'sssssssssssss', 'sssasssssssssss', '67a6a909e0b0e-matthew-smith-Rfflri94rs8-unsplash (2).jpg', '2025-02-07 19:44:57');
+(48, 'Abrigos', 'Ropa de abrigo', 'Abrigos para el invierno', '678d27e9d5932-muchos-abrigos-estan-frente-ventana-que-hombres-miren_674594-21434.jpg', '2025-01-19 11:27:21');
 
 -- --------------------------------------------------------
 
@@ -162,7 +222,7 @@ CREATE TABLE `contacto` (
 --
 
 INSERT INTO `contacto` (`conId`, `conTelefono`, `conEmail`, `conFechaRegis`) VALUES
-(1, '987654320', '2211@ddddd.com', '2025-01-04 16:34:28');
+(1, '954306631', '221181@unamba.com', '2025-02-08 18:45:55');
 
 -- --------------------------------------------------------
 
@@ -293,7 +353,7 @@ CREATE TABLE `portada` (
 --
 
 INSERT INTO `portada` (`porId`, `porTitulo`, `porDescripcion`, `porFechaRegis`) VALUES
-(1, 'Cms tienda de ropas para todos', 'Este es un sistio wew similar a un ecommerce diseñaado para una tienda de prendas de vestir.', '2024-12-30 20:08:09');
+(1, 'Vistiendo a Todos: Moda para Cada Estilo', 'Descubre moda para todos los gustos en nuestra plataforma de ecommerce, con ropa de calidad y estilo para todas las edades y ocasiones.', '2025-02-08 18:08:16');
 
 -- --------------------------------------------------------
 
@@ -522,7 +582,8 @@ INSERT INTO `talla` (`talId`, `talNombre`, `talFechaRegis`) VALUES
 (22, '36', '2025-01-27 09:59:50'),
 (23, '37', '2025-01-27 09:59:52'),
 (24, '38', '2025-01-27 09:59:53'),
-(25, '39', '2025-01-27 09:59:55');
+(25, '39', '2025-01-27 09:59:55'),
+(28, 'ssssssssss', '2025-02-09 08:37:25');
 
 -- --------------------------------------------------------
 
@@ -578,6 +639,13 @@ INSERT INTO `ventas` (`venId`, `cliId`, `venFechaRegis`) VALUES
 --
 -- Índices para tablas volcadas
 --
+
+--
+-- Indices de la tabla `actividades`
+--
+ALTER TABLE `actividades`
+  ADD PRIMARY KEY (`actId`),
+  ADD KEY `usuarioId` (`usuarioId`);
 
 --
 -- Indices de la tabla `cargo`
@@ -692,6 +760,12 @@ ALTER TABLE `ventas`
 --
 
 --
+-- AUTO_INCREMENT de la tabla `actividades`
+--
+ALTER TABLE `actividades`
+  MODIFY `actId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=63;
+
+--
 -- AUTO_INCREMENT de la tabla `cargo`
 --
 ALTER TABLE `cargo`
@@ -701,7 +775,7 @@ ALTER TABLE `cargo`
 -- AUTO_INCREMENT de la tabla `categoria`
 --
 ALTER TABLE `categoria`
-  MODIFY `catId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
+  MODIFY `catId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=85;
 
 --
 -- AUTO_INCREMENT de la tabla `cliente`
@@ -713,7 +787,7 @@ ALTER TABLE `cliente`
 -- AUTO_INCREMENT de la tabla `color`
 --
 ALTER TABLE `color`
-  MODIFY `colId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
+  MODIFY `colId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
 
 --
 -- AUTO_INCREMENT de la tabla `contacto`
@@ -737,7 +811,7 @@ ALTER TABLE `estado`
 -- AUTO_INCREMENT de la tabla `marca`
 --
 ALTER TABLE `marca`
-  MODIFY `marId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
+  MODIFY `marId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
 
 --
 -- AUTO_INCREMENT de la tabla `oferta`
@@ -755,7 +829,7 @@ ALTER TABLE `portada`
 -- AUTO_INCREMENT de la tabla `producto`
 --
 ALTER TABLE `producto`
-  MODIFY `proId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=63;
+  MODIFY `proId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=64;
 
 --
 -- AUTO_INCREMENT de la tabla `resenhas`
@@ -767,19 +841,19 @@ ALTER TABLE `resenhas`
 -- AUTO_INCREMENT de la tabla `stock`
 --
 ALTER TABLE `stock`
-  MODIFY `stoId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=113;
+  MODIFY `stoId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=114;
 
 --
 -- AUTO_INCREMENT de la tabla `talla`
 --
 ALTER TABLE `talla`
-  MODIFY `talId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `talId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `admId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `admId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de la tabla `ventas`
@@ -790,6 +864,12 @@ ALTER TABLE `ventas`
 --
 -- Restricciones para tablas volcadas
 --
+
+--
+-- Filtros para la tabla `actividades`
+--
+ALTER TABLE `actividades`
+  ADD CONSTRAINT `actividades_ibfk_1` FOREIGN KEY (`usuarioId`) REFERENCES `usuario` (`admId`) ON DELETE CASCADE;
 
 --
 -- Filtros para la tabla `detalleventa`
