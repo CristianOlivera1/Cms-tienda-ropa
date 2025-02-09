@@ -20,11 +20,9 @@ if (!isset($_SESSION['admin_id'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta content="Panel de administración de Men's Style" name="description" />
     <link rel="shortcut icon" href="/paneladministrador/recursos/images/favicon/favicon.ico">
-
     <link href="/paneladministrador/recursos/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <link href="/paneladministrador/recursos/css/icons.min.css" rel="stylesheet" type="text/css" />
     <link href="/paneladministrador/recursos/css/app.min.css" rel="stylesheet" type="text/css" />
-    <link href="/paneladministrador/reportes/style-reportes.css" rel="stylesheet" type="text/css" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 </head>
