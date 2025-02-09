@@ -87,30 +87,33 @@ document.addEventListener('DOMContentLoaded', function() {
             },
         });
     }
-});
 
-//CARRITO
-function addToCart(productId, productName, productPrice, quantity, productImage) {
-    let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
-    let index = carrito.findIndex(item => item.id === productId);
-
-    if (index === -1) {
-        // Si el producto no está en el carrito, lo agregamos
-        carrito.push({
-            id: productId,
-            nombre: productName,
-            precio: productPrice,
-            cantidad: parseInt(quantity),
-            img: productImage // Asegúrate de que la imagen esté disponible
-        });
-    } else {
-        // Si el producto ya está en el carrito, actualizamos la cantidad
-        carrito[index].cantidad += parseInt(quantity);
+    //carrusel portada
+var swiper = new Swiper('#product-carousel', {
+    loop: true,
+    autoplay: {
+        delay: 4000,
+        disableOnInteraction: false,
+    },
+    slidesPerView: 1,
+    spaceBetween: 10,
+    breakpoints: {
+        640: {
+            slidesPerView: 1,
+            spaceBetween: 10,
+        },
+        768: {
+            slidesPerView: 2,
+            spaceBetween: 20,
+        },
+        1024: {
+            slidesPerView: 3,
+            spaceBetween: 30,
+        },
     }
-
-    localStorage.setItem('carrito', JSON.stringify(carrito));
-    alert('Producto añadido al carrito');
-}
+});
+//carrusel portada
+});
 
 //INDEX
 function getSelectedBrand() {
@@ -217,32 +220,6 @@ document.addEventListener('click', function(event) {
     }
 });
 //buscador
-
-//carrusel portada
-var swiper = new Swiper('#product-carousel', {
-    loop: true,
-    autoplay: {
-        delay: 4000,
-        disableOnInteraction: false,
-    },
-    slidesPerView: 1,
-    spaceBetween: 10,
-    breakpoints: {
-        640: {
-            slidesPerView: 1,
-            spaceBetween: 10,
-        },
-        768: {
-            slidesPerView: 2,
-            spaceBetween: 20,
-        },
-        1024: {
-            slidesPerView: 3,
-            spaceBetween: 30,
-        },
-    }
-});
-//carrusel portada
 
 //scroll marcas
 const scrollerInner = document.querySelector('.scroller__inner');

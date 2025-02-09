@@ -107,9 +107,6 @@ while ($row = mysqli_fetch_assoc($stock)) {
                             <div class="col-12 mb-2">
                             <button class="btn btn-block btn-bordered-black p-3 mb-1" onclick="addToCart(<?php echo $todo; ?>, '<?php echo $product_name; ?>', <?php echo $product_price; ?>, document.getElementById('cantidad').value, '<?php echo $product_image; ?>')">Añadir a la cesta</button>
                         </div>
-                            <div class="col-12">
-                                <a href="checkout.php?id=<?php echo $todo; ?>" class="btn btn-block p-3 ">Comprar</a>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -183,31 +180,73 @@ while ($row = mysqli_fetch_assoc($stock)) {
 </section>
 
 <script>
-    var stockData = <?php echo json_encode($stock_data); ?>;
+  var stockData = <?php echo json_encode($stock_data); ?>;
 
-    function selectColor(colorName, element) {
-        document.getElementById('selected-color-name').innerText = colorName;
-        var circles = document.getElementsByClassName('color-circle');
-        for (var i = 0; i < circles.length; i++) {
-            circles[i].style.boxShadow = 'none';
-        }
-        element.style.boxShadow = '0 0 0 2px black';
-        updateStock();
+function selectColor(colorName, element) {
+    document.getElementById('selected-color-name').innerText = colorName;
+    var circles = document.getElementsByClassName('color-circle');
+    for (var i = 0; i < circles.length; i++) {
+        circles[i].style.boxShadow = 'none';
+    }
+    element.style.boxShadow = '0 0 0 2px black';
+    updateStock();
+}
+
+function updateStock() {
+    var selectedColor = document.getElementById('selected-color-name').innerText;
+    var selectedTalla = document.getElementById('talla').value;
+    var stockQuantity = stockData[selectedColor][selectedTalla].cantidad || 0;
+    document.getElementById('cantidad').max = stockQuantity;
+    document.getElementById('stock-quantity').innerText = stockQuantity;
+}
+
+var firstCircle = document.querySelector('.color-circle');
+if (firstCircle) {
+    selectColor(firstCircle.title, firstCircle);
+}
+updateStock();
+
+function addToCart(productId, productName, productPrice, quantity, productImage) {
+    // Obtener el color y la talla seleccionados
+    const selectedColor = document.getElementById('selected-color-name').innerText;
+    const selectedSize = document.getElementById('talla').value;
+
+    // Obtener el stoId basado en el color y la talla seleccionados
+    const stoId = stockData[selectedColor][selectedSize].stoId;
+
+    // Crear un objeto del producto
+    const product = {
+        id: productId,
+        name: productName,
+        price: productPrice,
+        quantity: quantity,
+        image: productImage,
+        color: selectedColor,
+        size: selectedSize,
+        stoId: stoId // Añadir el stoId
+    };
+
+    // Obtener el carrito del localStorage o inicializarlo
+    let cart = JSON.parse(localStorage.getItem('carrito')) || [];
+
+    // Comprobar si el producto ya está en el carrito
+    const existingProductIndex = cart.findIndex(item => item.id === productId && item.color === product.color && item.size === product.size);
+
+    if (existingProductIndex > -1) {
+        // Si el producto ya existe, actualizar la cantidad
+        cart[existingProductIndex].quantity = parseInt(cart[existingProductIndex].quantity) + parseInt(quantity);
+    } else {
+        // Si no existe, añadir el nuevo producto
+        cart.push(product);
     }
 
-    function updateStock() {
-        var selectedColor = document.getElementById('selected-color-name').innerText;
-        var selectedTalla = document.getElementById('talla').value;
-        var stockQuantity = stockData[selectedColor][selectedTalla] || 0;
-        document.getElementById('cantidad').max = stockQuantity;
-        document.getElementById('stock-quantity').innerText = stockQuantity;
-    }
+    // Guardar el carrito actualizado en el localStorage
+    localStorage.setItem('carrito', JSON.stringify(cart));
 
-        var firstCircle = document.querySelector('.color-circle');
-        if (firstCircle) {
-            selectColor(firstCircle.title, firstCircle);
-        }
-        updateStock();
+    // Opcional: Mostrar un mensaje de éxito
+    alert('Producto añadido al carrito');
+}
+
 </script>
 <?php include "../scroll-marcas.php"; ?>
 <?php include "../footer.php"; ?>

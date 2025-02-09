@@ -2,6 +2,11 @@
 // Incluir la conexión a la base de datos al principio del archivo
 include '../coneccionbd.php';
 
+// Inicializar variables para mensajes
+$mensaje_exito = '';
+$mensaje_error = '';
+$cliId = null;
+$cerrar_modal = false;
 
 // Procesar el registro de cliente y la compra
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -25,8 +30,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Procesar compra
     if (isset($_POST['comprar'])) {
         $cliId = $_POST['cliId'];
-        header("Location: confirmar_compra.php?cliId=" . $cliId);
-        exit;
+
+        // Insertar en la tabla ventas
+        $stmt = $con->prepare("INSERT INTO ventas (cliId, venFechaRegis, estadoVentasId) VALUES (?, NOW(),?)");
+        
+        $estado=2;
+        $stmt->bind_param("ii", $cliId,$estado);
+        
+        if ($stmt->execute()) {
+            $venId = $stmt->insert_id; // Obtener el ID de la venta generada
+            // Redirigir a la página de confirmación de compra con el venId
+            header("Location: confirmar_compra.php?cliId=" . $cliId . "&venId=" . $venId);
+            exit;
+        } else {
+            $mensaje_error = 'Error al registrar la venta: ' . $stmt->error;
+        }
     }
 
     // Procesar registro de cliente
@@ -67,7 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     // Iniciar transacción
                     $con->begin_transaction();
                     try {
-                        $sql_cliente = "INSERT INTO cliente (cliNombre, cliApellidoPaterno, cliApellidoMaterno, cliDni, cliCorreo, cliFechaNacimiento) VALUES (?, ?, ?, ?, ?, ?)";
+                        $sql_cliente = "INSERT INTO cliente (cliNombre, cliApellidoPaterno, cliApellidoMaterno, cliDni, cliCorreo, cliFechNacimiento) VALUES (?, ?, ?, ?, ?, ?)";
                         $stmt = $con->prepare($sql_cliente);
                         $stmt->bind_param("ssssss", $nombre, $apePaterno, $apeMaterno, $dni, $correo, $fechaNacimiento);
                         
@@ -118,12 +136,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             font-weight: bold;
         }
     </style>
-   
 </head>
 
 <body>
     <div class="container">
-        
         <div class="card p-4">
             <h2 class="text-center"><i class="bi bi-person-plus-fill"></i> ¿Realizaste compras antes?</h2>
             <form method="POST" action="">
@@ -135,50 +151,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </form>
 
             <div class="mt-3">
-                <?php
-                if (isset($mensaje_exito)) {
-                    echo '<div class="alert alert-success">' . $mensaje_exito . '</div>';
-                    echo '<form method="POST" action="">
-                            <input type="hidden" name="cliId" value="' . $cliId . '">
-                            <button type="submit" class="btn btn-primary w-100" name="comprar"><i class="bi bi-cart-check"></i> Comprar con este usuario</button>
-                          </form>';
-                } elseif (isset($mensaje_error)) {
-                    echo '<div class="alert alert-danger">' . $mensaje_error . '</div>';
-                }
-                ?>
+    <?php
+    if (!empty($mensaje_exito) && $cliId !== null) {
+        echo '<div class="alert alert-success">' . $mensaje_exito . '</div>';
+        echo '<form method="POST" action="">
+                <input type="hidden" name="cliId" value="' . $cliId . '">
+                <button type="submit" class="btn btn-primary w-100" name="comprar"><i class="bi bi-cart-check"></i> Comprar con este usuario</button>
+              </form>';
+    } elseif (!empty($mensaje_error)) {
+        echo '<div class="alert alert-danger">' . $mensaje_error . '</div>';
+    }
+    ?>
+</div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <button type="button" class="btn btn-volver w-100" onclick="window.location.href='carrito_compras.php'">
+                        <i class="bi bi-arrow-left"></i> Regresar
+                    </button>
+                </div>
+                <div class="col-md-6">
+ <button type="button" class="btn btn-secondary w-100" data-bs-toggle="modal" data-bs-target="#registroModal">
+                        <i class="bi bi-person-add"></i> Registrarse
+                    </button>
+                </div>
             </div>
-    <div class="row mt-3">
-        <div class="col-md-6">
-            <button type="button" class="btn btn-volver w-100" onclick="window.location.href='carrito_compras.php'">
-                <i class="bi bi-arrow-left"></i> Regresar
-            </button>
-        </div>
-        <div class="col-md-6">
-            <button type="button" class="btn btn-secondary w-100" data-bs-toggle="modal" data-bs-target="#registroModal">
-                <i class="bi bi-person-add"></i> Registrarse
-            </button>
-        </div>
-    </div>
 
             <!-- Modal para Registro de Cliente -->
             <div class="modal fade" id="registroModal" tabindex="-1" aria-labelledby="registroModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                        <h5 class="modal-title text-center" id="registroModalLabel"><i class="bi bi-person-plus-fill"></i> Registro de Cliente</h5>
+                            <h5 class="modal-title text-center" id="registroModalLabel"><i class="bi bi-person-plus-fill"></i> Registro de Cliente</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             <form method="POST" action="">
-                                <div class="mt-3">
-                                    <?php
-                                    if (isset($mensaje_exito)) {
-                                        echo '<div class="alert alert-success">' . $mensaje_exito . '</div>';
-                                    } elseif (isset($mensaje_error)) {
-                                        echo '<div class="alert alert-danger">' . $mensaje_error . '</div>';
-                                    }
-                                    ?>
-                                </div>
+                                
                                 <div class="mb-3">
                                     <label for="cliNombre" class="form-label">Nombre</label>
                                     <input type="text" class="form-control" id="cliNombre" name="cliNombre" pattern="^[A-Za-záéíóúÁÉÍÓÚñÑ ]+$" title="Solo letras y espacios" required>
@@ -204,7 +213,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <input type="date" class="form-control" id="cliFechNacimiento" name="cliFechNacimiento" required>
                                 </div>
                                 <button type="submit" class="btn btn-primary w-100" name="registrar"><i class="bi bi-person-add"></i> Registrarse</button>
-                                
                             </form>
                         </div>
                     </div>

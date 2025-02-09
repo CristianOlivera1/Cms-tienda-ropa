@@ -47,7 +47,8 @@ $productos = getProductData($con);
                     <img src="<?php echo $producto['foto']; ?>" alt="<?php echo $producto['nombre']; ?>">
                     <h2><?php echo $producto['nombre']; ?></h2>
                     <p>Precio: $<?php echo $producto['precio']; ?></p>
-                    <button onclick="agregarAlCarrito({id: <?php echo $producto['prodId']; ?>, nombre: '<?php echo $producto['nombre']; ?>', precio: <?php echo $producto['precio']; ?>, img: '<?php echo $producto['foto']; ?>'})">Agregar al carrito</button>
+                    <button onclick="agregarAlCarrito({id: <?php echo $producto['prodId']; ?>, nombre: '<?php echo $producto['nombre']; ?>', 
+                    : <?php echo $producto['precio']; ?>, img: '<?php echo $producto['foto']; ?>'})">Agregar al carrito</button>
                 </div>
             <?php endwhile; ?>
         <?php else: ?>

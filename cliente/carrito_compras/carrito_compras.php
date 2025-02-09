@@ -1,6 +1,3 @@
-<?php
-include '../header.php'
-?>
 <!DOCTYPE html>
 <html lang="es">
 
@@ -15,10 +12,11 @@ include '../header.php'
             background: url('../recursos/img/welcome/fondo-portada.svg') no-repeat center center fixed;
             background-size: cover;
         }
+
         .card {
             background-color: rgba(255, 255, 255, 0.8);
         }
-       
+
         h3 {
             color: #007bff; /* Color del título */
         }
@@ -27,18 +25,19 @@ include '../header.php'
 
 <body class="bg-light">
 
-
     <div class="container mt-5 pt-4">
-    <div class="card shadow p-3">
-    <h3 class="text-center mb-4 pb-2 border-bottom" style="color: black;">Resumen de mi Pedido</h3>
+        <div class="card shadow p-3">
+            <h3 class="text-center mb-4 pb-2 border-bottom" style="color: black;">Resumen de mi Pedido</h3>
+            <br>
 
-        
             <div class="table-responsive">
                 <table class="table table-hover align-middle">
                     <thead class="table-dark text-center">
                         <tr>
                             <th scope="col">Detalle</th>
                             <th scope="col">Producto</th>
+                            <th scope="col">Color</th>
+                            <th scope="col">Talla</th>
                             <th scope="col">Cantidad</th>
                             <th scope="col">Precio Unitario</th>
                             <th scope="col">Total</th>
@@ -46,7 +45,7 @@ include '../header.php'
                         </tr>
                     </thead>
                     <tbody id="cuerpoCarrito">
-                        <!-- Productos generados por JavaScript -->
+                        
                     </tbody>
                 </table>
             </div>
@@ -59,7 +58,7 @@ include '../header.php'
                 <a href="../producto/producto.php" class="btn btn-outline-dark">
                     <i class="bi bi-cart-plus"></i> Seguir Comprando
                 </a>
-                <a href="registro_cliente.php" class="btn btn-success">
+                <a href="registro_cliente.php" class="btn btn-success" id="btnSolicitarPedido" style="display: none;">
                     Solicitar Pedido <i class="bi bi-arrow-right-circle"></i>
                 </a>
             </div>
@@ -89,63 +88,70 @@ include '../header.php'
         let productoAEliminarIndex = -1;
 
         function cargarCarrito() {
-    let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
-    let cuerpoCarrito = document.getElementById('cuerpoCarrito');
-    let mensajeCarrito = document.getElementById('mensajeCarrito');
-    cuerpoCarrito.innerHTML = '';
+            let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+            let cuerpoCarrito = document.getElementById('cuerpoCarrito');
+            let mensajeCarrito = document.getElementById('mensajeCarrito');
+            let btnSolicitarPedido = document.getElementById('btnSolicitarPedido');
+            cuerpoCarrito.innerHTML = '';
 
-    if (carrito.length === 0) {
-        mensajeCarrito.style.display = 'block';
-    } else {
-        mensajeCarrito.style.display = 'none';
-        let total = 0;
+            if (carrito.length === 0) {
+                mensajeCarrito.style.display = 'block';
+                btnSolicitarPedido.style.display = 'none'; // Ocultar el botón si el carrito está vacío
+            } else {
+                mensajeCarrito.style.display = 'none';
+                btnSolicitarPedido.style.display = 'inline-block'; // Mostrar el botón si hay productos en el carrito
+                let totalGeneral = 0;
 
-        carrito.forEach((producto, index) => {
-            let totalProducto = producto.precio * producto.cantidad; // Calcular el total por producto
-            total += totalProducto; // Sumar al total general
-            cuerpoCarrito.innerHTML += `
-                <tr>
-                    <td class="text-center"><img src="../../paneladministrador/recursos/uploads/producto/${producto.img}/${producto.img}" class="rounded" style="width: 80px;"></td>
-                    <td>${producto.nombre}</td>
-                    <td class="text-center">
-                        <button class="btn btn-outline-secondary btn-sm" onclick="cambiarCantidad(${index}, -1)">
-                            <i class="bi bi-dash"></i>
-                        </button>
-                        <span class="mx-2">${producto.cantidad}</span>
-                        <button class="btn btn-outline-secondary btn-sm" onclick="cambiarCantidad(${index}, 1)">
-                            <i class="bi bi-plus"></i>
-                        </button>
-                    </td>
-                    <td class="text-end"><strong>S/.</strong>${producto.precio.toFixed(2)}</td>
-                    <td class="text-end"><strong>S/.${totalProducto.toFixed(2)}</strong></td> <!-- Total por producto -->
-                    <td class="text-center">
-                        <button class="btn btn-sm btn-danger" onclick="abrirModalEliminar(${index})">
-                            <i class="bi bi-trash3"></i>
-                        </button>
-                    </td>
-                </tr>
-            `;
-        });
+                carrito.forEach((producto, index) => {
+                    let totalProducto = producto.price * producto.quantity; // Calcular el total por producto
+                    totalGeneral += totalProducto; // Sumar al total general
+                    cuerpoCarrito.innerHTML += `
+                        <tr>
+                            <td class="text-center"><img src="${producto.image}" class="rounded" style="width: 80px;"></td>
+                            <td>${producto.name}</td>
+                            <td>${producto.color}</td>
+                            <td>${producto.size}</td>
+                            <td class="text-center">
+                                <button class="btn btn-outline-secondary btn-sm" onclick="cambiarCantidad(${index}, -1)">
+                                    <i class="bi bi-dash"></i>
+                                </button>
+                                <span class="mx-2">${producto.quantity}</span>
+                                <button class="btn btn-outline-secondary btn-sm" onclick="cambiarCantidad(${index}, 1)">
+                                    <i class="bi bi-plus"></i>
+                                </button>
+                            </td>
+                            <td class="text-end"><strong>S/.</strong>${producto.price.toFixed(2)}</td>
+                            <td class="text-end"><strong>S/.${totalProducto.toFixed(2)}</strong></td> <!-- Total por producto -->
+                            <td class="text-center">
+                                <button class="btn btn-sm btn-danger" onclick="abrirModalEliminar(${index})">
+                                    <i class="bi bi-trash3"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
 
-        cuerpoCarrito.innerHTML += `
-            <tr class="table-secondary">
-                <td colspan="4" class="text-end"><strong>Total a Pagar:</strong></td>
-                <td class="text-end"><strong>S/.${total.toFixed(2)}</strong></td>
-                <td></td>
-            </tr>
-        `;
-    }
-}
-
-
+                cuerpoCarrito.innerHTML += `
+                    <tr class="table-secondary">
+                        <td colspan="6" class="text-end"><strong>Total a Pagar:</strong></td>
+                        <td class="text-end"><strong>S/.${totalGeneral.toFixed(2)}</strong></td>
+                        <td></td>
+                    </tr>
+                `;
+            }
+        }
 
         function cambiarCantidad(index, cambio) {
             let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
-            carrito[index].cantidad += cambio;
-            if (carrito[index].cantidad <= 0) abrirModalEliminar(index);
-            else {
+            let nuevaCantidad = parseInt(carrito[index].quantity, 10) + cambio; // Asegúrate de que sea un número
+
+            // Asegurarse de que la cantidad no sea menor que 1
+            if (nuevaCantidad < 1) {
+                abrirModalEliminar(index);
+            } else {
+                carrito[index].quantity = nuevaCantidad; // Actualizar la cantidad
                 localStorage.setItem('carrito', JSON.stringify(carrito));
-                cargarCarrito();
+                cargarCarrito(); // Recargar el carrito para reflejar los cambios
             }
         }
 
