@@ -333,6 +333,31 @@ function confirmDeleteStock(stockId) {
     });
 }
 
+/*OFERTA */
+function loadStocks() {
+    // Obtener el ID del producto seleccionado
+    var proId = document.getElementById("proId").value;
+
+    // Verificar si se ha seleccionado un producto
+    if (proId) {
+        // Crear la solicitud AJAX
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "get_stocks.php?proId=" + proId, true);
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                var response = JSON.parse(xhr.responseText);
+                // Actualizar el select de stocks con las nuevas opciones
+                document.getElementById("stoId").innerHTML = response.options;
+            }
+        };
+        xhr.send();
+    } else {
+        // Si no se ha seleccionado un producto, mostrar solo la opción por defecto
+        document.getElementById("stoId").innerHTML = "<option value=''>Selecciona un producto primero</option>";
+    }
+}
+/*OFERTA */
+
 //filtros de buscar y filtrar (todos)
 $(document).ready(function() {
     let searchTimeout = null;

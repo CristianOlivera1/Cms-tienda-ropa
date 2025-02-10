@@ -34,7 +34,10 @@ $stock = mysqli_query($con, "SELECT s.colId, s.talId, s.stoCantidad, c.colNombre
                              WHERE s.proId='$todo'");
 $stock_data = [];
 while ($row = mysqli_fetch_assoc($stock)) {
-    $stock_data[$row['colNombre']][$row['talNombre']] = $row['stoCantidad'];
+    $stock_data[$row['colNombre']][$row['talNombre']] = [
+        'cantidad' => $row['stoCantidad'],
+        'stoId' => $row['colId'] . '-' . $row['talId'] // Añadir stoId para cada combinación de color y talla
+    ];
 }
 ?>
 
@@ -97,10 +100,10 @@ while ($row = mysqli_fetch_assoc($stock)) {
                         <label for="cantidad" class="form-label">Cantidad:</label>
                         <div class="input-group input-group-sm d-flex align-items-center">
                             <button class="btn-mutted" type="button" id="decrement">-</button>
-                            <input type="number" id="cantidad" class="form-control text-center mx-2" value="1" min="1" max="<?php echo $stock_quantity; ?>" style="max-width: 60px;">
+                            <input type="number" id="cantidad" class="form-control text-center mx-2" value="1" min="1" max="0" style="max-width: 60px;">
                             <button class="btn-mutted" type="button" id="increment">+</button>
                         </div>
-                        <small class="form-text text-muted">Stock disponible: <span id="stock-quantity"><?php echo $stock_quantity; ?></span></small>
+                        <small class="form-text text-muted">Stock disponible: <span id="stock-quantity">0</span></small>
                     </div>
                     <div class="button-group mt-5">
                         <div class="row">
@@ -118,6 +121,25 @@ while ($row = mysqli_fetch_assoc($stock)) {
     </div>
 </section>
 
+<!-- Modal de error -->
+   <!-- Modal -->
+    <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-warning text-dark">
+                    <h5 class="modal-title" id="errorModalLabel">Información</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="errorModalBody">
+                    <!-- Mensaje de error -->
+                    Este es un mensaje de error.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 <!-- ***** Productos relacionados(sugerencias) inicio ***** -->
 <section class="section related-products ptb_50">
@@ -179,6 +201,55 @@ while ($row = mysqli_fetch_assoc($stock)) {
     </div>
 </section>
 
+<section class="section product-reviews ptb_50">
+    <div class="container">
+        <div class="row" style="height: 90px;">
+            <div class="col-12">
+                <div class="section-heading">
+                    <h3 class="text-muted">Reseñas de Compras</h3>
+                    <hr>
+                </div>
+            </div>
+        </div>
+      
+        <div class="row">
+    <?php
+    // Asegúrate de que $todo contenga el stoId del producto actual
+    $reviews = mysqli_query($con, "
+        SELECT cliente.cliNombre, resenhas.resFechaRegis, resenhas.resMensaje FROM resenhas
+        INNER JOIN ventas ON ventas.venId = resenhas.venId
+        INNER JOIN cliente ON cliente.cliId = ventas.cliId
+        INNER JOIN detalleventa ON detalleventa.venId = ventas.venId
+        INNER JOIN stock ON stock.stoId = detalleventa.stoId");
+
+    while ($review = mysqli_fetch_assoc($reviews)): 
+        // Simular una calificación aleatoria entre 1 y 5
+        $calificacion = rand(1, 5); ?>
+        <div class="col-12 col-md-6 col-lg-3 mb-4">
+            <div class='single-review color-1  bg-white hover-bottom text-center p-3'>
+                
+                <h5 class="mb-2"><?php echo $review['cliNombre']; ?></h5>
+                <p class='text-muted font-italic mt-2'><?php echo $review['resFechaRegis']; ?></p>
+                
+                <div class="rating">
+                    <?php
+                    for ($i = 1; $i <= 5; $i++): 
+                        if ($i <= $calificacion): ?>
+                            <span>&#9733;</span>
+                        <?php else: ?>
+                            <span>&#9734;</span> 
+                        <?php endif;
+                    endfor; ?>
+                </div>
+                
+                <p><?php echo $review['resMensaje']; ?></p>
+            </div>
+        </div>
+    <?php endwhile; ?>
+</div>
+    </div>
+</section>
+
 <script>
   var stockData = <?php echo json_encode($stock_data); ?>;
 
@@ -195,7 +266,7 @@ function selectColor(colorName, element) {
 function updateStock() {
     var selectedColor = document.getElementById('selected-color-name').innerText;
     var selectedTalla = document.getElementById('talla').value;
-    var stockQuantity = stockData[selectedColor][selectedTalla].cantidad || 0;
+    var stockQuantity = (stockData[selectedColor] && stockData[selectedColor][selectedTalla]) ? stockData[selectedColor][selectedTalla].cantidad : 0;
     document.getElementById('cantidad').max = stockQuantity;
     document.getElementById('stock-quantity').innerText = stockQuantity;
 }
@@ -212,8 +283,23 @@ function addToCart(productId, productName, productPrice, quantity, productImage)
     const selectedSize = document.getElementById('talla').value;
 
     // Obtener el stoId basado en el color y la talla seleccionados
+    if (!stockData[selectedColor] || !stockData[selectedColor][selectedSize]) {
+        document.getElementById('errorModalBody').innerText = 'No se puede agregar al carrito. Stock insuficiente.';
+        const errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
+        errorModal.show();
+        return;
+    }
     const stoId = stockData[selectedColor][selectedSize].stoId;
 
+    // Verificar el stock disponible
+    const stockQuantity = stockData[selectedColor][selectedSize].cantidad;
+    if (stockQuantity === 0 || quantity > stockQuantity) {
+        // Mostrar el modal de error
+        document.getElementById('errorModalBody').innerText = 'No se puede agregar al carrito. Stock insuficiente.';
+        const errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
+        errorModal.show();
+        return;
+    }
     // Crear un objeto del producto
     const product = {
         id: productId,

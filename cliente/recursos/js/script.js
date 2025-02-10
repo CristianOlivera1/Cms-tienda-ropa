@@ -223,11 +223,59 @@ document.addEventListener('click', function(event) {
 
 //scroll marcas
 const scrollerInner = document.querySelector('.scroller__inner');
-const scrollerContent = Array.from(scrollerInner.children);
+if (scrollerInner) {
+    const scrollerContent = Array.from(scrollerInner.children);
 
-scrollerContent.forEach(item => {
-    const duplicatedItem = item.cloneNode(true);
-    duplicatedItem.setAttribute('aria-hidden', true);
-    scrollerInner.appendChild(duplicatedItem);
-});
+    scrollerContent.forEach(item => {
+        const duplicatedItem = item.cloneNode(true);
+        duplicatedItem.setAttribute('aria-hidden', true);
+        scrollerInner.appendChild(duplicatedItem);
+    });
+}
 //scroll marcas
+
+/*OFERTA */
+
+function addToCartoferta(id, nombre, precio, cantidad, talla, img) {
+    let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+
+    // Crear un ID único combinando el ID del producto y la talla
+    const uniqueId = `${id}-${talla}`;
+    const productoExistente = carrito.find(producto => producto.uniqueId === uniqueId);
+    
+    if (productoExistente) {
+        // Si el producto ya existe, solo actualizar la cantidad
+        productoExistente.cantidad += cantidad;
+    } else {
+        // Si es nuevo, agregarlo al carrito
+        carrito.push({ uniqueId, id, nombre, precio, cantidad, talla, img });
+    }
+
+    localStorage.setItem('carrito', JSON.stringify(carrito));
+    alert('oferta añadido al carrito');
+    cargarCarrito(); // Actualizar la vista del carrito
+    
+}
+$(document).ready(function(){
+    $(".offers-carousel").owlCarousel({
+        items: 4, // Mostrar 4 elementos por fila
+        loop: true,
+        margin: 0,
+        nav: true,
+        autoplay: true,
+        autoplayTimeout: 2000,
+        autoplayHoverPause: true,
+        responsive: {
+            0: {
+                items: 1 // Para pantallas pequeñas
+            },
+            600: {
+                items: 2 // Para pantallas medianas
+            },
+            1000: {
+                items: 4 // Para pantallas grandes
+            }
+        }
+    });
+});
+/*OFERTA */

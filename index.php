@@ -74,6 +74,65 @@ $sale_product_ids_str = implode(',', $sale_product_ids);
         <img src="cliente/recursos/img/welcome/fondo-portada.svg" alt="fondo-portada">
     </div>
 </section>
+<br>
+<section id="portfolio" class="portfolio-area overflow-hidden mt-5 mb-5">
+    <div class="container">
+        <section id="offers" class="section review-area bg-overlay ptb_75" style="background-color: white;">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-12 col-md-10 col-lg-7">
+                        <div class="section-heading text-center">
+                            <h2 class="text-dark">Prendas de vestir en oferta</h2>
+                            <a href="cliente/producto/productooferta.php" class="btn btn-custom d-none d-sm-inline-block mt-3">Ver Ofertas</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="offers-carousel owl-carousel">
+                        <?php
+                        $ofertas_query = mysqli_query($con, "
+                            SELECT p.proId, p.proNombre, p.proPrecio, p.proImg, o.ofePorcentaje
+                            FROM oferta o
+                            INNER JOIN stock s ON o.stoId = s.stoId
+                            INNER JOIN producto p ON s.proId = p.proId
+                            WHERE o.ofeTiempo > NOW() AND s.stoCantidad > 0
+                        ");
+                        while ($oferta = mysqli_fetch_assoc($ofertas_query)) {
+                            $discountedPrice = $oferta['proPrecio'] - ($oferta['proPrecio'] * ($oferta['ofePorcentaje'] / 100));
+                            echo "
+                                <div class='single-offer' style='background:#fff; border-radius: 5px; text-align: center; height: 350px; width: 220px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);'>
+                                    <a href='cliente/producto/detalleofertaproducto.php?id={$oferta['proId']}' class='hover-products'>
+                                        <div class='image-container' style='height: 260px; overflow: hidden; border-radius: 5px;'>
+                                            <img src='../../paneladministrador/recursos/uploads/producto/{$oferta['proImg']}' alt='{$oferta['proNombre']}' class='category-img' style='width: 100%; height: 100%; object-fit: cover;'>
+                                        </div>
+                                        <h5 class='mt-3 mb-1 text-dark'>{$oferta['proNombre']}</h5>
+                                        <p class='text-muted' style='font-size: 14px;'><s>S/. {$oferta['proPrecio']}</s> S/. " . number_format($discountedPrice, 2) . "</p>
+                           <p class='text-danger font-weight-bold' style='font-size: 16px; display: flex; align-items: center; justify-content: center;'>
+    <i style='margin-right: 5px;'><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\"><path fill=\"#DC3545\" d=\"M20.04 8.71V4h-4.7L12 .69L8.71 4H4v4.71L.69 12L4 15.34v4.7h4.71L12 23.35l3.34-3.31h4.7v-4.7L23.35 12zM8.83 7.05c.98 0 1.77.79 1.77 1.78a1.77 1.77 0 0 1-1.77 1.77c-.99 0-1.78-.79-1.78-1.77c0-.99.79-1.78 1.78-1.78M15.22 17c-.98 0-1.77-.8-1.77-1.78a1.77 1.77 0 0 1 1.77-1.77c.98 0 1.78.79 1.78 1.77A1.78 1.78 0 0 1 15.22 17m-6.72.03L7 15.53L15.53 7l1.5 1.5z\"/></svg></i>Descuento: <span style='color: #ff0000;'>&nbsp;{$oferta['ofePorcentaje']}%</span>
+</p>
+                                    </a>
+                                </div>
+                            ";
+                        }
+                        ?>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</section>
+<style>
+    @keyframes blink {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+.text-danger span {
+    animation: blink 1s infinite;
+}
+
+</style>
 
 <section id="service" class="section service-area bg-grey ptb_150">
     <div class="container">
