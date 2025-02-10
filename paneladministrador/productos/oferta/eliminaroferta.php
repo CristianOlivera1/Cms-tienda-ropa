@@ -6,22 +6,49 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     if (isset($_POST['oferta_id']) && filter_var($_POST['oferta_id'], FILTER_VALIDATE_INT)) {
         $ofertaId = $_POST['oferta_id'];
 
-        // Preparar la consulta SQL para prevenir inyecciones SQL
-        $query = "DELETE FROM oferta WHERE ofeId = ?";
-        $stmt = $con->prepare($query);
+        // Obtener el stoId relacionado con la oferta
+        $stockQuery = "SELECT stoId FROM oferta WHERE ofeId = ?";
+        $stockStmt = $con->prepare($stockQuery);
         
-        if ($stmt) {
-            $stmt->bind_param('i', $ofertaId);
-            
-            // Ejecutar la consulta y verificar el éxito
-            if ($stmt->execute()) {
-                echo json_encode(['success' => true]);
-            } else {
-                echo json_encode(['success' => false, 'error' => 'Error al eliminar la oferta.']);
+        if ($stockStmt) {
+            $stockStmt->bind_param('i', $ofertaId);
+            $stockStmt->execute();
+            $stockStmt->bind_result($stoId);
+            $stockStmt->fetch();
+            $stockStmt->close();
+
+            // Verificar si se encontró un stoId
+            if ($stoId) {
+                // Actualizar el estado del stock relacionado
+                $updateQuery = "UPDATE stock SET estId = 1 WHERE stoId = ?";
+                $updateStmt = $con->prepare($updateQuery);
+                
+                if ($updateStmt) {
+                    $updateStmt->bind_param('i', $stoId);
+                    $updateStmt->execute();
+                    $updateStmt->close(); // Cerrar la declaración de actualización
+                }
             }
-            $stmt->close(); // Cerrar la declaración
+
+            // Preparar la consulta SQL para eliminar la oferta
+            $query = "DELETE FROM oferta WHERE ofeId = ?";
+            $stmt = $con->prepare($query);
+            
+            if ($stmt) {
+                $stmt->bind_param('i', $ofertaId);
+                
+                // Ejecutar la consulta y verificar el éxito
+                if ($stmt->execute()) {
+                    echo json_encode(['success' => true]);
+                } else {
+                    echo json_encode(['success' => false, 'error' => 'Error al eliminar la oferta.']);
+                }
+                $stmt->close(); // Cerrar la declaración
+            } else {
+                echo json_encode(['success' => false, 'error' => 'Error en la preparación de la consulta de eliminación.']);
+            }
         } else {
-            echo json_encode(['success' => false, 'error' => 'Error en la preparación de la consulta.']);
+            echo json_encode(['success' => false, 'error' => 'Error en la preparación de la consulta para obtener stoId.']);
         }
     } else {
         echo json_encode(['success' => false, 'error' => 'ID de oferta no válido.']);

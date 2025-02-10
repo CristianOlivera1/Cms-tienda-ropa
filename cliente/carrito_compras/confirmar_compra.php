@@ -134,7 +134,7 @@
                 totalGeneral += totalProducto; // Sumar al total general
                 cuerpoCarrito.innerHTML += `
                     <tr>
-                        <td class="text-center"><img src="${producto.image}" class="rounded" style="width: 80px;"></td>
+                        <td class="text-center"><img src="../../paneladministrador/recursos/uploads/producto/${producto.image}" class="rounded" style="width: 80px;"></td>
                         <td>${producto.name}</td>
                         <td>${producto.color}</td>
                         <td>${producto.size}</td>
