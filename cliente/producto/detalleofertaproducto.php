@@ -134,9 +134,7 @@ $discounted_price = $base_price - ($base_price * ($discount_percentage / 100));
                 Añadir a la cesta
             </button>
         </div>
-        <div class="col-12">
-            <a href="checkout.php?id=<?php echo $todo; ?>" class="btn btn-block p-3 ">Comprar</a>
-        </div>
+ 
     </div>
 </div>
                 </div>
@@ -164,7 +162,7 @@ $discounted_price = $base_price - ($base_price * ($discount_percentage / 100));
             <?php
             $related_products = mysqli_query($con, "
                 SELECT DISTINCT p.proId, p.proNombre, p.proPrecio, p.proImg, m.marNombre 
-                FROM Producto p
+                FROM producto p
                 INNER JOIN stock s ON p.proId = s.proId
                 INNER JOIN marca m ON m.marId = p.marId
                 WHERE p.catId = '$product_category_id' AND p.proId != '$todo' AND s.stoCantidad > 0

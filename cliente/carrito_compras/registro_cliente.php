@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $cliId = $_POST['cliId'];
 
         // Insertar en la tabla ventas
-        $stmt = $con->prepare("INSERT INTO ventas (cliId, venFechaRegis, estadoVentasId) VALUES (?, NOW(),?)");
+        $stmt = $con->prepare("INSERT INTO ventas (cliId, venFechaRegis, estVenId) VALUES (?, NOW(),?)");
         
         $estado=2;
         $stmt->bind_param("ii", $cliId,$estado);

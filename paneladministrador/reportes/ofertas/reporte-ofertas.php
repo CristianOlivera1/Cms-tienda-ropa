@@ -50,7 +50,8 @@ $result = $stmt->get_result();
 
 // Obtener datos para el gráfico de Ofertas por Terminarse
 $query_terminarse = "
-SELECT p.proNombre, COUNT(o.ofeId) as cantidad
+SELECT p.proNombre, COUNT(o.ofeId) as cantidad, 
+       TIMESTAMPDIFF(SECOND, NOW(), o.ofeTiempo) as tiempo_restante
 FROM oferta o 
 INNER JOIN stock s ON o.stoId = s.stoId 
 INNER JOIN producto p ON s.proId = p.proId 
@@ -59,9 +60,11 @@ GROUP BY p.proNombre";
 $result_terminarse = mysqli_query($con, $query_terminarse);
 $productos_terminarse = [];
 $cantidades_terminarse = [];
+$tiempos_restantes = [];
 while ($row = mysqli_fetch_assoc($result_terminarse)) {
     $productos_terminarse[] = $row['proNombre'];
     $cantidades_terminarse[] = $row['cantidad'];
+    $tiempos_restantes[] = $row['tiempo_restante'];
 }
 // Obtener datos para el gráfico de Ofertas por Categoría
 $query_categoria = "
@@ -185,28 +188,53 @@ while ($row = mysqli_fetch_assoc($result_categoria)) {
     </div>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    // Gráfico de Ofertas por Terminarse
-    var ctxTerminarse = document.getElementById('terminarseChart').getContext('2d');
-    var terminarseChart = new Chart(ctxTerminarse, {
-        type: 'bar',
-        data: {
-            labels: <?php echo json_encode($productos_terminarse); ?>,
-            datasets: [{
-                label: 'Ofertas por Terminarse',
-                data: <?php echo json_encode($cantidades_terminarse); ?>,
-                backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                borderColor: 'rgba(255, 99, 132, 1)',
-                borderWidth: 1
-            }]
+        // Función para convertir segundos a formato de días, horas, minutos y segundos
+        function formatTime(seconds) {
+        const days = Math.floor(seconds / (3600 * 24));
+        seconds %= 3600 * 24;
+        const hours = Math.floor(seconds / 3600);
+        seconds %= 3600;
+        const minutes = Math.floor(seconds / 60);
+        seconds %= 60;
+        return `${days}d ${hours}h ${minutes}m ${seconds}s`;
+    }
+
+ // Gráfico de Ofertas por Terminarse
+var ctxTerminarse = document.getElementById('terminarseChart').getContext('2d');
+var terminarseChart = new Chart(ctxTerminarse, {
+    type: 'bar',
+    data: {
+        labels: <?php echo json_encode($productos_terminarse); ?>,
+        datasets: [{
+            label: 'Ofertas por Terminarse',
+            data: <?php echo json_encode($cantidades_terminarse); ?>,
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            borderColor: 'rgba(255, 99, 132, 1)',
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: {
+                    stepSize: 1
+                }
+            }
         },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true
+        plugins: {
+            tooltip: {
+                callbacks: {
+                    afterLabel: function(context) {
+                        const tiemposRestantes = <?php echo json_encode($tiempos_restantes); ?>;
+                        const tiempoRestante = tiemposRestantes[context.dataIndex];
+                        return 'Tiempo restante: ' + formatTime(tiempoRestante);
+                    }
                 }
             }
         }
-    });
+    }
+});
 
     // Gráfico de Ofertas por Categoría
     var ctxCategoria = document.getElementById('categoriaChart').getContext('2d');
@@ -225,7 +253,10 @@ while ($row = mysqli_fetch_assoc($result_categoria)) {
         options: {
             scales: {
                 y: {
-                    beginAtZero: true
+                    beginAtZero: true,
+                ticks: {
+                    stepSize: 1
+                }
                 }
             }
         }

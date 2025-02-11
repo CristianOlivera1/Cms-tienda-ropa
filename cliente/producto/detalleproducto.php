@@ -122,24 +122,23 @@ while ($row = mysqli_fetch_assoc($stock)) {
 </section>
 
 <!-- Modal de error -->
-   <!-- Modal -->
-    <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header bg-warning text-dark">
-                    <h5 class="modal-title" id="errorModalLabel">Información</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body" id="errorModalBody">
-                    <!-- Mensaje de error -->
-                    Este es un mensaje de error.
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                </div>
+<div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-warning text-dark">
+                <h5 class="modal-title" id="errorModalLabel">Información</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="errorModalBody">
+                <!-- Mensaje de error -->
+                Este es un mensaje de error.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
             </div>
         </div>
     </div>
+</div>
 
 <!-- ***** Productos relacionados(sugerencias) inicio ***** -->
 <section class="section related-products ptb_50">
@@ -293,7 +292,7 @@ function addToCart(productId, productName, productPrice, quantity, productImage)
 
     // Verificar el stock disponible
     const stockQuantity = stockData[selectedColor][selectedSize].cantidad;
-    if (stockQuantity === 0 || quantity > stockQuantity) {
+    if (stockQuantity === 0 || parseInt(quantity) > stockQuantity) {
         // Mostrar el modal de error
         document.getElementById('errorModalBody').innerText = 'No se puede agregar al carrito. Stock insuficiente.';
         const errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
@@ -305,7 +304,7 @@ function addToCart(productId, productName, productPrice, quantity, productImage)
         id: productId,
         name: productName,
         price: productPrice,
-        quantity: quantity,
+        quantity: parseInt(quantity), // Asegúrate de que la cantidad sea un número entero
         image: productImage,
         color: selectedColor,
         size: selectedSize,
