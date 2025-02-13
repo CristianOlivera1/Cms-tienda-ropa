@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 09-02-2025 a las 23:03:51
+-- Tiempo de generación: 13-02-2025 a las 01:48:22
 -- Versión del servidor: 10.4.27-MariaDB
 -- Versión de PHP: 8.2.0
 
@@ -80,7 +80,9 @@ INSERT INTO `actividades` (`actId`, `usuarioId`, `nombreTabla`, `actividad`, `de
 (58, 4, 'Usuario', 'Insert', 'Inserto el usuario: Nombre de Usuario - aaaaaaaaaaa, Cargo ID - 2.', '2025-02-09 08:09:02'),
 (60, 4, 'Usuario', 'Insert', 'Inserto el usuario: Nombre de Usuario - aaaaaaaa, Cargo ID - 2.', '2025-02-09 08:10:19'),
 (61, 4, 'Usuario', 'Delete', 'Eliminó el usuario con ID: 10.', '2025-02-09 08:10:23'),
-(62, 3, 'Talla', 'Insert', 'Inserto la talla: Nombre - ssssssssss.', '2025-02-09 08:37:25');
+(62, 3, 'Talla', 'Insert', 'Inserto la talla: Nombre - ssssssssss.', '2025-02-09 08:37:25'),
+(63, 4, 'Producto', 'Insert', 'Inserto el producto: Nombre - zapatos con stylo, Categoria - 31, Precio - 50.', '2025-02-12 14:10:27'),
+(64, 4, 'Stock', 'Insert', 'Registró el stock: Producto ID - 64, Estado ID - 1, Color ID - 13, Talla ID - 15, Cantidad - 10.', '2025-02-12 14:11:22');
 
 -- --------------------------------------------------------
 
@@ -232,7 +234,7 @@ INSERT INTO `contacto` (`conId`, `conTelefono`, `conEmail`, `conFechaRegis`) VAL
 
 CREATE TABLE `detalleventa` (
   `detVenId` int(11) NOT NULL,
-  `venId` int(11) DEFAULT NULL,
+  `venId` varchar(4) DEFAULT NULL,
   `stoId` int(11) DEFAULT NULL,
   `detVenCantidad` int(11) DEFAULT NULL,
   `detVenPrecio` decimal(8,2) DEFAULT NULL,
@@ -244,11 +246,22 @@ CREATE TABLE `detalleventa` (
 --
 
 INSERT INTO `detalleventa` (`detVenId`, `venId`, `stoId`, `detVenCantidad`, `detVenPrecio`, `detVenFechaRegis`) VALUES
-(1, 3, 41, 2, '20.00', '2025-01-20 13:19:11'),
-(2, 4, 42, 1, '25.00', '2025-01-20 13:25:14'),
-(3, 5, 44, 3, '10.00', '2025-01-20 13:28:41'),
-(10, 12, 47, 2, '20.00', '2025-02-08 16:38:10'),
-(11, 13, 45, 1, '50.00', '2025-02-08 17:24:02');
+(15, 'A001', 43, 1, '100.00', '2025-02-11 20:15:02'),
+(16, 'A002', 43, 3, '150.00', '2025-02-11 20:23:40'),
+(41, 'A001', 43, 2, '150.00', '2025-02-12 09:05:08'),
+(42, 'A005', 44, 2, '150.00', '2025-02-12 09:06:43'),
+(46, 'A009', 71, 1, '35.00', '2025-02-12 12:19:13'),
+(47, 'A010', 54, 4, '11.00', '2025-02-12 12:28:56'),
+(48, 'A012', 111, 1, '66.00', '2025-02-12 12:35:32'),
+(49, 'A013', 107, 1, '66.00', '2025-02-12 12:37:09'),
+(50, 'A013', 81, 1, '150.00', '2025-02-12 12:37:09'),
+(51, 'A013', 43, 1, '25.00', '2025-02-12 12:37:09'),
+(52, 'A013', 57, 2, '25.00', '2025-02-12 12:37:09'),
+(53, 'A014', 104, 2, '55.00', '2025-02-12 12:38:58'),
+(54, 'A015', 111, 1, '66.00', '2025-02-12 12:42:45'),
+(55, 'A016', 111, 1, '66.00', '2025-02-12 14:13:20'),
+(56, 'A016', 58, 1, '12.00', '2025-02-12 14:13:20'),
+(57, 'A016', 112, 2, '44.00', '2025-02-12 14:13:20');
 
 -- --------------------------------------------------------
 
@@ -270,6 +283,28 @@ INSERT INTO `estado` (`estId`, `estDisponible`, `estFechaRegis`) VALUES
 (1, 'Disponible', '2025-01-08 09:30:25'),
 (2, 'No disponible', '2025-01-08 09:30:25'),
 (3, 'En oferta', '2025-01-28 11:32:53');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `estadoventa`
+--
+
+CREATE TABLE `estadoventa` (
+  `estVenId` int(11) NOT NULL,
+  `estVenNombre` varchar(50) NOT NULL,
+  `estVenDescripcion` varchar(255) DEFAULT NULL,
+  `estVenFechaRegis` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `estadoventa`
+--
+
+INSERT INTO `estadoventa` (`estVenId`, `estVenNombre`, `estVenDescripcion`, `estVenFechaRegis`) VALUES
+(1, 'Completada', 'La venta ha sido creada pero no se ha procesado aún.', '2025-02-09 06:23:02'),
+(2, 'Pendiente', 'La venta ha sido procesada exitosamente y los productos han sido enviados.', '2025-02-09 06:23:02'),
+(3, 'Cancelada', 'La venta ha sido cancelada por el cliente o el sistema.', '2025-02-09 06:23:02');
 
 -- --------------------------------------------------------
 
@@ -333,7 +368,7 @@ INSERT INTO `oferta` (`ofeId`, `stoId`, `ofePorcentaje`, `ofeTiempo`, `ofeFechaR
 (29, 56, 50, '2025-02-22 15:14:00', '2025-02-08 15:14:27'),
 (30, 54, 30, '2025-02-23 15:14:00', '2025-02-08 15:14:51'),
 (31, 44, 20, '2025-02-12 15:15:00', '2025-02-08 15:15:22'),
-(32, 43, 10, '2025-02-10 15:15:00', '2025-02-08 15:15:46');
+(33, 42, 10, '2025-02-28 12:38:47', '2025-02-11 12:39:10');
 
 -- --------------------------------------------------------
 
@@ -438,7 +473,8 @@ INSERT INTO `producto` (`proId`, `catId`, `marId`, `proNombre`, `proDescripcion`
 (59, 29, 29, 'Pantalones de vestir', 'Casuales para hombre, corte ajustado, tejido de mezcla de nailon y elastano, color liso con bolsillos, cintura media, ligero estiramiento, para el tra', '679b89e10b519-0f30bb08-d1e6-4922-b217-41053e26b00e.webp', '679b89e10c533-2fcd2bf4-934b-4193-9d87-25fe09361c2c.webp', '55.00', '2025-01-30 09:17:05'),
 (60, 29, 31, 'Pantalones ajustados', 'Casuales de verano para hombre, corte regular de cintura media, color liso, nailon 79,10% elastano 20,90%, tejido de punto de alta elasticidad, brague', '679b8a1a8c281-21d05ea6-ec46-44b8-a178-d955398d8123.webp', '679b8a1a8c28a-a8d8e71d-0a97-4bdc-a1c7-eb195a9ffe2d.webp', '45.00', '2025-01-30 09:18:02'),
 (61, 29, 5, 'Pantalones Cargo Elásticos', 'Ajuste Slim para Hombre - Impermeables, Resistentes a UV y Manchas, Gris Claro con Múltiples Bolsillos, Cintura Elástica para Uso Casual a Semi-Formal', '679d23290802c-b14770ca-7b74-4dae-a104-158159dcf57c.webp', '679d232908039-ac23d0a4-8d6d-4a57-8943-1f13c667be21.webp', '66.00', '2025-01-31 14:23:21'),
-(62, 29, 29, 'Pantalones Sólidos', 'Elegantes Para Hombres Con Bolsillos, Pantalones De Algodón De Ajuste Delgado Y Transpirables Para Primavera Y Otoño', '679d2735852ce-ebfc809688e9f26294a20f2bcfcc4466.webp', '679d2735852dd-b6bfca6b0740c515c831197b544e7d3e.webp', '44.00', '2025-01-31 14:40:37');
+(62, 29, 29, 'Pantalones Sólidos', 'Elegantes Para Hombres Con Bolsillos, Pantalones De Algodón De Ajuste Delgado Y Transpirables Para Primavera Y Otoño', '679d2735852ce-ebfc809688e9f26294a20f2bcfcc4466.webp', '679d2735852dd-b6bfca6b0740c515c831197b544e7d3e.webp', '44.00', '2025-01-31 14:40:37'),
+(64, 31, 29, 'zapatos con stylo', 'dddddddddddddddddddddddddddddddddddddddddddddd', '67acf223ee64d-code.png', '67acf223ee70d-Drag and drop your design here.png', '50.00', '2025-02-12 14:10:27');
 
 -- --------------------------------------------------------
 
@@ -448,19 +484,10 @@ INSERT INTO `producto` (`proId`, `catId`, `marId`, `proNombre`, `proDescripcion`
 
 CREATE TABLE `resenhas` (
   `resId` int(11) NOT NULL,
-  `venId` int(11) DEFAULT NULL,
+  `venId` varchar(4) DEFAULT NULL,
   `resMensaje` varchar(255) DEFAULT NULL,
   `resFechaRegis` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `resenhas`
---
-
-INSERT INTO `resenhas` (`resId`, `venId`, `resMensaje`, `resFechaRegis`) VALUES
-(7, 4, 'Este es una retroalimentacion para la seccion reseñas', '2025-01-13 14:51:27'),
-(8, 3, 'Este es una retroalimentacion para la seccion reseñas 2', '2025-01-13 14:51:39'),
-(9, 5, 'Este es una retroalimentacion para la seccion reseñas 3', '2025-01-13 14:51:51');
 
 -- --------------------------------------------------------
 
@@ -497,7 +524,7 @@ INSERT INTO `stock` (`stoId`, `proId`, `estId`, `colId`, `talId`, `stoCantidad`,
 (55, 41, 1, 13, 13, 30, '2025-01-26 10:48:53'),
 (56, 3, 1, 26, 12, 33, '2025-01-26 10:49:14'),
 (57, 4, 1, 16, 14, 25, '2025-01-26 10:49:38'),
-(58, 6, 1, 13, 13, 22, '2025-01-26 10:50:48'),
+(58, 6, 1, 13, 13, 21, '2025-02-12 14:14:58'),
 (59, 6, 1, 26, 11, 44, '2025-01-26 10:51:07'),
 (60, 7, 1, 18, 12, 25, '2025-01-26 10:51:29'),
 (61, 13, 1, 16, 2, 12, '2025-01-26 12:02:25'),
@@ -546,8 +573,9 @@ INSERT INTO `stock` (`stoId`, `proId`, `estId`, `colId`, `talId`, `stoCantidad`,
 (108, 17, 1, 16, 1, 12, '2025-01-30 09:28:27'),
 (109, 21, 1, 34, 1, 8, '2025-01-30 09:30:02'),
 (110, 28, 1, 13, 1, 5, '2025-01-30 09:31:02'),
-(111, 61, 1, 16, 1, 14, '2025-01-31 14:29:55'),
-(112, 62, 1, 34, 12, 4, '2025-02-06 20:45:08');
+(111, 61, 1, 16, 1, 12, '2025-02-12 14:14:58'),
+(112, 62, 1, 34, 12, 2, '2025-02-12 14:14:58'),
+(114, 64, 1, 13, 15, 10, '2025-02-12 14:11:22');
 
 -- --------------------------------------------------------
 
@@ -614,7 +642,8 @@ INSERT INTO `usuario` (`admId`, `admUser`, `admPassword`, `admFechaRegis`, `carI
 --
 
 CREATE TABLE `ventas` (
-  `venId` int(11) NOT NULL,
+  `venId` varchar(4) NOT NULL,
+  `estVenId` int(11) DEFAULT NULL,
   `cliId` int(11) DEFAULT NULL,
   `venFechaRegis` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -623,18 +652,61 @@ CREATE TABLE `ventas` (
 -- Volcado de datos para la tabla `ventas`
 --
 
-INSERT INTO `ventas` (`venId`, `cliId`, `venFechaRegis`) VALUES
-(3, 4, '2025-01-11 16:34:08'),
-(4, 7, '2025-01-13 14:49:36'),
-(5, 6, '2025-01-13 14:49:46'),
-(6, 4, '2025-01-27 15:35:00'),
-(7, 7, '2025-01-27 15:35:07'),
-(8, 6, '2025-01-27 15:35:14'),
-(9, 6, '2025-01-31 14:47:51'),
-(10, 6, '2025-01-31 14:51:16'),
-(11, 8, '2025-01-31 14:59:47'),
-(12, 6, '2025-02-08 16:34:41'),
-(13, 6, '2025-02-08 17:22:14');
+INSERT INTO `ventas` (`venId`, `estVenId`, `cliId`, `venFechaRegis`) VALUES
+('A001', 2, 7, '2025-02-11 20:39:41'),
+('A002', 1, 7, '2025-02-11 20:12:56'),
+('A003', 1, 6, '2025-02-11 20:13:09'),
+('A004', 2, 7, '2025-02-11 20:13:09'),
+('A005', 1, 6, '2025-02-12 09:06:15'),
+('A006', 2, 6, '2025-02-12 11:55:43'),
+('A007', 2, 6, '2025-02-12 12:11:44'),
+('A008', 2, 6, '2025-02-12 12:12:24'),
+('A009', 2, 6, '2025-02-12 12:19:11'),
+('A010', 2, 6, '2025-02-12 12:28:53'),
+('A011', 2, 6, '2025-02-12 12:31:41'),
+('A012', 2, 6, '2025-02-12 12:35:30'),
+('A013', 2, 8, '2025-02-12 12:37:05'),
+('A014', 2, 8, '2025-02-12 12:38:55'),
+('A015', 1, 8, '2025-02-12 13:44:14'),
+('A016', 1, 6, '2025-02-12 14:14:58');
+
+--
+-- Disparadores `ventas`
+--
+DELIMITER $$
+CREATE TRIGGER `before_insert_ventas` BEFORE INSERT ON `ventas` FOR EACH ROW BEGIN
+    DECLARE last_id VARCHAR(4);
+    DECLARE letter CHAR(1);
+    DECLARE number INT;
+    
+    -- Obtener el último ID registrado
+    SELECT venId INTO last_id FROM ventas ORDER BY venId DESC LIMIT 1;
+    
+    -- Si la tabla está vacía, iniciar desde 'A001'
+    IF last_id IS NULL THEN
+        SET NEW.venId = 'A001';
+    ELSE
+        -- Separar letra y número
+        SET letter = LEFT(last_id, 1);
+        SET number = CAST(RIGHT(last_id, 3) AS UNSIGNED);
+        
+        -- Incrementar el número
+        IF number < 999 THEN
+            SET NEW.venId = CONCAT(letter, LPAD(number + 1, 3, '0'));
+        ELSE
+            -- Si llega a 999, pasar a la siguiente letra (de A a Z)
+            IF letter < 'Z' THEN
+                SET NEW.venId = CONCAT(CHAR(ASCII(letter) + 1), '001');
+            ELSE
+                -- Si ya llegó a 'Z999', evitar desbordamiento
+                SIGNAL SQLSTATE '45000'
+                SET MESSAGE_TEXT = 'Límite de ID alcanzado';
+            END IF;
+        END IF;
+    END IF;
+END
+$$
+DELIMITER ;
 
 --
 -- Índices para tablas volcadas
@@ -682,14 +754,20 @@ ALTER TABLE `contacto`
 --
 ALTER TABLE `detalleventa`
   ADD PRIMARY KEY (`detVenId`),
-  ADD KEY `venId` (`venId`),
-  ADD KEY `stoId` (`stoId`);
+  ADD KEY `stoId` (`stoId`),
+  ADD KEY `fk_detventa_venta` (`venId`);
 
 --
 -- Indices de la tabla `estado`
 --
 ALTER TABLE `estado`
   ADD PRIMARY KEY (`estId`);
+
+--
+-- Indices de la tabla `estadoventa`
+--
+ALTER TABLE `estadoventa`
+  ADD PRIMARY KEY (`estVenId`);
 
 --
 -- Indices de la tabla `marca`
@@ -723,7 +801,7 @@ ALTER TABLE `producto`
 --
 ALTER TABLE `resenhas`
   ADD PRIMARY KEY (`resId`),
-  ADD KEY `venId` (`venId`);
+  ADD KEY `fk_rese_venta` (`venId`);
 
 --
 -- Indices de la tabla `stock`
@@ -753,7 +831,8 @@ ALTER TABLE `usuario`
 --
 ALTER TABLE `ventas`
   ADD PRIMARY KEY (`venId`),
-  ADD KEY `cliId` (`cliId`);
+  ADD KEY `cliId` (`cliId`),
+  ADD KEY `fk_estVenId` (`estVenId`);
 
 --
 -- AUTO_INCREMENT de las tablas volcadas
@@ -763,7 +842,7 @@ ALTER TABLE `ventas`
 -- AUTO_INCREMENT de la tabla `actividades`
 --
 ALTER TABLE `actividades`
-  MODIFY `actId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=63;
+  MODIFY `actId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=65;
 
 --
 -- AUTO_INCREMENT de la tabla `cargo`
@@ -799,13 +878,19 @@ ALTER TABLE `contacto`
 -- AUTO_INCREMENT de la tabla `detalleventa`
 --
 ALTER TABLE `detalleventa`
-  MODIFY `detVenId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `detVenId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=58;
 
 --
 -- AUTO_INCREMENT de la tabla `estado`
 --
 ALTER TABLE `estado`
   MODIFY `estId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT de la tabla `estadoventa`
+--
+ALTER TABLE `estadoventa`
+  MODIFY `estVenId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `marca`
@@ -817,7 +902,7 @@ ALTER TABLE `marca`
 -- AUTO_INCREMENT de la tabla `oferta`
 --
 ALTER TABLE `oferta`
-  MODIFY `ofeId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+  MODIFY `ofeId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT de la tabla `portada`
@@ -829,7 +914,7 @@ ALTER TABLE `portada`
 -- AUTO_INCREMENT de la tabla `producto`
 --
 ALTER TABLE `producto`
-  MODIFY `proId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=64;
+  MODIFY `proId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=65;
 
 --
 -- AUTO_INCREMENT de la tabla `resenhas`
@@ -841,7 +926,7 @@ ALTER TABLE `resenhas`
 -- AUTO_INCREMENT de la tabla `stock`
 --
 ALTER TABLE `stock`
-  MODIFY `stoId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=114;
+  MODIFY `stoId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=115;
 
 --
 -- AUTO_INCREMENT de la tabla `talla`
@@ -854,12 +939,6 @@ ALTER TABLE `talla`
 --
 ALTER TABLE `usuario`
   MODIFY `admId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
-
---
--- AUTO_INCREMENT de la tabla `ventas`
---
-ALTER TABLE `ventas`
-  MODIFY `venId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- Restricciones para tablas volcadas
@@ -875,8 +954,8 @@ ALTER TABLE `actividades`
 -- Filtros para la tabla `detalleventa`
 --
 ALTER TABLE `detalleventa`
-  ADD CONSTRAINT `detalleventa_ibfk_1` FOREIGN KEY (`venId`) REFERENCES `ventas` (`venId`) ON DELETE CASCADE,
-  ADD CONSTRAINT `detalleventa_ibfk_2` FOREIGN KEY (`stoId`) REFERENCES `stock` (`stoId`);
+  ADD CONSTRAINT `detalleventa_ibfk_2` FOREIGN KEY (`stoId`) REFERENCES `stock` (`stoId`),
+  ADD CONSTRAINT `fk_detventa_venta` FOREIGN KEY (`venId`) REFERENCES `ventas` (`venId`);
 
 --
 -- Filtros para la tabla `oferta`
@@ -895,7 +974,7 @@ ALTER TABLE `producto`
 -- Filtros para la tabla `resenhas`
 --
 ALTER TABLE `resenhas`
-  ADD CONSTRAINT `resenhas_ibfk_1` FOREIGN KEY (`venId`) REFERENCES `ventas` (`venId`) ON DELETE CASCADE;
+  ADD CONSTRAINT `fk_rese_venta` FOREIGN KEY (`venId`) REFERENCES `ventas` (`venId`);
 
 --
 -- Filtros para la tabla `stock`
@@ -916,6 +995,7 @@ ALTER TABLE `usuario`
 -- Filtros para la tabla `ventas`
 --
 ALTER TABLE `ventas`
+  ADD CONSTRAINT `fk_estVenId` FOREIGN KEY (`estVenId`) REFERENCES `estadoventa` (`estVenId`),
   ADD CONSTRAINT `ventas_ibfk_2` FOREIGN KEY (`cliId`) REFERENCES `cliente` (`cliId`) ON DELETE CASCADE;
 COMMIT;
 
