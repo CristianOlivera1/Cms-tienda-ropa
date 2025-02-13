@@ -32,13 +32,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $cliId = $_POST['cliId'];
 
         // Insertar en la tabla ventas
-        $stmt = $con->prepare("INSERT INTO ventas (cliId, venFechaRegis, estVenId) VALUES (?, NOW(),?)");
-        
-        $estado=2;
-        $stmt->bind_param("ii", $cliId,$estado);
-        
+        $stmt = $con->prepare("INSERT INTO ventas (cliId, venFechaRegis, estVenId) VALUES (?, NOW(), ?)");
+        $estado = 2;
+        $stmt->bind_param("ii", $cliId, $estado);
+
         if ($stmt->execute()) {
-            $venId = $stmt->insert_id; // Obtener el ID de la venta generada
+            // Obtener el venId generado
+            $stmt = $con->prepare("SELECT venId FROM ventas WHERE cliId = ? ORDER BY venFechaRegis DESC LIMIT 1");
+            $stmt->bind_param("i", $cliId);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $venta = $result->fetch_assoc();
+            $venId = $venta['venId'];
+
             // Redirigir a la página de confirmación de compra con el venId
             header("Location: confirmar_compra.php?cliId=" . $cliId . "&venId=" . $venId);
             exit;

@@ -180,14 +180,19 @@
             },
             body: JSON.stringify({ carrito, ventaId, cliId })
         })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                return response.text().then(text => { throw new Error(text) });
+            }
+            return response.json();
+        })
         .then(data => {
             if (data.success) {
                 // Construir el mensaje para WhatsApp
                 let mensaje = '¡Hola! He realizado un pedido:\n\n';
                 carrito.forEach(producto => {
                     let totalProducto = (producto.price * producto.quantity).toFixed(2);
-                    mensaje += `Producto: ${producto.name}\nColor: ${producto.color}\nTalla: ${producto.size}\nCantidad: ${producto.quantity}\nPrecio Unitario: S/.${producto.price.toFixed(2)}\nTotal: S/.${totalProducto}\n\n`;
+                    mensaje += `Numero de venta: ${ventaId}\nProducto: ${producto.name}\nColor: ${producto.color}\nTalla: ${producto.size}\nCantidad: ${producto.quantity}\nPrecio Unitario: S/.${producto.price.toFixed(2)}\nTotal: S/.${totalProducto}\n\n`;
                 });
                 let totalGeneral = carrito.reduce((total, producto) => total + (producto.price * producto.quantity), 0).toFixed(2);
                 mensaje += `Total a Pagar: S/.${totalGeneral}\n\nGracias por su compra!`;
@@ -208,7 +213,8 @@
             }
         })
         .catch(error => {
-            console.error('Error :', error);
+            console.error('Error:', error);
+            alert('Error al confirmar la compra: ' + error.message);
         });
     }
 
@@ -219,4 +225,6 @@
     }
 
     document.addEventListener('DOMContentLoaded', cargarCarrito);
-</script>
+    </script>
+</body>
+</html>

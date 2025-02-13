@@ -30,7 +30,7 @@ foreach ($data['carrito'] as $producto) {
 
     // Preparar la consulta para insertar en detalleventa
     $stmt = $con->prepare("INSERT INTO detalleventa (venId, stoId, detVenCantidad, detVenPrecio, detVenFechaRegis) VALUES (?, ?, ?, ?, NOW())");
-    $stmt->bind_param("siid", $ventaId, $stoId, $cantidad, $precio);
+    $stmt->bind_param("ssii", $ventaId, $stoId, $cantidad, $precio);
 
     // Ejecutar la consulta
     if (!$stmt->execute()) {

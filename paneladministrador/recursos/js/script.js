@@ -532,3 +532,50 @@ if (toggleConfirmPassword) {
 }
 /* ADMINISTRADOR VER CONTRASEÑA */
 
+/*REPORTE VENTAS */
+function cargarReporte(periodo) {
+    let url = 'obtener_reporte_rango.php';
+    let params = {};
+
+    if (periodo === 'rango') {
+        params.filtro = 'rango';
+        params.fecha_desde = document.getElementById('fecha_desde').value;
+        params.fecha_hasta = document.getElementById('fecha_hasta').value;
+    } else {
+        params.filtro = periodo;
+    }
+
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(params)
+    })
+    .then(response => response.json())
+    .then(data => {
+        actualizarTabla(data.ventas);
+
+        // Enviar los datos al servidor para generar el PDF
+        fetch('generar_pdf.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data.ventas)
+        })
+        .then(response => response.blob())
+        .then(blob => {
+            // Crear un enlace para descargar el PDF
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'reporte_ventas.pdf';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        })
+        .catch(error => console.error('Error al generar el PDF:', error));
+    })
+    .catch(error => console.error('Error:', error));
+}

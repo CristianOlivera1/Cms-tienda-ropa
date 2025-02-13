@@ -4,7 +4,7 @@ $todo = mysqli_real_escape_string($con, $_GET["id"]);
 
 // Obtener detalles del producto en oferta
 $rt = mysqli_query($con, "
-SELECT producto.*, categoria.catNombre, marca.marNombre, marca.marImg, oferta.ofePorcentaje 
+SELECT producto.*, stock.stoId,categoria.catNombre, marca.marNombre, marca.marImg, oferta.ofePorcentaje 
 FROM oferta
 INNER JOIN stock ON stock.stoId = oferta.stoId
 INNER JOIN producto ON producto.proId = stock.proId
@@ -18,7 +18,7 @@ if (!$tr) {
     echo "<h2>Producto no encontrado o la oferta ha expirado.</h2>";
     exit;
 }
-
+$stock_id = $tr["stoId"];
 $product_name = $tr['proNombre'];
 $product_desc = $tr['proDescripcion'];
 $product_image = $tr['proImg'];
@@ -42,7 +42,22 @@ $tallas = mysqli_query($con, "
     INNER JOIN producto p ON p.proId = s.proId
     WHERE s.proId='$todo'");
 
-// Obtener cantidad de stock disponible
+// Obtener cantidad de stock disponible por color y talla
+$stock_query = mysqli_query($con, "
+    SELECT c.colNombre, t.talNombre, SUM(s.stoCantidad) as cantidad 
+    FROM stock s 
+    INNER JOIN color c ON s.colId = c.colId 
+    INNER JOIN talla t ON s.talId = t.talId 
+    WHERE s.proId = '$todo' 
+    GROUP BY c.colNombre, t.talNombre
+");
+
+$stockData = [];
+while ($row = mysqli_fetch_assoc($stock_query)) {
+    $stockData[$row['colNombre']][$row['talNombre']] = $row['cantidad'];
+}
+
+// Obtener cantidad total de stock
 $stock = mysqli_query($con, "SELECT SUM(stoCantidad) as totalCantidad FROM stock WHERE proId='$todo'");
 $stock_data = mysqli_fetch_array($stock);
 $stock_quantity = $stock_data['totalCantidad'];
@@ -85,7 +100,7 @@ $discounted_price = $base_price - ($base_price * ($discount_percentage / 100));
                         S/. <span id="price"><?php echo number_format($discounted_price, 2); ?></span> 
                             <span class="text-muted" style="text-decoration: line-through;">S/. <span id="original-price"><?php echo number_format($base_price, 2); ?></span></span>
                     </h3>
-                <p id="discount" class="text-success">Descuento: <span id="discount-percentage"><?php echo $discount_percentage; ?>%</span></p>
+                    <p id="discount" class="text-success">Descuento: <span id="discount-percentage"><?php echo $discount_percentage; ?>%</span></p>
 
                     <!-- Colores disponibles -->
                     <div class="mb-3 mt-4">
@@ -94,14 +109,15 @@ $discounted_price = $base_price - ($base_price * ($discount_percentage / 100));
                             <?php 
                             mysqli_data_seek($colors, 0);
                             while ($color = mysqli_fetch_assoc($colors)): ?>
-                                <div class="color-circle" title="<?php echo $color['colNombre']; ?>" style="background-color: <?php echo $color['colCodigoHex']; ?>; width: 30px; height: 30px; border: 3px solid white; border-radius: 50%; margin-right: 10px; cursor: pointer;" onclick="selectColor('<?php echo $color['colNombre']; ?>', this)"></div>
+                                <div class="color-circle" title="<?php echo $color['colNombre']; ?>" style="background-color: <?php echo $color['colCodigoHex']; ?>; width: 30px; height: 30px; border: 3px solid white; border-radius: 50%; margin-right: 10px; cursor: pointer;" onclick="selectColor('<?php echo $color['colNombre']; ?>', this); updateStock();"></div>
                             <?php endwhile; ?>
                         </div>
                     </div> 
+
                     <!-- Tallas disponibles -->
                     <div class="mb-3">
                         <label for="talla" class="form-label">Talla:</label> <br>
-                        <select id="talla" class="form-select w-100" style="height: 45px;" onchange="updatePrice()">
+                        <select id="talla" class="form-select w-100" style="height: 45px;" onchange="updatePrice(); updateStock();">
                             <?php while ($talla = mysqli_fetch_assoc($tallas)): ?>
                                 <option value="<?php echo $talla['talNombre']; ?>" 
                                         data-price="<?php echo $talla['proPrecio']; ?>" 
@@ -111,6 +127,7 @@ $discounted_price = $base_price - ($base_price * ($discount_percentage / 100));
                             <?php endwhile; ?>
                         </select>
                     </div>
+
                     <!-- Cantidad -->
                     <div class="mb-3">
                         <label for="cantidad" class="form-label">Cantidad:</label>
@@ -119,24 +136,17 @@ $discounted_price = $base_price - ($base_price * ($discount_percentage / 100));
                             <input type="number" id="cantidad" class="form-control text-center mx-2" value="1" min="1" max="<?php echo $stock_quantity; ?>" style="max-width: 60px;">
                             <button class="btn-mutted" type="button" id="increment">+</button>
                         </div>
-                        <small class="form-text text-muted">Stock disponible: <?php echo $stock_quantity; ?></small>
+                        <small class="form-text text-muted">Stock disponible: <span id="stock-quantity"><?php echo $stock_quantity; ?></span></small>
                     </div>
+
                     <div class="button-group mt-5">
-    <div class="row">
-        <div class="col-12 mb-2">
-            <button class="btn btn-block btn-bordered-black p-3 mb-1" 
-                onclick="addToCartoferta(<?php echo $todo; ?>, 
-                '<?php echo $product_name; ?>', 
-                parseFloat(document.getElementById('price').innerText), 
-                parseInt(document.getElementById('cantidad').value), 
-                document.getElementById('talla').value, 
-                '../../paneladministrador/recursos/uploads/producto/<?php echo $product_image; ?>')">
-                Añadir a la cesta
-            </button>
-        </div>
- 
-    </div>
-</div>
+                        <div class="row">
+                            <div class="col-12 mb-2">
+                            <button id="add-to-cart-button" class="btn btn-block btn-bordered-black p-3 mb-1" onclick="addToCart(<?php echo $todo; ?>, '<?php echo $product_name; ?>', <?php echo $discounted_price; ?>, document.getElementById('cantidad').value, '<?php echo $product_image; ?>','<?php echo $stock_id; ?>')">
+                                Añadir a la cesta</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="brand-image position-absolute w-100 h-100 d-flex justify-content-center align-items-center" style="top: 0; left: 0; opacity: 0.05; z-index: -1;">
                     <img src="../../paneladministrador/recursos/uploads/marca/<?php echo $product_brand_img; ?>" alt="brand" class="img-fluid" style="width: 300px; height: auto;">
@@ -157,7 +167,6 @@ $discounted_price = $base_price - ($base_price * ($discount_percentage / 100));
                 </div>
             </div>
         </div>
-      
         <div class="row">
             <?php
             $related_products = mysqli_query($con, "
@@ -182,6 +191,7 @@ $discounted_price = $base_price - ($base_price * ($discount_percentage / 100));
         </div>
     </div>
 </section>
+
 <!-- ***** Reseñas de compras inicio ***** -->
 <section class="section product-reviews ptb_50">
     <div class="container">
@@ -193,66 +203,59 @@ $discounted_price = $base_price - ($base_price * ($discount_percentage / 100));
                 </div>
             </div>
         </div>
-      
         <div class="row">
-    <?php
-    // Asegúrate de que $todo contenga el stoId del producto actual
-    $reviews = mysqli_query($con, "
-        SELECT cliente.cliNombre, resenhas.resFechaRegis, resenhas.resMensaje FROM resenhas
-        INNER JOIN ventas ON ventas.venId = resenhas.venId
-        INNER JOIN cliente ON cliente.cliId = ventas.cliId
-        INNER JOIN detalleventa ON detalleventa.venId = ventas.venId
-        INNER JOIN stock ON stock.stoId = detalleventa.stoId");
+            <?php
+            $reviews = mysqli_query($con, "
+                SELECT cliente.cliNombre, resenhas.resFechaRegis, resenhas.resMensaje FROM resenhas
+                INNER JOIN ventas ON ventas.venId = resenhas.venId
+                INNER JOIN cliente ON cliente.cliId = ventas.cliId
+                INNER JOIN detalleventa ON detalleventa.venId = ventas.venId
+                INNER JOIN stock ON stock.stoId = detalleventa.stoId");
 
-    while ($review = mysqli_fetch_assoc($reviews)): 
-        // Simular una calificación aleatoria entre 1 y 5
-        $calificacion = rand(1, 5); ?>
-        <div class="col-12 col-md-6 col-lg-3 mb-4">
-            <div class='single-review color-1  bg-white hover-bottom text-center p-3'>
-                
-                <h5 class="mb-2"><?php echo $review['cliNombre']; ?></h5>
-                <p class='text-muted font-italic mt-2'><?php echo $review['resFechaRegis']; ?></p>
-                
-                <div class="rating">
-                    <?php
-                    for ($i = 1; $i <= 5; $i++): 
-                        if ($i <= $calificacion): ?>
-                            <span>&#9733;</span> <!-- Estrella llena -->
-                        <?php else: ?>
-                            <span>&#9734;</span> <!-- Estrella vacía -->
-                        <?php endif;
-                    endfor; ?>
+            while ($review = mysqli_fetch_assoc($reviews)): 
+                $calificacion = rand(1, 5); ?>
+                <div class="col-12 col-md-6 col-lg-3 mb-4">
+                    <div class='single-review color-1  bg-white hover-bottom text-center p-3'>
+                        <h5 class="mb-2"><?php echo $review['cliNombre']; ?></h5>
+                        <p class='text-muted font-italic mt-2'><?php echo $review['resFechaRegis']; ?></p>
+                        <div class="rating">
+                            <?php for ($i = 1; $i <= 5; $i++): 
+                                if ($i <= $calificacion): ?>
+                                    <span>&#9733;</span>
+                                <?php else: ?>
+                                    <span>&#9734;</span>
+                                <?php endif;
+                            endfor; ?>
+                        </div>
+                        <p><?php echo $review['resMensaje']; ?></p>
+                    </div>
                 </div>
-                
-                <p><?php echo $review['resMensaje']; ?></p>
-            </div>
+            <?php endwhile; ?>
         </div>
-    <?php endwhile; ?>
-</div>
     </div>
 </section>
 
-
 <script>
-function updatePrice() {
-    const sizeSelect = document.getElementById('talla');
-    const selectedOption = sizeSelect.options[sizeSelect.selectedIndex];
+    // Pasar datos de stock desde PHP a JavaScript
+    var stockData = <?php echo json_encode($stockData); ?>;
 
-    const newPrice = parseFloat(selectedOption.getAttribute('data-price'));
-    const newDiscount = parseFloat(selectedOption.getAttribute('data-discount'));
+    function updatePrice() {
+        const sizeSelect = document.getElementById('talla');
+        const selectedOption = sizeSelect.options[sizeSelect.selectedIndex];
 
-    // Calcula el precio descontado
-    const discountedPrice = newPrice - (newPrice * (newDiscount / 100));
+        const newPrice = parseFloat(selectedOption.getAttribute('data-price'));
+        const newDiscount = parseFloat(selectedOption.getAttribute('data-discount'));
 
-    // Actualiza el precio mostrado
-    document.getElementById('price').innerText = discountedPrice.toFixed(2);
-    
-    // Actualiza el precio original tachado
-    document.getElementById('original-price').innerText = newPrice.toFixed(2);
-    document.getElementById('discount-percentage').innerText = newDiscount + '%';
+        // Calcula el precio descontado
+        const discountedPrice = newPrice - (newPrice * (newDiscount / 100));
 
-}
-function selectColor(colorName, element) {
+        // Actualiza el precio mostrado
+        document.getElementById('price').innerText = discountedPrice.toFixed(2);
+        document.getElementById('original-price').innerText = newPrice.toFixed(2);
+        document.getElementById('discount-percentage').innerText = newDiscount + '%';
+    }
+
+    function selectColor(colorName, element) {
         document.getElementById('selected-color-name').innerText = colorName;
         var circles = document.getElementsByClassName('color-circle');
         for (var i = 0; i < circles.length; i++) {
@@ -260,6 +263,84 @@ function selectColor(colorName, element) {
         }
         element.style.boxShadow = '0 0 0 2px black';
         updateStock();
+    }
+
+    function updateStock() {
+        var selectedColor = document.getElementById('selected-color-name').innerText;
+        var selectedTalla = document.getElementById('talla').value;
+
+        // Verifica si hay stock para la combinación de color y talla seleccionada
+        var stockQuantity = stockData[selectedColor] && stockData[selectedColor][selectedTalla] ?
+            stockData[selectedColor][selectedTalla] : 0;
+
+        // Actualiza el campo de cantidad y el mensaje de stock disponible
+        document.getElementById('cantidad').max = stockQuantity;
+        document.getElementById('stock-quantity').innerText = stockQuantity;
+
+        // Habilitar o deshabilitar el botón según la cantidad de stock
+        var addToCartButton = document.getElementById('add-to-cart-button'); // Asegúrate de que el botón tenga este ID
+        if (stockQuantity === 0) {
+            addToCartButton.disabled = true; // Deshabilitar botón
+        } else {
+            addToCartButton.disabled = false; // Habilitar botón
+        }
+    }
+
+    // Limitar la cantidad ingresada
+    document.getElementById('cantidad').addEventListener('input', function() {
+        let maxStock = parseInt(this.max);
+        let currentValue = parseInt(this.value);
+
+        if (currentValue > maxStock) {
+            this.value = maxStock; // Set the value to max if it exceeds
+        }
+    });
+
+    // Seleccionar el primer color por defecto
+    var firstCircle = document.querySelector('.color-circle');
+    if (firstCircle) {
+        selectColor(firstCircle.title, firstCircle);
+    }
+    updateStock();
+    function addToCart(productId, productName, productPrice, quantity, productImage,stockid) {
+        // Obtener el color y la talla seleccionados
+        const selectedColor = document.getElementById('selected-color-name').innerText;
+        const selectedSize = document.getElementById('talla').value;
+
+        // Obtener el stoId basado en el color y la talla seleccionados
+        
+
+        // Crear un objeto del producto
+        const product = {
+            id: productId,
+            name: productName,
+            price: productPrice,
+            quantity: quantity,
+            image: productImage,
+            color: selectedColor,
+            size: selectedSize,
+            stoId: stockid // Añadir el stoId
+        };
+
+        // Obtener el carrito del localStorage o inicializarlo
+        let cart = JSON.parse(localStorage.getItem('carrito')) || [];
+
+        // Comprobar si el producto ya está en el carrito
+        const existingProductIndex = cart.findIndex(item => item.id === productId && item.color === product.color && item.size === product.size==product.stoId);
+
+        if (existingProductIndex > -1) {
+            // Si el producto ya existe, actualizar la cantidad
+            cart[existingProductIndex].quantity = parseInt(cart[existingProductIndex].quantity) + parseInt(quantity);
+        } else {
+            // Si no existe, añadir el nuevo producto
+            cart.push(product);
+        }
+
+        // Guardar el carrito actualizado en el localStorage
+        localStorage.setItem('carrito', JSON.stringify(cart));
+
+        // Opcional: Mostrar un mensaje de éxito
+        alert('Oferta añadido al carrito');
     }
 </script>
 

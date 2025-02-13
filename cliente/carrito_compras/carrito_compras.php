@@ -71,7 +71,8 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="modalEliminarLabel">Confirmar Eliminación</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" 
+                    -bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     ¿Estás seguro de que deseas eliminar este producto del carrito?
@@ -103,7 +104,7 @@
                 let totalGeneral = 0;
 
                 carrito.forEach((producto, index) => {
-                    let totalProducto = producto.price * producto.quantity; // Calcular el total por producto
+                    let totalProducto = (producto.price || 0) * producto.quantity; // Calcular el total por producto
                     totalGeneral += totalProducto; // Sumar al total general
                     cuerpoCarrito.innerHTML += `
                         <tr>
@@ -120,7 +121,7 @@
                                     <i class="bi bi-plus"></i>
                                 </button>
                             </td>
-                            <td class="text-end"><strong>S/.</strong>${producto.price.toFixed(2)}</td>
+                            <td class="text-end"><strong>S/.</strong>${(producto.price ? producto.price.toFixed(2) : '0.00')}</td>
                             <td class="text-end"><strong>S/.${totalProducto.toFixed(2)}</strong></td> <!-- Total por producto -->
                             <td class="text-center">
                                 <button class="btn btn-sm btn-danger" onclick="abrirModalEliminar(${index})">

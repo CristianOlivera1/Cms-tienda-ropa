@@ -28,7 +28,7 @@ $tallas = mysqli_query($con, "SELECT DISTINCT t.talNombre FROM stock s
                               WHERE s.proId='$todo'");
 
 // Obtener cantidad de stock disponible
-$stock = mysqli_query($con, "SELECT s.colId, s.talId, s.stoCantidad, c.colNombre, t.talNombre FROM stock s 
+$stock = mysqli_query($con, "SELECT s.stoId, s.colId, s.talId, s.stoCantidad, c.colNombre, t.talNombre FROM stock s 
                              INNER JOIN color c ON s.colId = c.colId 
                              INNER JOIN talla t ON s.talId = t.talId 
                              WHERE s.proId='$todo'");
@@ -36,7 +36,7 @@ $stock_data = [];
 while ($row = mysqli_fetch_assoc($stock)) {
     $stock_data[$row['colNombre']][$row['talNombre']] = [
         'cantidad' => $row['stoCantidad'],
-        'stoId' => $row['colId'] . '-' . $row['talId'] // Añadir stoId para cada combinación de color y talla
+        'stoId' => $row['stoId'] // Usar el stoId real
     ];
 }
 ?>
@@ -275,7 +275,6 @@ if (firstCircle) {
     selectColor(firstCircle.title, firstCircle);
 }
 updateStock();
-
 function addToCart(productId, productName, productPrice, quantity, productImage) {
     // Obtener el color y la talla seleccionados
     const selectedColor = document.getElementById('selected-color-name').innerText;
@@ -331,6 +330,7 @@ function addToCart(productId, productName, productPrice, quantity, productImage)
     // Opcional: Mostrar un mensaje de éxito
     alert('Producto añadido al carrito');
 }
+
 
 </script>
 <?php include "../scroll-marcas.php"; ?>

@@ -89,29 +89,31 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     //carrusel portada
-var swiper = new Swiper('#product-carousel', {
-    loop: true,
-    autoplay: {
-        delay: 4000,
-        disableOnInteraction: false,
-    },
-    slidesPerView: 1,
-    spaceBetween: 10,
-    breakpoints: {
-        640: {
-            slidesPerView: 1,
-            spaceBetween: 10,
+if (document.querySelector('#product-carousel')) {
+    var swiper = new Swiper('#product-carousel', {
+        loop: true,
+        autoplay: {
+            delay: 4000,
+            disableOnInteraction: false,
         },
-        768: {
-            slidesPerView: 2,
-            spaceBetween: 20,
-        },
-        1024: {
-            slidesPerView: 3,
-            spaceBetween: 30,
-        },
-    }
-});
+        slidesPerView: 1,
+        spaceBetween: 10,
+        breakpoints: {
+            640: {
+                slidesPerView: 1,
+                spaceBetween: 10,
+            },
+            768: {
+                slidesPerView: 2,
+                spaceBetween: 20,
+            },
+            1024: {
+                slidesPerView: 3,
+                spaceBetween: 30,
+            },
+        }
+    });
+}
 //carrusel portada
 });
 
@@ -254,8 +256,9 @@ function addToCartoferta(id, nombre, precio, cantidad, talla, img) {
     localStorage.setItem('carrito', JSON.stringify(carrito));
     alert('oferta añadido al carrito');
     cargarCarrito(); // Actualizar la vista del carrito
-    
 }
+
+
 $(document).ready(function(){
     $(".offers-carousel").owlCarousel({
         items: 4, // Mostrar 4 elementos por fila
