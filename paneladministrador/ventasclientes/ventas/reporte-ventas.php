@@ -1,7 +1,13 @@
 <?php
 require('../../fpdf/fpdf.php');
 include ("../../coneccionbd.php");
+
+
 date_default_timezone_set('America/Lima'); // Ajusta la zona horaria
+
+
+// Obtener el estado seleccionado desde la URL o el formulario
+$estadoSeleccionado = isset($_GET['estado']) ? $_GET['estado'] : '2';
 
 // Realizar la consulta a la base de datos  
 $query = "SELECT 
@@ -15,8 +21,10 @@ $query = "SELECT
 FROM ventas v
 INNER JOIN cliente c ON v.cliId = c.cliId
 INNER JOIN detalleventa d ON v.venId = d.venId
+WHERE v.estVenId = '$estadoSeleccionado'  -- Filtrar por el estado seleccionado
 GROUP BY v.venId, c.cliNombre, c.cliApellidoPaterno, c.cliApellidoMaterno, c.cliCorreo, c.cliDni;
 ";
+
 $result = $con->query($query); // Cambia mysqli_query por $con->query
 
 $data = [];
@@ -176,7 +184,7 @@ $pdf->Ln();
 
 // Restablecer colores a los valores predeterminados
 $pdf->SetTextColor(0, 0, 0); // Texto negro
-$pdf->SetFillColor(255, 255, 255); // Fondo blanco
+$pdf-> SetFillColor(255, 255, 255); // Fondo blanco
 
 // Fill data rows
 $pdf->SetFont('Helvetica', '', 7);

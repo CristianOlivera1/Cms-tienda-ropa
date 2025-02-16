@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Insertar en la tabla ventas
         $stmt = $con->prepare("INSERT INTO ventas (cliId, venFechaRegis, estVenId) VALUES (?, NOW(), ?)");
-        $estado = 2;
+        $estado = 1;
         $stmt->bind_param("ii", $cliId, $estado);
 
         if ($stmt->execute()) {
@@ -91,7 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     // Iniciar transacción
                     $con->begin_transaction();
                     try {
-                        $sql_cliente = "INSERT INTO cliente (cliNombre, cliApellidoPaterno, cliApellidoMaterno, cliDni, cliCorreo, cliFechNacimiento) VALUES (?, ?, ?, ?, ?, ?)";
+                        $sql_cliente = "INSERT INTO cliente (cliNombre, cliApellidoPaterno, cliApellidoMaterno, cliDni, cliCorreo, cliFechaNacimiento) VALUES (?, ?, ?, ?, ?, ?)";
                         $stmt = $con->prepare($sql_cliente);
                         $stmt->bind_param("ssssss", $nombre, $apePaterno, $apeMaterno, $dni, $correo, $fechaNacimiento);
                         

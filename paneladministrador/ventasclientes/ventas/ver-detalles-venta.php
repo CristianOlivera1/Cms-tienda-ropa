@@ -216,13 +216,28 @@ include "../../footer.php";
 <script>
 document.getElementById('btnConfirmar').addEventListener('click', function() {
     const venId = this.getAttribute('data-id');
-    // Aquí puedes hacer la petición para cambiar el estado a "Confirmado"
-    fetch('actualizar-estado.php', {
+    // Primero, actualizar el stock
+    fetch('actualizar_stock.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ venId: venId, estado: 'Confirmado' }),
+        body: JSON.stringify({ venId: venId }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Luego, cambiar el estado a "Confirmado"
+            return fetch('actualizar-estado.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ venId: venId, estado: 'Confirmado' }),
+            });
+        } else {
+            throw new Error('Error al actualizar el stock: ' + data.message);
+        }
     })
     .then(response => response.json())
     .then(data => {
@@ -234,24 +249,6 @@ document.getElementById('btnConfirmar').addEventListener('click', function() {
         }
     })
     .catch(error => console.error('Error:', error));
-
-        fetch('actualizar_stock.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ venId: venId }),
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Redirigir o actualizar la página
-                window.location.href = 'gestionar-ventas.php';
-            } else {
-                alert('Error al confirmar la venta: ' + data.message);
-            }
-        })
-        .catch(error => console.error('Error:', error));
 });
 
 document.getElementById('btnCancelar').addEventListener('click', function() {

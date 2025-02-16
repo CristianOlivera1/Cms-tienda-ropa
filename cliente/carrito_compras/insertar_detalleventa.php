@@ -18,11 +18,11 @@ if (empty($data['carrito'])) {
 // Iterar sobre cada producto en el carrito y realizar la inserción
 foreach ($data['carrito'] as $producto) {
     $ventaId = $data['ventaId'];
-    $stoId = $producto['stoId']; // Asegúrate de que esto esté definido en el producto
-    $cantidad = $producto['quantity']; // Asegúrate de que esto esté definido en el producto
-    $precio = $producto['price']; // Asegúrate de que esto esté definido en el producto
+    $stoId = $producto['stoId'];
+    $cantidad = $producto['quantity'];
+    $precio = $producto['price'];
 
-    // Verificar que los datos sean válidos
+    // Validaciones
     if (is_null($ventaId) || is_null($stoId) || is_null($cantidad) || is_null($precio)) {
         echo json_encode(['success' => false, 'message' => 'Datos no válidos.']);
         exit;
@@ -42,6 +42,17 @@ foreach ($data['carrito'] as $producto) {
     $stmt->close();
 }
 
-// Responder con éxito
-echo json_encode(['success' => true]);
+// Inserción en la tabla seguimiento
+$stmt = $con->prepare("INSERT INTO seguimiento_compra (venId, segEstadoEnvio, segFechaActualizacion) VALUES (?, 'pendiente', NOW())");
+$stmt->bind_param("s", $ventaId);
+
+// Ejecutar la consulta de seguimiento
+if (!$stmt->execute()) {
+    echo json_encode(['success' => false, 'message' => 'Error al insertar en seguimiento: ' . $stmt->error]);
+} else {
+    echo json_encode(['success' => true, 'message' => 'Inserción exitosa.']);
+}
+
+// Cerrar la declaración
+$stmt->close();
 ?>

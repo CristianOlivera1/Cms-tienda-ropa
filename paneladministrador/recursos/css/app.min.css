@@ -8,7 +8,27 @@
 .card-report-hover:hover {
     transform: translateY(-5px);
 }
+/* Estilos para los estados */
+.estado-completada {
+    background-color: #d4edda; /* Verde claro */
+    padding: 5px;
+    border-radius: 5px;
+    display: inline-block;
+}
 
+.estado-pendiente {
+    background-color: #fff3cd; /* Amarillo */
+    padding: 5px;
+    border-radius: 5px;
+    display: inline-block;
+}
+
+.estado-cancelada {
+    background-color: #f8d7da; /* Rojo */
+    padding: 5px;
+    border-radius: 5px;
+    display: inline-block;
+}
 /* Estilo para tabs inactivos */
 .nav-tabs .nav-link {
     background-color: #F3F3F9;
