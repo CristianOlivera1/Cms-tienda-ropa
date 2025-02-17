@@ -7,6 +7,10 @@
 * Author:  Olivier PLATHEY                                                     *
 *******************************************************************************/
 
+if (!defined('FPDF_FONTPATH')) {
+	define('FPDF_FONTPATH', dirname(__FILE__).'/font/');
+}
+
 class FPDF
 {
 const VERSION = '1.86';

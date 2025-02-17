@@ -2,9 +2,7 @@
 require('../../fpdf/fpdf.php');
 include ("../../coneccionbd.php");
 
-
 date_default_timezone_set('America/Lima'); // Ajusta la zona horaria
-
 
 // Obtener el estado seleccionado desde la URL o el formulario
 $estadoSeleccionado = isset($_GET['estado']) ? $_GET['estado'] : '2';
@@ -54,11 +52,11 @@ class PDF extends FPDF
         $this->Ln(4);
         $this->Cell(300, 10, 'Telefono: 954455664', 0, 0, 'L', 0);
         $this->Ln(4);
-        $this->Cell(300, 10, utf8_decode('Direccion: Av. Cusco N° 321'), 0, 0, 'L', 0);
+        $this->Cell(300, 10, iconv('UTF-8', 'ISO-8859-1', 'Direccion: Av. Cusco N° 321'), 0, 0, 'L', 0);
         $this->Ln(4);
-        $this->Cell(300, 10, utf8_decode('Email: menstore@hotmail.com'), 0, 0, 'L', 0);
+        $this->Cell(300, 10, iconv('UTF-8', 'ISO-8859-1', 'Email: menstore@hotmail.com'), 0, 0, 'L', 0);
         $this->Ln(4);
-        $this->Cell(300, 10, utf8_decode('Fecha y Hora: ' . date('Y-m-d H:i:s')), 0, 1, 'L', 0);
+        $this->Cell(300, 10, iconv('UTF-8', 'ISO-8859-1', 'Fecha y Hora: ' . date('Y-m-d H:i:s')), 0, 1, 'L', 0);
         $this->SetXY(80, 40); 
         $this->SetFont('Helvetica', 'B', 20);
         $this->Cell(50, 8, 'REPORTE DE VENTAS', 0, 0, 'C', 0);
@@ -72,7 +70,7 @@ class PDF extends FPDF
         $this->SetY(-15);
         $this->SetX(150);
         $this->SetFont('Helvetica', 'B', 8);
-        $this->Cell(0, 10, utf8_decode('Página') . $this->PageNo() . '/{nb}', 0, 0, 'C');
+        $this->Cell(0, 10, iconv('UTF-8', 'ISO-8859-1', 'Página') . $this->PageNo() . '/{nb}', 0, 0, 'C');
     }
 
     protected $widths;
@@ -191,12 +189,12 @@ $pdf->SetFont('Helvetica', '', 7);
 for ($i = 0; $i < count($data); $i++) {
     $pdf->Row(array(
         $i + 1,
-        utf8_decode($data[$i]['venId']),
-        utf8_decode($data[$i]['cliNombre']),
-        utf8_decode($data[$i]['Apellidos']),
-        utf8_decode($data[$i]['cliCorreo']),
-        utf8_decode($data[$i]['cliDni']),
-        utf8_decode($data[$i]['PrecioTotal']),
+        iconv('UTF-8', 'ISO-8859-1', $data[$i]['venId']),
+        iconv('UTF-8', 'ISO-8859-1', $data[$i]['cliNombre']),
+        iconv('UTF-8', 'ISO-8859-1', $data[$i]['Apellidos']),
+        iconv('UTF-8', 'ISO-8859-1', $data[$i]['cliCorreo']),
+        iconv('UTF-8', 'ISO-8859-1', $data[$i]['cliDni']),
+        iconv('UTF-8', 'ISO-8859-1', $data[$i]['PrecioTotal']),
     ), 15);
 }
 

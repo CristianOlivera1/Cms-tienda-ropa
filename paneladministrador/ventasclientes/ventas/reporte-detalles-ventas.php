@@ -58,11 +58,11 @@ class PDF extends FPDF
         $this->Ln(4);
         $this->Cell(300, 10, 'Telefono: 954455664', 0, 0, 'L', 0);
         $this->Ln(4);
-        $this->Cell(300, 10, utf8_decode('Direccion: Av. Cusco N° 321'), 0, 0, 'L', 0);
+        $this->Cell(300, 10, iconv('UTF-8', 'ISO-8859-1', 'Direccion: Av. Cusco N° 321'), 0, 0, 'L', 0);
         $this->Ln(4);
-        $this->Cell(300, 10, utf8_decode('Email: menstore@hotmail.com'), 0, 0, 'L', 0);
+        $this->Cell(300, 10, iconv('UTF-8', 'ISO-8859-1', 'Email: menstore@hotmail.com'), 0, 0, 'L', 0);
         $this->Ln(4);
-        $this->Cell(300, 10, utf8_decode('Fecha y Hora: ' . date('Y-m-d H:i:s')), 0, 1, 'L', 0);
+        $this->Cell(300, 10, iconv('UTF-8', 'ISO-8859-1', 'Fecha y Hora: ' . date('Y-m-d H:i:s')), 0, 1, 'L', 0);
         $this->SetXY(80, 40); 
         $this->SetFont('Helvetica', 'B', 20);
         $this->Cell(50, 8, 'Detalles de la Venta', 0, 0, 'C', 0);
@@ -76,7 +76,7 @@ class PDF extends FPDF
         $this->SetY(-15);
         $this->SetX(150);
         $this->SetFont('Helvetica', 'B', 8);
-        $this->Cell(0, 10, utf8_decode('Página') . $this->PageNo() . '/{nb}', 0, 0, 'C');
+        $this->Cell(0, 10, iconv('UTF-8', 'ISO-8859-1', 'Página') . $this->PageNo() . '/{nb}', 0, 0, 'C');
     }
 
     protected $widths;
@@ -193,9 +193,9 @@ $contador = 1;
 foreach ($productos as $producto) {
     $pdf->Row(array(
         $contador++, // Número de fila
-        utf8_decode($producto['proNombre']), // Nombre del producto
-        utf8_decode($producto['talNombre']), // Talla
-        utf8_decode($producto['colNombre']), // Color
+        iconv('UTF-8', 'ISO-8859-1', $producto['proNombre']), // Nombre del producto
+        iconv('UTF-8', 'ISO-8859-1', $producto['talNombre']), // Talla
+        iconv('UTF-8', 'ISO-8859-1', $producto['colNombre']), // Color
         $producto['detVenCantidad'], // Cantidad
         number_format($producto['detVenPrecio'], 2), // Precio Unitario
         number_format($producto['totalPrecio'], 2) // Total
@@ -206,10 +206,6 @@ $pdf->SetFont('Helvetica', 'B', 10);
 $pdf->SetX(15);
 $pdf->Cell(145, 10, 'Total de la Venta:', 0, 0, 'R', 0);
 $pdf->Cell(20, 10, number_format($totalVenta, 2), 0, 0, 'L', 0);
-
-
-
-
 // Output the PDF
 $pdf->Output();
 ?>
