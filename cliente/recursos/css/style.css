@@ -645,6 +645,9 @@ img {
     cursor: pointer;
 }
 
+header .contacto{
+    padding: 8px 16px;
+}
 
 /*BG SHAPE*/
 .shape {

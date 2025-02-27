@@ -77,8 +77,8 @@ session_start();
             <nav data-aos="zoom-out" data-aos-delay="800" class="navbar navbar-expand">
                 <div class="container header ">
                     <a class="navbar-brand" href="/">
-                        <img class="navbar-brand-regular" src="/cliente/recursos/img/logo-header/mens-store-white.png" alt="logo-marca-blanco" class="logo-header">
-                        <img class="navbar-brand-sticky" src="/cliente/recursos/img/logo-header/mens-store-dark.png" alt="logo-marca-oscuro" class="logo-header">
+                        <img class="navbar-brand-regular logo-header" src="/cliente/recursos/img/logo-header/mens-store-white.png" alt="logo-marca-blanco" >
+                        <img class="navbar-brand-sticky logo-header" src="/cliente/recursos/img/logo-header/mens-store-dark.png" alt="logo-marca-oscuro" >
                     </a>
                     <div class="ml-auto"></div>
                     <ul class="navbar-nav items">
@@ -117,9 +117,12 @@ session_start();
                                 <div id="suggestions-box" class="suggestions-box mt-1"></div>
                             </form>
                         </li>
+                    </ul>
 
+                    <!-- Botón de Acción de la Barra de Navegación -->
+                    <ul class="navbar-nav action">
                         <!-- Cesta -->
-                        <li class="nav-item">
+                    <li class="nav-item">
                             <a class="navbar-brand-sticky" href="/cliente/carrito_compras/carrito_compras.php"> 
                                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M16.148 11.479c-.101-1.428-.125-2.985-.296-4.57C15.577 4.37 14.372 2.64 12 2.64S8.423 4.37 8.148 6.908c-.171 1.586-.195 3.142-.296 4.57" stroke="black" stroke-width="1.2" stroke-miterlimit="10" stroke-linejoin="bevel"></path>
@@ -133,12 +136,8 @@ session_start();
                                 </svg>
                             </a>
                         </li>
-                    </ul>
-
-                    <!-- Botón de Acción de la Barra de Navegación -->
-                    <ul class="navbar-nav action">
                         <li class="nav-item ml-3">
-                            <a href="/cliente/contacto/contacto.php" class="btn ml-lg-auto btn-bordered-white">
+                            <a href="/cliente/contacto/contacto.php" class="btn ml-lg-auto btn-bordered-white contacto">
                                 <!-- Icono de WhatsApp -->
                                 <svg xmlns="http://www.w3.org/2000/svg" width="28" height="30" viewBox="0 0 256 258">
                                     <defs>
@@ -157,13 +156,13 @@ session_start();
                                 </svg> Contáctenos
                             </a>
                         </li>
-
+                   
                                 <li class="nav-item ml-2">
                             <a class="navbar-brand-sticky" href="#" data-toggle="modal" data-target="#loginModal">
-                                <button class="btn ml-lg-auto btn-bordered-white" >Iniciar sesión</button>
+                                <button class="btn ml-lg-auto btn-bordered-white login" >Iniciar sesión</button>
                             </a>
                             <a class="navbar-brand-regular" href="#" data-toggle="modal" data-target="#loginModal">
-                            <button class="btn ml-lg-auto btn-bordered-white" >Iniciar sesión</button>
+                            <button class="btn ml-lg-auto btn-bordered-white login" >Iniciar sesión</button>
 
                             </a>
                         </li>
