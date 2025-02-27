@@ -77,8 +77,8 @@ session_start();
             <nav data-aos="zoom-out" data-aos-delay="800" class="navbar navbar-expand">
                 <div class="container header ">
                     <a class="navbar-brand" href="/">
-                        <img class="navbar-brand-regular" src="/cliente/recursos/img/logo-header/mens-store-white.png" alt="logo-marca-blanco">
-                        <img class="navbar-brand-sticky" src="/cliente/recursos/img/logo-header/mens-store-dark.png" alt="logo-marca-oscuro">
+                        <img class="navbar-brand-regular" src="/cliente/recursos/img/logo-header/mens-store-white.png" alt="logo-marca-blanco" class="logo-header">
+                        <img class="navbar-brand-sticky" src="/cliente/recursos/img/logo-header/mens-store-dark.png" alt="logo-marca-oscuro" class="logo-header">
                     </a>
                     <div class="ml-auto"></div>
                     <ul class="navbar-nav items">
@@ -133,16 +133,6 @@ session_start();
                                 </svg>
                             </a>
                         </li>
-
-                    </ul>
-
-                    <!-- Hamburguesa de la Barra de Navegación -->
-                    <ul class="navbar-nav toggle">
-                        <li class="nav-item">
-                            <a href="#" class="nav-link" data-toggle="modal" data-target="#menu">
-                                <i class="fas fa-bars toggle-icon m-0"></i>
-                            </a>
-                        </li>
                     </ul>
 
                     <!-- Botón de Acción de la Barra de Navegación -->
@@ -168,7 +158,6 @@ session_start();
                             </a>
                         </li>
 
-                                <!-- Nuevo ícono al lado de Cesta -->
                                 <li class="nav-item ml-2">
                             <a class="navbar-brand-sticky" href="#" data-toggle="modal" data-target="#loginModal">
                                 <button class="btn ml-lg-auto btn-bordered-white" >Iniciar sesión</button>
@@ -176,6 +165,14 @@ session_start();
                             <a class="navbar-brand-regular" href="#" data-toggle="modal" data-target="#loginModal">
                             <button class="btn ml-lg-auto btn-bordered-white" >Iniciar sesión</button>
 
+                            </a>
+                        </li>
+                    </ul>
+                         <!-- Hamburguesa de la Barra de Navegación -->
+                         <ul class="navbar-nav toggle">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-toggle="modal" data-target="#menu">
+                                <i class="fas fa-bars toggle-icon m-0"></i>
                             </a>
                         </li>
                     </ul>

@@ -63,6 +63,9 @@
     .res-margin {
         margin-bottom: 30px;
     }
+    #product-carousel{
+        margin-top: 30px;
+    }
 }
 
 @media (max-width: 575px) {
@@ -143,9 +146,15 @@
 }
 
 @media(max-width: 767px) {
+    header .navbar-expand .navbar-nav.action a {
+        padding: 5px 10px;
+        font-size: 0 !important;
+        border: none;
+    }
+
     header .navbar-expand .navbar-nav.action .btn {
         padding: 5px 10px;
-        font-size: 0;
+        font-size: 12px;
     }
 
     header .navbar-expand .navbar-nav.action .btn .contact-icon {
@@ -156,6 +165,16 @@
     .navbar-brand {
         margin: 0;
     }
+
+    .main-image{
+        width: clamp(300px, 70%, 350px) !important;
+
+    }
+
+    .product-content{
+    margin-top: 30px !important;
+    }
+ 
 }
 
 @media (max-width: 575px) {
@@ -177,6 +196,10 @@
 
     .search-title {
         font-size: 40px;
+    }
+    .logo-header{
+        width: 50px;
+        
     }
 }
 

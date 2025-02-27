@@ -138,7 +138,7 @@ function loadProducts(category, brand = '') {
                 productList.innerHTML = response.products;
             // Initialize Swiper
             new Swiper(`#swiper-${category}`, {
-                slidesPerView: 4,
+                slidesPerView: 1,
                 spaceBetween: 0,
                 grid: {
                     rows: 2,
@@ -149,8 +149,15 @@ function loadProducts(category, brand = '') {
                     prevEl: '.swiper-button-prev',
                 },
                 breakpoints: {
-                    640: {
+                    578: {
                         slidesPerView: 1,
+                        spaceBetween: 0,
+                        grid: {
+                            rows: 2,
+                        },
+                    },
+                    640: {
+                        slidesPerView: 2,
                         spaceBetween: 0,
                         grid: {
                             rows: 2,
